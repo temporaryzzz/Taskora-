@@ -6,9 +6,15 @@ function TestBuild() {
 
   const fetchGreeting = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/greeting?name=${encodeURIComponent(name)}`);
+      const response = await fetch(`http://localhost:8080/greeting?name=${encodeURIComponent(name)}`, {
+        mode: "no-cors",
+        headers: {
+                 "Access-Control-Allow-Origin": "*"
+            },
+      });
       const data = await response.json();
       setGreeting(data);
+      console.log("data:", data, "greeting:", greeting)
     } catch (error) {
       console.error('Ошибка при получении приветствия:', error);
     }

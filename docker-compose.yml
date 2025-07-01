@@ -7,5 +7,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000" # Маппинг порта frontend
-    volumes:
-      - ./taskora-frontend:/app # Для горячей перезагрузки во время разработки
+    networks:
+      - default
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    networks:
+      - default
