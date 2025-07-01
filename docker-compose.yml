@@ -1,0 +1,11 @@
+
+services:
+  # Frontend
+  taskora-frontend:
+    build:
+      context: ./taskora-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # Маппинг порта frontend
+    volumes:
+      - ./taskora-frontend:/app # Для горячей перезагрузки во время разработки
