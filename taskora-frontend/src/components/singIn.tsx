@@ -51,7 +51,10 @@ function SingInForm() {
 
                 <button className="main-button main-button--green" type="submit" >Sing-in</button>
             </form>
-            
+            <form>
+                <p>No account?</p>
+                <button className="main-button" type="submit" formAction={"sing-up"}>Sing-up</button>
+            </form>
         </>
     );
 }
