@@ -6,8 +6,9 @@ function TestBuild() {
 
   const fetchGreeting = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/greeting?name=${encodeURIComponent(name)}`, {
+      const response = await fetch(`http://localhost:8080/greeting?name=${name}`, {
         mode: "no-cors",
+        method: "GET",
         headers: {
                  "Access-Control-Allow-Origin": "*"
             },
@@ -15,7 +16,8 @@ function TestBuild() {
       const data = await response.json();
       setGreeting(data);
       console.log("data:", data, "greeting:", greeting)
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Ошибка при получении приветствия:', error);
     }
   };
@@ -29,7 +31,7 @@ function TestBuild() {
         value={name}
         onChange={e => setName(e.target.value)}
       />
-      <button onClick={fetchGreeting}>Отправить</button>
+      <button onClick={() => fetchGreeting()}>Отправить</button>
 
       {greeting && (
         <div style={{ marginTop: 20 }}>
