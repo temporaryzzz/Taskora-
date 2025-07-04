@@ -1,19 +1,35 @@
 package com.taskora.backend.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
+/**
+ * Сущность задачи в базе данных.
+ */
 @Entity
 public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(nullable = false)
     private String title;
+
     private String description;
+
+//* priority (Enum)
+//* created_at / date (Date)
+//* deadline / due date (Date)
+//* status (Enum)
+//* start_date (Date)
+//* completed_at (Date)
+//* duration in days (Long)
+//* tags (???)
+//* parent_task (Task)
+//* sub_tasks (Task)
+//* attachments (???)
+//* reminders (???)
 
     protected Task() { }
 
@@ -21,6 +37,7 @@ public class Task {
         this.title = title;
         this.description = description;
     }
+
 
     public Long getId() {
         return id;

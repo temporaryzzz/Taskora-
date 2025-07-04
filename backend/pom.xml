@@ -11,9 +11,9 @@
 	</parent>
 
 	<groupId>com.taskora</groupId>
-	<artifactId>backend</artifactId>
+	<artifactId>taskora-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>backend</name>
+	<name>taskora-backend</name>
 	<description>task-manager + online board</description>
 
 	<url/>

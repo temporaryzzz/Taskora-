@@ -2,18 +2,14 @@ package com.taskora.backend.controller;
 
 import com.taskora.backend.model.dto.TaskDto;
 import com.taskora.backend.service.TaskServiceImpl;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// to_change: большая часть контроллера - кривая хренотень для теста
+// to_change: добавить статус коды и хоть какие нибудь обратные сообщения, чтобы в случае чего понимать, что произошло
 @RestController
+@RequestMapping("/test")
 public class TaskController {
 
     private final TaskServiceImpl taskService;
@@ -22,26 +18,35 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    // to_change: проверено, работает
-    @GetMapping(value = "test/getAll")
-    public ResponseEntity<List<TaskDto>> getAllTasks() {
-        List<TaskDto> tasks = taskService.getAllTasks();
 
-        return new ResponseEntity<>(tasks, HttpStatus.OK);
+    @GetMapping(value = "/task")
+    public TaskDto getTaskById(@RequestParam Long id) {
+        return taskService.getTaskById(id);
     }
 
-    // to_change: проверено, работает
-    @GetMapping(value = "test/create")
-    public ResponseEntity<?> create(@RequestParam(value = "title") String title, @RequestParam(value = "description", defaultValue = "") String description) {
-        taskService.createTask(new TaskDto(title, description));
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @GetMapping(value = "/tasks")
+    public List<TaskDto> getAllTasks() {
+        return taskService.getAllTasks();
     }
 
-    // to_change: Method not Allowed: 405
-    @DeleteMapping(value = "test/delete")
-    public ResponseEntity<?> delete(@RequestParam(value = "id") Long id) {
+    // to_change: возвращается DTO'шка без id
+    // to_change: какого то хрена первый id у задач - 52. Нужно в application.properties подшаманить скорее всего, или в @Entity
+    @GetMapping(value = "/create")
+    public TaskDto createTask(@RequestParam(value = "title") String title, @RequestParam(value = "description", defaultValue = "") String description) {
+        return taskService.createTask(new TaskDto(title, description));
+    }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+    // to_change: заменить GET на PUT после тестов
+    // to_change: тут тоже DTO'шка без id
+    // to_change: сбивается порядок задач в новом JSON
+    @GetMapping(value = "/update")
+    public TaskDto updateTask(@NonNull @RequestParam(value = "id") Long id, @RequestParam(value = "title") String title, @RequestParam(value = "description", defaultValue = "") String description) {
+        return taskService.updateTask(id, new TaskDto(title, description));
+    }
+
+    // to_change: заменить GET на DELETE после тестов
+    @GetMapping(value = "/delete")
+    public void delete(@NonNull @RequestParam(value = "id") Long id) {
+        taskService.deleteTask(id);
     }
 }
