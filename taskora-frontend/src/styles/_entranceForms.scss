@@ -1,5 +1,5 @@
 @use "index";
-@import "https://unpkg.com/@a1rth/css-normalize@1.1.3/index.css";
+@use "vars";
 
 .main-button {
     border: 2px solid rgba(0, 0, 0, 0);
@@ -7,13 +7,13 @@
 }
  
 .main-button--green {
-    background-color: index.$greenAccent;
+    background-color: vars.$greenAccent;
     color: white;
     font-weight: bold;
 }
 
 .main-button--back {
-    background-color: index.$taskCardColor-hover;
+    background-color: vars.$taskCardColor-hover;
     max-height: 40px;
     padding: 2%;
 }
