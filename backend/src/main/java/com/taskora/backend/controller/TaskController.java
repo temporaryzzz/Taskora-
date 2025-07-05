@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// to_change: после добавления Security - заменить эндпоинты, оставив только Mapping
 // to_change: добавить статус коды и хоть какие нибудь обратные сообщения, чтобы в случае чего понимать, что произошло
 @RestController
 @RequestMapping("/test")
