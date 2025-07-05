@@ -1,5 +1,5 @@
 # Указать базовый образ  
-FROM node:alpine as build
+FROM node:alpine AS build
 # Задать рабочий каталог  
 WORKDIR /app  
 # Скопировать файлы package.json и package-lock.json  
@@ -14,6 +14,12 @@ COPY . .
 # Собрать приложение  
 RUN npm run build  
 
-EXPOSE 3000  
-# Запустить приложение  
-CMD ["npm", "run", "preview"]
+# Продакшн сервер: Nginx
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Копируем кастомный конфиг
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 3000
+CMD ["nginx", "-g", "daemon off;"]

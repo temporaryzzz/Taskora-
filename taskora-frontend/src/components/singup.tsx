@@ -1,14 +1,38 @@
-//import { useState } from 'react';
-import type { FormEvent } from 'react';
+import { useState } from 'react';
+import type { FormEvent} from 'react';
 import { useNavigate } from 'react-router';
 import '../styles.scss';
 
 
-function SingUpForm() {
+function SingUpForm () {
     const navigate = useNavigate()
+    const [username, setUsername] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
 
-    const handleSubmit = (event: FormEvent) => {
+    const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
+
+        try {
+            const response = await fetch("/api/auth/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "username": username,
+                    "email": email,
+                    "password": password
+                }),
+            });
+
+            const data = await response.json();
+            console.log("data:", data)
+        } 
+        catch (error) {
+            console.error('Ошибка:', error);
+        }
+
         navigate('../', {replace: false})//Для рендиринга этого компонента по url '/main'
     };
 
@@ -18,19 +42,36 @@ function SingUpForm() {
             <form id="singup-form" action='' data-js-singin 
                 onSubmit={handleSubmit} >
                 <p className="field">
-                    <label className="field__label" htmlFor="login">Username or email address</label>
+                    <label className="field__label" htmlFor="username">Username</label>
                     <input
                     className="field__control" 
-                    id="login" 
-                    name="login" 
+                    id="username" 
+                    name="username" 
+                    onChange={(event) => setUsername(event.target.value)}
                     minLength={2}
                     maxLength={16}
-                    aria-errormessage="login-errors"
-                    data-login
+                    aria-errormessage="username-errors"
+                    data-username
                     required/>
 
-                    <span className="field__errors" id="login-errors" data-js-singin-field-errors></span>
+                    <span className="field__errors" id="username-errors" data-js-singin-field-errors></span>
                 </p>
+
+                <p className="field">
+                    <label className="field__label" htmlFor="email">Email address</label>
+                    <input
+                    className="field__control" 
+                    id="email" 
+                    name="email" 
+                    onChange={(event) => setEmail(event.target.value)}
+                    minLength={6}
+                    aria-errormessage="email-errors"
+                    data-email
+                    required/>
+
+                    <span className="field__errors" id="email-errors" data-js-singin-field-errors></span>
+                </p>
+
                 <p className="field">
                     <label className="field__label" htmlFor="password">Password</label>
                     <input 
@@ -38,6 +79,7 @@ function SingUpForm() {
                     id="password" 
                     name="password" 
                     type="password" 
+                    onChange={(event) => setPassword(event.target.value)}
                     minLength={4}
                     maxLength={16}
                     pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,16}"
@@ -56,6 +98,7 @@ function SingUpForm() {
                     id="password" 
                     name="password" 
                     type="password" 
+                    onChange={(event) => setPassword(event.target.value)}
                     minLength={4}
                     maxLength={16}
                     pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,16}"

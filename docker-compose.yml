@@ -8,14 +8,18 @@ services:
     ports:
       - "3000:3000" # Маппинг порта frontend
     networks:
-      - default
+      - taskora-network
     depends_on:
-      - backend
+      - taskora-backend
 
   taskora-backend:
-      build: .
+      build: 
+            context: ./taskora-backend
+            dockerfile: Dockerfile
       ports:
         - "8080:8080"
+      networks:
+        - taskora-network
       environment:
         SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/demo
         SPRING_DATASOURCE_USERNAME: postgres
@@ -33,8 +37,14 @@ services:
       POSTGRES_PASSWORD: immabriish
     ports:
       - "5432:5432"
+    networks:
+      - taskora-network
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  volumes:
-    postgres_data:
+volumes:
+  postgres_data:
+
+networks:
+  taskora-network:
+    driver: bridge
