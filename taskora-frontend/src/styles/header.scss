@@ -1,0 +1,28 @@
+@use "index";
+@use "vars";
+
+.tabs {
+    display: flex;
+    background-color: vars.$bgColor-default;
+    width: 100vw;
+}
+
+.tabs__tab {
+    padding: 1rem 2rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: 2px solid transparent;
+    background: none;
+    font-size: 1rem;
+    color: vars.$bodyColor-default;
+
+    .tabs__tab:hover {
+        background-color: vars.$borderColor-default;
+    }
+}
+
+.tabs__tab--active {
+    border-bottom: 2px solid vars.$greenAccent;
+    font-weight: 500;
+}
+
