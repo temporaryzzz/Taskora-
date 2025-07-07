@@ -1,5 +1,6 @@
 @use "index";
 @use "vars";
+@use "mixins";
 
 .tabs {
     display: flex;
@@ -12,13 +13,16 @@
     cursor: pointer;
     transition: background-color 0.2s;
     border: 2px solid transparent;
+    border-radius: 0px !important;
     background: none;
     font-size: 1rem;
-    color: vars.$bodyColor-default;
+    color: vars.$fgColor-default;
 
-    .tabs__tab:hover {
-        background-color: vars.$borderColor-default;
-    }
+}
+
+.tabs__tab:hover {
+    background-color: vars.$light-gray;
+    border-radius: 8px !important;
 }
 
 .tabs__tab--active {
