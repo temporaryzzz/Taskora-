@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import SingInForm from './components/singIn';
 import SingUpForm from './components/singup';
 import Header from './components/header';
+import TaskPage from './components/task-manager/task-page';
 
 function App() {
 
@@ -19,7 +20,7 @@ function App() {
             <Route path='task-lists' element={
               <>
                 <Header active="task-lists"/>
-                <div>TASK-MANAGER</div>
+                <TaskPage />
               </>} />
             <Route path='task-board' element={
               <>

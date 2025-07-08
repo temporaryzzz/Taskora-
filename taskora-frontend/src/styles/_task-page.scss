@@ -1,0 +1,58 @@
+@use "index";
+@use "vars";
+@use "mixins";
+
+.task-list {
+    @include mixins.flex-start;
+    min-height: 50vh;
+    max-height: 90vh;
+    width: 50vw;
+    text-align: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    overflow-y: auto;
+    margin: 5px;    
+}
+
+.task-list__completed {
+    width: 100%;
+    margin-top: 10px;
+    text-align: center;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.task-list__task {
+  display: flex;
+  background: vars.$light-gray;
+  color: vars.$fgColor-default;
+  border-bottom: 1px solid #4a6fa5;
+  width: 100%;
+  height: 40px;
+  overflow: hidden;
+  align-items: center;
+}
+
+.task-list__task:hover {
+  border: 2px solid #4a6fa5;
+  border-top: 1px solid #4a6fa5 !important;
+  background-color: vars.$muted-blue;
+}
+
+.task-list__task h4 {
+  margin: 5px;
+  font-size: 14px;
+}
+
+.task-list__task p {
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+.side-bar {
+    height: 100vh;
+    width: 20vw;
+    background-color: vars.$muted-blue;
+}
