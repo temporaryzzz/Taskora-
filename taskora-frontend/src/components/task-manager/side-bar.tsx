@@ -8,12 +8,12 @@ function SideBar() {
 
     return (
         <div className='side-bar'> 
-            SIDE-BAR 
-            <SideBarButton />
-            <SideBarButton />
-            <SideBarButton />
-            <SideBarButton />
-            <SideBarButton />
+            <h4>SIDE-BAR</h4> 
+            <SideBarButton active={true}/>
+            <SideBarButton active={false}/>
+            <SideBarButton active={false}/>
+            <SideBarButton active={false}/>
+            <SideBarButton active={false}/>
         </div>    
     )
 }

@@ -40,7 +40,7 @@
 .task-list__task:hover {
   border: 2px solid #4a6fa5;
   border-top: 1px solid #4a6fa5 !important;
-  background-color: vars.$muted-blue;
+  background-color: vars.$ultra-light-gray;
 }
 
 .task-list__task h4 {
@@ -64,6 +64,7 @@
 
 .side-bar__button {
   display: flex;
+  background-color: transparent;
   border-radius: 7px;
   color: vars.$fgColor-default;
   width: 100%;
@@ -77,6 +78,10 @@
   background-color: vars.$light-gray;
 }
 
+.side-bar__button--active {
+  background-color: vars.$ultra-light-gray;
+}
+
 .side-bar__icon {
   width: 30px;
   height: 15px;
@@ -84,7 +89,15 @@
 }
 
 .side-bar__icon--inbox-list {
-    background-image: url("../../public/inbox-list-icon.svg");
-    background-size: contain;
-    background-repeat: no-repeat;
+  background-image: url("../../public/inbox-list-icon.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.task-info-winow {
+    @include mixins.default-border;
+    height: 95vh;
+    width: 29vw;
+    padding: 5px;
+    margin-left: 5px;
 }
