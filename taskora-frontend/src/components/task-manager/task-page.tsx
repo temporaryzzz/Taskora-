@@ -6,9 +6,8 @@ import TaskList from './task-list';
 
 function TaskPage() {
 
-
     return (
-        <div style={{display: 'flex'}}>
+        <div className='task-page'>
             <SideBar />
             <TaskList />
         </div>    
