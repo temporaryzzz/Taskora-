@@ -43,31 +43,33 @@ function Header(props: HeaderProps) {
     useEffect(() => {setActiveTab(props.active)}, [props.active])
 
     return (
-        <nav className="tabs">
-            <button 
-                id="profile" 
-                ref={profileRef} 
-                className="tabs__tab" 
-                onClick={() => navigate('../profile', {replace: false})}>
-                    {userName}
-            </button> 
+        <header>
+            <nav className="tabs">
+                <button 
+                    id="profile" 
+                    ref={profileRef} 
+                    className="tabs__tab" 
+                    onClick={() => navigate('../profile', {replace: false})}>
+                        {userName}
+                </button> 
 
-            <button 
-                id="task-lists" 
-                ref={taskListsRef} 
-                className="tabs__tab" 
-                onClick={() => navigate('../task-lists', {replace: false})}>
-                    Task-manager
-            </button>
+                <button 
+                    id="task-lists" 
+                    ref={taskListsRef} 
+                    className="tabs__tab" 
+                    onClick={() => navigate('../task-lists', {replace: false})}>
+                        Task-manager
+                </button>
 
-            <button 
-                id="task-board" 
-                ref={taskBoardRef} 
-                className="tabs__tab" 
-                onClick={() => navigate('../task-board', {replace: false})}>
-                    Task-board
-            </button>
-        </nav>
+                <button 
+                    id="task-board" 
+                    ref={taskBoardRef} 
+                    className="tabs__tab" 
+                    onClick={() => navigate('../task-board', {replace: false})}>
+                        Task-board
+                </button>
+            </nav>
+        </header>
     )
 }
 

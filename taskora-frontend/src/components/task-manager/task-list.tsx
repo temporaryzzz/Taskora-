@@ -18,7 +18,6 @@ function TaskList() {
             <Task />
             <Task />
 
-            <h3>COMPLETED</h3>
             <div className='task-list__completed'>
                 <Task />
                 <Task />

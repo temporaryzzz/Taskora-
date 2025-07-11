@@ -7,7 +7,9 @@ function Task() {
 
     return (
         <div className='task-list__task'> 
-            TASK 
+            <input type='checkbox' id='completed'></input>
+            <h4>TASK</h4> 
+            <p>something task description</p>
         </div>    
     )
 }

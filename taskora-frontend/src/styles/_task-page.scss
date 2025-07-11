@@ -3,32 +3,30 @@
 @use "mixins";
 
 .task-list {
-    @include mixins.flex-start;
+    @include mixins.flex-start(column);
+    @include mixins.overflow-default;
+    @include mixins.default-border;
     min-height: 50vh;
-    max-height: 90vh;
+    max-height: 95vh;
     width: 50vw;
-    text-align: center;
-    flex-wrap: wrap;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-    overflow-y: auto;
-    margin: 5px;    
+    margin-left: 5px;  
+    padding: 5px;  
 }
 
 .task-list__completed {
     width: 100%;
-    margin-top: 10px;
+    margin-top: 40px;
     text-align: center;
     overflow: hidden;
     overflow-y: auto;
 }
 
 .task-list__task {
+  @include mixins.default-border;
   display: flex;
-  background: vars.$light-gray;
+  background: vars.$bgColor-lightAccent;
   color: vars.$fgColor-default;
-  border-bottom: 1px solid #4a6fa5;
+  margin-top: 5px;
   width: 100%;
   height: 40px;
   overflow: hidden;
@@ -47,12 +45,14 @@
 }
 
 .task-list__task p {
+  color: vars.$strong-gray;
   margin-left: 10px;
   font-size: 12px;
 }
 
+
 .side-bar {
-    height: 100vh;
+    height: 95vh;
     width: 20vw;
-    background-color: vars.$muted-blue;
+    @include mixins.default-border;
 }
