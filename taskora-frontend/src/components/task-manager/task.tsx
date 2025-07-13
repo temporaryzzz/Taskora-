@@ -39,7 +39,7 @@ function Task(task: TaskInfo) {
             }
         }
 
-        if (taskCheckbox.current) taskCheckbox.current.checked = taskCompletedState  
+        if (taskCheckbox.current) taskCheckbox.current.checked = !taskCompletedState  
 
     }
 
