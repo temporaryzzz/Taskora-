@@ -38,6 +38,7 @@
   min-height: 40px;
   overflow: hidden;
   align-items: center;
+  text-decoration: none;
 }
 
 .task-list__task:hover {
@@ -55,6 +56,11 @@
   color: vars.$strong-gray;
   margin-left: 10px;
   font-size: 12px;
+}
+
+.task-list__task--completed p {
+  color: vars.$ultra-light-gray;
+  text-decoration: line-through;
 }
 
 
