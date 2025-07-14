@@ -30,16 +30,19 @@ function Task(task: TaskInfo) {
     const setStateTask = () => { 
         setTaskCompletedState(!taskCompletedState)
 
-        if (taskRef.current) {
-            if (taskRef.current.matches(stateClasses.completedClass)) {
-                taskRef.current.classList.remove(stateClasses.completedClass)
-            }
-            else {
-                taskRef.current.classList.add(stateClasses.completedClass)
-            }
-        }
+        if (taskCheckbox.current){
 
-        if (taskCheckbox.current) taskCheckbox.current.checked = !taskCompletedState  
+            taskCheckbox.current.checked = !taskCompletedState  
+
+            if (taskRef.current) {
+                if (taskCheckbox.current.checked == false) {
+                    taskRef.current.classList.remove(stateClasses.completedClass)
+                }
+                else {
+                    taskRef.current.classList.add(stateClasses.completedClass)
+                }
+        }
+        }
 
     }
 
