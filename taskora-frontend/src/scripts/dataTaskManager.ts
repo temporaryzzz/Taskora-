@@ -1,5 +1,7 @@
 //Инициализация тасков для рендера
 const InizializateTasks = async () => {
+    
+    console.log('Inizializate Tasks...')
 
     const response = await fetch('http://localhost:3002/tasks');
     const dataValues = await response.json();
