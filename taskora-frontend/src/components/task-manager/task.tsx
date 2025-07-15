@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { ChangeStateTask } from '../../scripts/dataTaskManager';
 import '../../styles.scss';
 
 type TaskInfo = {
@@ -6,7 +7,7 @@ type TaskInfo = {
     title: string;
     description: string;
     time: string;
-    completed: string;
+    completed: boolean;
 }
 
 function Task(task: TaskInfo) {
@@ -17,11 +18,11 @@ function Task(task: TaskInfo) {
 
     const taskRef = useRef<HTMLDivElement>(null);
     const taskCheckbox = useRef<HTMLInputElement>(null);
-    const [taskCompletedState, setTaskCompletedState] = useState(false)
+    const [taskCompletedState, setTaskCompletedState] = useState(task.completed)
 
     const InizializateStateTask = () => {
-        if(task.completed === "true") {
-            console.log(taskRef.current)
+        if(task.completed === true) {
+
             if (taskRef.current) taskRef.current.classList.add(stateClasses.completedClass)
             if (taskCheckbox.current) taskCheckbox.current.checked = true  
         }
@@ -37,19 +38,23 @@ function Task(task: TaskInfo) {
             if (taskRef.current) {
                 if (taskCheckbox.current.checked == false) {
                     taskRef.current.classList.remove(stateClasses.completedClass)
+                    document.getElementById('inbox-list')?.appendChild(taskRef.current)
                 }
                 else {
                     taskRef.current.classList.add(stateClasses.completedClass)
+                    document.getElementById('completed-list')?.appendChild(taskRef.current)
                 }
+            }
         }
-        }
+
+        ChangeStateTask(taskCompletedState, task.id)
 
     }
 
     useEffect(InizializateStateTask, [task.completed])
 
     return (
-        <div className='task-list__task' ref={taskRef}> 
+        <div className='task-list__task' ref={taskRef} id={`task-${task.id}`}> 
             <input type='checkbox' id='completed' ref={taskCheckbox} onChange={setStateTask}></input>
             <h4>{task.title}</h4> 
             <p>{task.description}</p>

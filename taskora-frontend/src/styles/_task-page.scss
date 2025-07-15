@@ -10,7 +10,6 @@
     @include mixins.flex-start(column);
     @include mixins.overflow-default;
     @include mixins.default-border;
-    min-height: 50vh;
     max-height: 93vh;
     position: relative;
     width: 50vw;
@@ -18,15 +17,18 @@
     padding: 7px;  
 }
 
-.task-list__completed {
+.task-list__section {
     width: 100%;
     border: none;
     padding: 0px;
-    margin-top: 40px;
     text-align: center;
 }
 
-.task-list__completed::-webkit-scrollbar { width: 0; }
+.task-list__section--completed {
+  margin-top: 40px;
+}
+
+.task-list__section::-webkit-scrollbar { width: 0; }
 
 .task-list__task {
   @include mixins.default-border;
