@@ -60,9 +60,12 @@
   font-size: 12px;
 }
 
-.task-list__task--completed p {
+.task-list__task--completed {
   color: vars.$ultra-light-gray;
-  text-decoration: line-through;
+}
+
+.task-list__task--completed p{
+  color: vars.$ultra-light-gray;
 }
 
 
@@ -106,9 +109,32 @@
 }
 
 .task-info-winow {
-    @include mixins.default-border;
-    height: 95vh;
-    width: 29vw;
-    padding: 5px;
-    margin-left: 5px;
+  @include mixins.default-border;
+  height: 95vh;
+  width: 29vw;
+  padding: 5px;
+  margin-left: 5px;
+}
+
+.task-info-winow__title {
+  width: 100%;
+  height: 50px;
+  border: none;
+  font-size: larger;
+  background-color: transparent;
+  text-align: start;
+  outline:none;
+  resize: none;
+}
+
+.task-info-winow__description {
+  width: 100%;
+  height: fit-content;
+  border: none;
+  font-size: smaller;
+  margin-top: 10px;
+  background-color: transparent;
+  text-align: start;
+  outline:none;
+  resize: none;
 }
