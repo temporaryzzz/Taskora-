@@ -3,7 +3,7 @@ import '../../styles.scss';
 import SideBar from './side-bar';
 import TaskInfoWindow from './task-info-window';
 import TaskList from './task-list';
-import InizializateTasks, { FindTask } from '../../scripts/dataTaskManager' 
+import InizializateTasks, { FindTask, ChangeTask } from '../../scripts/dataTaskManager' 
 
 
 export type TaskInfo = {
@@ -16,18 +16,39 @@ export type TaskInfo = {
 
 type TaskPageType = {
     tasks: Array<TaskInfo> | undefined;
-    currentTask: TaskInfo | undefined;
+    currentTaskInfo: TaskInfo | undefined;
+    changeCurrentTask: (title: string, description: string) => void
 }
 
 export const TaskInfoContext = createContext<TaskPageType | undefined>(undefined);
 
 function TaskPage() {
     const [tasks, setTasks] = useState<Array<TaskInfo> | undefined>()
-    const [currentTask, setCurrentTask] = useState<TaskInfo | undefined>()
-    const contextValue: TaskPageType = {
-        tasks,
-        currentTask,
-    };
+    const [currentTaskInfo, setCurrentTaskInfo] = useState<TaskInfo | undefined>()
+
+    const changeCurrentTask = (title: string, description: string) => {
+
+        if(tasks != undefined) {
+            const currentTaskIndex = tasks.findIndex(task => task.id === currentTaskInfo?.id)
+            if(currentTaskIndex != undefined && currentTaskInfo != undefined) {
+
+                //Изменяем значение tasks[currentTaskIndex], а потом обновляем сам tasks
+                //Нужно для того чтобы своевременно обновился contextValue
+                tasks[currentTaskIndex].title = title
+                tasks[currentTaskIndex].description = description
+                ChangeTask(currentTaskInfo.id, title, description, currentTaskInfo.time)
+                setTasks([...tasks])
+                setCurrentTaskInfo(tasks[currentTaskIndex])
+            }
+        }
+
+    }
+
+    const contextValue = {
+        tasks, 
+        currentTaskInfo, 
+        changeCurrentTask
+    }
 
     //С пустым массивом зависимостей выполнится только при монтировании
     useEffect(() => {InizializateTasks().then((data) => {setTasks(data)})}, [])
@@ -37,11 +58,10 @@ function TaskPage() {
         if(event.target instanceof HTMLElement) {
             if(event.target.classList.contains('task-list__task')) {
 
-                FindTask(Number((event.target.id).split('-')[1])).then((data) => setCurrentTask(data))
+                FindTask(Number((event.target.id).split('-')[1])).then((data) => setCurrentTaskInfo(data))
             }
         }
     }, [])
-
 
     return (
         <TaskInfoContext.Provider value={contextValue}>

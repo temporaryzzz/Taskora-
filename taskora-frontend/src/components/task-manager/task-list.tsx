@@ -5,7 +5,6 @@ import type { TaskInfo } from './task-page';
 import { TaskInfoContext } from "./task-page";
 
 const SortedTasks = ({ tasks } : {tasks : Array<TaskInfo> | undefined}) => {
-    console.log(typeof(tasks))
 
     return(
         tasks?.map(task =>
@@ -24,12 +23,15 @@ function TaskList() {
     const taskList = useContext(TaskInfoContext)
 
     if(taskList != undefined) {
+
         return (
             <div className='task-list'>
                 <h3>INBOX</h3>
+                
                 <div className='task-list task-list__section' id='inbox-list'>
                     <SortedTasks tasks={taskList.tasks?.filter(task => task.completed === false)}/>
                 </div>
+
                 <div className='task-list task-list__section task-list__section--completed' id='completed-list'>
                     <SortedTasks tasks={taskList.tasks?.filter(task => task.completed === true)}/>
                 </div>

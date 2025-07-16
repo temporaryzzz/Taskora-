@@ -1,12 +1,18 @@
 //Инициализация тасков для рендера
 const InizializateTasks = async () => {
     
-    console.log('Inizializate Tasks...')
-
     const response = await fetch('http://localhost:3002/tasks');
     const dataValues = await response.json();
 
     return dataValues
+}
+
+const ChangeTask = (id: number, title : string, description : string, time : string) => {
+    fetch(`http://localhost:3002/tasks/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({title: title, description: description, time: time}),
+    })
+
 }
 
 //Смена состояний таска(активен/выполнен)
@@ -36,4 +42,4 @@ const FindTask = async (id: number) => {
 }
 
 export default InizializateTasks
-export {ChangeStateTask, FindTask}
+export {ChangeStateTask, ChangeTask, FindTask}

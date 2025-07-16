@@ -44,7 +44,7 @@ function Task(task: TaskInfo) {
 
     }
 
-    useEffect(InizializateStateTask, [task.completed])
+    useEffect(InizializateStateTask, [task])
 
     return (
         <div className='task-list__task' ref={taskRef} id={`task-${task.id}`}> 
