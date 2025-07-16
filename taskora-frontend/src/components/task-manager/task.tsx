@@ -1,14 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChangeStateTask } from '../../scripts/dataTaskManager';
 import '../../styles.scss';
-
-type TaskInfo = {
-    id: number;
-    title: string;
-    description: string;
-    time: string;
-    completed: boolean;
-}
+import type { TaskInfo } from './task-page';
 
 function Task(task: TaskInfo) {
     const stateClasses ={

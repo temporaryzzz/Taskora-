@@ -1,23 +1,14 @@
-//import { useState, useRef, useEffect } from 'react';
+import {useContext} from "react";
 import '../../styles.scss';
 import Task from './task';
+import type { TaskInfo } from './task-page';
+import { TaskInfoContext } from "./task-page";
 
-type TaskInfo = {
-    id: number;
-    title: string;
-    description: string;
-    time: string;
-    completed: boolean;
-}
-
-type TaskListProps = {
-    tasks?: Array<TaskInfo>;
-}
-
-const SortedTasks = (props: TaskListProps) => {
+const SortedTasks = ({ tasks } : {tasks : Array<TaskInfo> | undefined}) => {
+    console.log(typeof(tasks))
 
     return(
-        props.tasks?.map(task =>
+        tasks?.map(task =>
             <Task id={task.id} 
             title={task.title} 
             description={task.description} 
@@ -28,20 +19,33 @@ const SortedTasks = (props: TaskListProps) => {
     )
 }
 
-function TaskList(props: TaskListProps) {
+function TaskList() {
 
+    const taskList = useContext(TaskInfoContext)
 
-    return (
-        <div className='task-list'>
-            <h3>INBOX</h3>
-            <div className='task-list task-list__section' id='inbox-list'>
-                <SortedTasks tasks={props.tasks?.filter(task => task.completed === false)}/>
-            </div>
-            <div className='task-list task-list__section task-list__section--completed' id='completed-list'>
-                <SortedTasks tasks={props.tasks?.filter(task => task.completed === true)}/>
-            </div>
-        </div>    
-    )
+    if(taskList != undefined) {
+        return (
+            <div className='task-list'>
+                <h3>INBOX</h3>
+                <div className='task-list task-list__section' id='inbox-list'>
+                    <SortedTasks tasks={taskList.tasks?.filter(task => task.completed === false)}/>
+                </div>
+                <div className='task-list task-list__section task-list__section--completed' id='completed-list'>
+                    <SortedTasks tasks={taskList.tasks?.filter(task => task.completed === true)}/>
+                </div>
+            </div>    
+        )
+    }
+
+    else {
+        setTimeout(() => {
+            return (
+                <div style={{textAlign: 'center', width: '70%'}}>
+                    <h2>ПОКА ПУСТО...</h2>
+                </div>
+            )
+        }, 300)
+    }
 }
 
 export default TaskList;

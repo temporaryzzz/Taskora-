@@ -1,29 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import '../../styles.scss';
+import { TaskInfoContext } from "./task-page";
 
-type TaskInfo = {
-    id: number;
-    title: string;
-    description: string;
-    time: string;
-    completed: boolean;
-}
 
-type TaskInfoWindowProps = {
-    task?: TaskInfo;
-}
+function TaskInfoWindow() {
+    const taskList = useContext(TaskInfoContext)
 
-function TaskInfoWindow(taskInfo: TaskInfoWindowProps) {
-    const [taskTitle, setTaskTitle] = useState(taskInfo.task?.title)
-    const [taskDescription, setTaskDescription] = useState(taskInfo.task?.description)
+    if(taskList?.currentTask == undefined) {
+        return (
+            <div className='task-info-winow' style={{visibility:`visible`}}>
+            </div>
+        )
+    }
+
+    const [taskTitle, setTaskTitle] = useState<string | undefined>(taskList.currentTask.title)
+    const [taskDescription, setTaskDescription] = useState<string | undefined>(taskList.currentTask.description)
 
     useEffect(() => {
-        setTaskTitle(taskInfo.task?.title)
-        setTaskDescription(taskInfo.task?.description)
-    }, [taskInfo])
+        setTaskTitle(taskList.currentTask?.title)
+        setTaskDescription(taskList.currentTask?.description)
+    }, [taskList])
 
     return (
-        <div className='task-info-winow' style={{visibility:`${taskInfo.task == undefined? 'hidden': 'visible'}`}}>
+        <div className='task-info-winow'>
             <textarea className='task-info-winow task-info-winow__title' 
                 value={taskTitle}
                 onChange={(e) => setTaskTitle(e.target.value)}>

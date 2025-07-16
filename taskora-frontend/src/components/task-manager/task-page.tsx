@@ -1,11 +1,12 @@
-import { useState, useCallback, useEffect,} from 'react';
+import { useState, useCallback, useEffect, createContext} from 'react';
 import '../../styles.scss';
 import SideBar from './side-bar';
 import TaskInfoWindow from './task-info-window';
 import TaskList from './task-list';
 import InizializateTasks, { FindTask } from '../../scripts/dataTaskManager' 
 
-type Task = {
+
+export type TaskInfo = {
   id: number;
   title: string;
   description: string;
@@ -13,10 +14,23 @@ type Task = {
   completed: boolean;
 };
 
+type TaskPageType = {
+    tasks: Array<TaskInfo> | undefined;
+    currentTask: TaskInfo | undefined;
+}
+
+export const TaskInfoContext = createContext<TaskPageType | undefined>(undefined);
+
 function TaskPage() {
-    const [tasks, setTasks] = useState<Task[]>()
-    const [currentTask, setCurrentTask] = useState<Task>()
-    useEffect(() => {InizializateTasks().then((data) => {setTasks(data)})}, [])//С пустым массивом зависимостей выполнится только при монтировании
+    const [tasks, setTasks] = useState<Array<TaskInfo> | undefined>()
+    const [currentTask, setCurrentTask] = useState<TaskInfo | undefined>()
+    const contextValue: TaskPageType = {
+        tasks,
+        currentTask,
+    };
+
+    //С пустым массивом зависимостей выполнится только при монтировании
+    useEffect(() => {InizializateTasks().then((data) => {setTasks(data)})}, [])
 
     //Передаем данные о задаче в фокусе
     const targetTask = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
@@ -30,11 +44,13 @@ function TaskPage() {
 
 
     return (
-        <div className='task-page' onClick={event => targetTask(event)}>
-            <SideBar />
-            <TaskList tasks={tasks?tasks:undefined} />
-            <TaskInfoWindow task={currentTask?currentTask:undefined}/>
-        </div>    
+        <TaskInfoContext.Provider value={contextValue}>
+            <div className='task-page' onClick={event => targetTask(event)}>
+                <SideBar />
+                <TaskList />
+                <TaskInfoWindow />
+            </div>    
+        </TaskInfoContext.Provider>
     )
 }
 
