@@ -33,6 +33,15 @@ const ChangeStateTask = (state: boolean, id: number) => {
     }
 }
 
+const AddTask = (id: number, title : string, description : string, time : string) => {
+    fetch(`http://localhost:3002/tasks`,
+    { method: 'POST', body: JSON.stringify({id: String(id), 
+                                            title: title, 
+                                            description: description, 
+                                            time: time,
+                                            completed: false }) })
+}
+
 //Найти таск по id
 const FindTask = async (id: number) => {
     const response = await fetch(`http://localhost:3002/tasks/${id}`);
@@ -42,4 +51,4 @@ const FindTask = async (id: number) => {
 }
 
 export default InizializateTasks
-export {ChangeStateTask, ChangeTask, FindTask}
+export {ChangeStateTask, ChangeTask, FindTask, AddTask}

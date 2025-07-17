@@ -28,13 +28,11 @@ function TaskPage() {
     const [currentTaskInfo, setCurrentTaskInfo] = useState<TaskInfo | undefined>()
 
     const updateList = () => {
-        if(tasks != undefined) 
+        if(tasks) 
             setTasks([...tasks])
-
     }
 
-    const changeCurrentTask = useCallback((title: string, description: string) => {
-
+    const changeCurrentTask = (title: string, description: string) => {
         if(tasks != undefined) {
             const currentTaskIndex = tasks.findIndex(task => task.id === currentTaskInfo?.id)
             if(currentTaskIndex != undefined && currentTaskInfo != undefined) {
@@ -49,14 +47,14 @@ function TaskPage() {
             }
         }
 
-    }, [])
+    }
 
     //Передаем данные о задаче в фокусе
     const targetTask = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
         if(event.target instanceof HTMLElement) {
             if(event.target.classList.contains('task-list__task')) {
-
                 FindTask(Number((event.target.id).split('-')[1])).then((data) => setCurrentTaskInfo(data))
+
             }
         }
     }, [])

@@ -1,7 +1,8 @@
 import '../../styles.scss';
 import { useContext, useRef, useState, type FormEvent } from 'react';
 import { TaskInfoContext } from "./task-page";
-//import type { TaskInfo } from './task-page';
+import { AddTask } from '../../scripts/dataTaskManager';
+
 
 function CreateTaskForm() {
 
@@ -11,10 +12,17 @@ function CreateTaskForm() {
 
     const createTask = (event : FormEvent) => {
         event.preventDefault()
-        taskList?.tasks?.push({id: 100, title: taskTitle??'', description: '', time: '', completed: false})
-        taskList?.updateList()
-        if(inputTitleTaskRef.current){
-            inputTitleTaskRef.current.value = ''
+
+        if(taskList && taskList.tasks) {
+            const taskId = Number(taskList?.tasks[taskList.tasks?.length - 1].id) + 1
+            
+            taskList?.tasks?.push({id: taskId, title: taskTitle??'', description: '', time: '', completed: false})
+            AddTask(taskId, taskTitle??'',  '', '')
+            taskList?.updateList()
+            
+            if(inputTitleTaskRef.current){
+                inputTitleTaskRef.current.value = ''
+            }
         }
     }
 
