@@ -17,18 +17,19 @@
     padding: 7px;  
 }
 
+.task-list::-webkit-scrollbar { width: 0; }
+
 .task-list__section {
     width: 100%;
     border: none;
     padding: 0px;
     text-align: center;
+    overflow: visible;
 }
 
 .task-list__section--completed {
   margin-top: 40px;
 }
-
-.task-list__section::-webkit-scrollbar { width: 0; }
 
 .task-list__task {
   @include mixins.default-border;
