@@ -14,7 +14,7 @@ function CreateTaskForm() {
         event.preventDefault()
 
         if(taskList && taskList.tasks) {
-            const taskId = Number(taskList?.tasks[taskList.tasks?.length - 1].id) + 1
+            const taskId = String(Number(taskList?.tasks[taskList.tasks?.length - 1].id) + 1)
             
             taskList?.tasks?.push({id: taskId, title: taskTitle??'', description: '', time: '', completed: false})
             AddTask(taskId, taskTitle??'',  '', '')

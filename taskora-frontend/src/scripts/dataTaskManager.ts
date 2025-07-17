@@ -7,7 +7,7 @@ const InizializateTasks = async () => {
     return dataValues
 }
 
-const ChangeTask = (id: number, title : string, description : string, time : string) => {
+const ChangeTask = (id: string, title : string, description : string, time : string) => {
     fetch(`http://localhost:3002/tasks/${id}`, {
         method: 'PATCH',
         body: JSON.stringify({title: title, description: description, time: time}),
@@ -16,7 +16,7 @@ const ChangeTask = (id: number, title : string, description : string, time : str
 }
 
 //Смена состояний таска(активен/выполнен)
-const ChangeStateTask = (state: boolean, id: number) => {
+const ChangeStateTask = (state: boolean, id: string) => {
 
     if(state === true) {
         fetch(`http://localhost:3002/tasks/${id}`, {
@@ -33,9 +33,9 @@ const ChangeStateTask = (state: boolean, id: number) => {
     }
 }
 
-const AddTask = (id: number, title : string, description : string, time : string) => {
+const AddTask = (id: string, title : string, description : string, time : string) => {
     fetch(`http://localhost:3002/tasks`,
-    { method: 'POST', body: JSON.stringify({id: String(id), 
+    { method: 'POST', body: JSON.stringify({id: id, 
                                             title: title, 
                                             description: description, 
                                             time: time,
@@ -43,7 +43,7 @@ const AddTask = (id: number, title : string, description : string, time : string
 }
 
 //Найти таск по id
-const FindTask = async (id: number) => {
+const FindTask = async (id: string) => {
     const response = await fetch(`http://localhost:3002/tasks/${id}`);
     const dataValues = await response.json();
 

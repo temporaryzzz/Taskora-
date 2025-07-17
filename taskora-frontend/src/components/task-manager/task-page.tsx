@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, createContext} from 'react';
+import { useState, useEffect, createContext} from 'react';
 import '../../styles.scss';
 import SideBar from './side-bar';
 import TaskInfoWindow from './task-info-window';
@@ -7,7 +7,7 @@ import InizializateTasks, { FindTask, ChangeTask } from '../../scripts/dataTaskM
 
 
 export type TaskInfo = {
-  id: number;
+  id: string;
   title: string;
   description: string;
   time: string;
@@ -50,14 +50,13 @@ function TaskPage() {
     }
 
     //Передаем данные о задаче в фокусе
-    const targetTask = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    const targetTask = (event: React.MouseEvent<HTMLDivElement>) => {
         if(event.target instanceof HTMLElement) {
             if(event.target.classList.contains('task-list__task')) {
-                FindTask(Number((event.target.id).split('-')[1])).then((data) => setCurrentTaskInfo(data))
-
+                FindTask((event.target.id).split('-')[1]).then((data) => setCurrentTaskInfo(data))
             }
         }
-    }, [])
+    }
 
     const contextValue = {
         tasks, 
