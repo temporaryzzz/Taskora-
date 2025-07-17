@@ -18,6 +18,7 @@ type TaskPageType = {
     tasks: Array<TaskInfo> | undefined;
     currentTaskInfo: TaskInfo | undefined;
     changeCurrentTask: (title: string, description: string) => void
+    updateList: () => void
 }
 
 export const TaskInfoContext = createContext<TaskPageType | undefined>(undefined);
@@ -26,7 +27,13 @@ function TaskPage() {
     const [tasks, setTasks] = useState<Array<TaskInfo> | undefined>()
     const [currentTaskInfo, setCurrentTaskInfo] = useState<TaskInfo | undefined>()
 
-    const changeCurrentTask = (title: string, description: string) => {
+    const updateList = () => {
+        if(tasks != undefined) 
+            setTasks([...tasks])
+
+    }
+
+    const changeCurrentTask = useCallback((title: string, description: string) => {
 
         if(tasks != undefined) {
             const currentTaskIndex = tasks.findIndex(task => task.id === currentTaskInfo?.id)
@@ -37,21 +44,12 @@ function TaskPage() {
                 tasks[currentTaskIndex].title = title
                 tasks[currentTaskIndex].description = description
                 ChangeTask(currentTaskInfo.id, title, description, currentTaskInfo.time)
-                setTasks([...tasks])
+                updateList()
                 setCurrentTaskInfo(tasks[currentTaskIndex])
             }
         }
 
-    }
-
-    const contextValue = {
-        tasks, 
-        currentTaskInfo, 
-        changeCurrentTask
-    }
-
-    //С пустым массивом зависимостей выполнится только при монтировании
-    useEffect(() => {InizializateTasks().then((data) => {setTasks(data)})}, [])
+    }, [])
 
     //Передаем данные о задаче в фокусе
     const targetTask = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
@@ -62,6 +60,16 @@ function TaskPage() {
             }
         }
     }, [])
+
+    const contextValue = {
+        tasks, 
+        currentTaskInfo, 
+        changeCurrentTask,
+        updateList
+    }
+
+    //С пустым массивом зависимостей выполнится только при монтировании
+    useEffect(() => {InizializateTasks().then((data) => {setTasks(data)})}, [])
 
     return (
         <TaskInfoContext.Provider value={contextValue}>

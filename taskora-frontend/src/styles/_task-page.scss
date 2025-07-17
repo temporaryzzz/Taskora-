@@ -138,3 +138,14 @@
   outline:none;
   resize: none;
 }
+
+//мб потом вынести в отдельный файл с формами
+.create-task {
+  width: 95%;
+  border: none;
+  background-color: transparent;
+}
+
+.create-task_button {
+  display: none;
+}
