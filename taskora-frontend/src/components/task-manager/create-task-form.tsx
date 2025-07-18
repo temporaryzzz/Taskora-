@@ -13,15 +13,16 @@ function CreateTaskForm() {
     const createTask = (event : FormEvent) => {
         event.preventDefault()
 
-        if(taskList && taskList.tasks) {
-            const taskId = String(Number(taskList?.tasks[taskList.tasks?.length - 1].id) + 1)
+        if((/\S/.test(taskTitle??''))) {
             
-            taskList?.tasks?.push({id: taskId, title: taskTitle??'', description: '', time: '', completed: false})
-            AddTask(taskId, taskTitle??'',  '', '')
-            taskList?.updateList()
-            
-            if(inputTitleTaskRef.current){
-                inputTitleTaskRef.current.value = ''
+            if(taskList && taskList.tasks) {
+                const taskId = String(Number(taskList?.tasks[taskList.tasks?.length - 1].id) + 1)
+                
+                taskList?.tasks?.push({id: taskId, title: taskTitle??'', description: '', time: '', completed: false})
+                AddTask(taskId, taskTitle??'',  '', '')
+                taskList?.updateList()
+                
+                if(inputTitleTaskRef.current) inputTitleTaskRef.current.value = ''
             }
         }
     }
