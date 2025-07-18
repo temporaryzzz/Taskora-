@@ -21,11 +21,19 @@
 }
 
 @mixin default-border($d: none){
-    border: 2px solid vars.$light-gray;
-    border-radius: 7px;
+  border: 2px solid vars.$light-gray;
+  border-radius: 7px;
 }
 
 @mixin overflow-default {
-    overflow-x: hidden;
-    overflow-y:scroll;
+  overflow-x: hidden;
+  overflow-y:scroll;
+}
+
+@mixin textarea-default {
+  height: fit-content;
+  text-align: start;
+  border: none;
+  outline:none;
+  resize: none;
 }
