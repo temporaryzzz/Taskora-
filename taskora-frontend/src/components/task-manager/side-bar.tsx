@@ -7,13 +7,15 @@ function SideBar() {
     
 
     return (
-        <ul className='side-bar'> 
-            <SideBarButton active={true}/>
-            <SideBarButton active={false}/>
-            <SideBarButton active={false}/>
-            <SideBarButton active={false}/>
-            <SideBarButton active={false}/>
-        </ul>    
+        <div className='side-bar'> 
+            <ul className='side-bar__items-list'>
+                <SideBarButton active={true}/>
+                <SideBarButton active={false}/>
+                <SideBarButton active={false}/>
+                <SideBarButton active={false}/>
+                <SideBarButton active={false}/>
+            </ul>
+        </div>    
     )
 }
 

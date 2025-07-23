@@ -1,13 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { ChangeStateTask } from '../../scripts/dataTaskManager';
 import '../../styles.scss';
 import type { TaskInfo } from './task-page';
+import { TaskInfoContext } from "./task-page";
 
 function Task(task: TaskInfo) {
     const stateClasses ={
         defaultClass: "task-list__task",
         completedClass: "task-list__task--completed"
     }
+
+    const taskList = useContext(TaskInfoContext)
 
     const taskRef = useRef<HTMLLIElement>(null);
     const taskCheckbox = useRef<HTMLInputElement>(null);
@@ -47,7 +50,7 @@ function Task(task: TaskInfo) {
     useEffect(InizializateStateTask, [task])
 
     return (
-        <li className='task-list__task' ref={taskRef} id={`task-${task.id}`}> 
+        <li className='task-list__task' ref={taskRef} id={`task-${task.id}`} onClick={event => taskList?.setCurrentTask(event)}> 
             <input type='checkbox' id='completed' ref={taskCheckbox} onChange={setStateTask}></input>
             <h4>{task.title}</h4> 
         </li>    

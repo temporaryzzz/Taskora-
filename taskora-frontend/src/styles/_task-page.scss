@@ -81,7 +81,12 @@
   padding: 5px;
 }
 
-.side-bar__button {
+.side-bar__items-list {
+  padding: 10px;
+  border-bottom: 1px solid vars.$light-gray;
+}
+
+.side-bar__item {
   display: flex;
   background-color: transparent;
   border-radius: 7px;
@@ -93,11 +98,11 @@
   padding: 5px;
 }
 
-.side-bar__button:hover {
+.side-bar__item:hover {
   background-color: vars.$light-gray;
 }
 
-.side-bar__button--active {
+.side-bar__item--active {
   background-color: vars.$ultra-light-gray;
 }
 
@@ -123,8 +128,9 @@
 .task-info-window__title {
   @include mixins.textarea-default;
   width: 100%;
-  height: 50px;
+  min-height: 50px;
   font-size: larger;
+  font-weight: 700;
   background-color: transparent;
 }
 

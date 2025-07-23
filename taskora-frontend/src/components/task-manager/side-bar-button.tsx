@@ -10,11 +10,11 @@ function SideBarButton(props: SideBarButton) {
 
     const setActiveButton = (active: boolean) => {
         if(active == true) {
-            if (activeRef.current) activeRef.current.classList.add("side-bar__button--active");
+            if (activeRef.current) activeRef.current.classList.add("side-bar__item--active");
         }
 
         else {
-            if (activeRef.current) activeRef.current.classList.remove("side-bar__button--active");
+            if (activeRef.current) activeRef.current.classList.remove("side-bar__item--active");
         }
     }
 
@@ -22,7 +22,7 @@ function SideBarButton(props: SideBarButton) {
 
     return (
         <li>
-            <li className='side-bar__button' ref={activeRef}>
+            <li className='side-bar__item' ref={activeRef}>
                 <div className='icon icon--inbox-list'></div>
                 <h5>TASK-LIST</h5> 
             </li>    

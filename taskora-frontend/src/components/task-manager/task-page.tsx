@@ -17,6 +17,7 @@ export type TaskInfo = {
 type TaskPageType = {
     tasks: Array<TaskInfo> | undefined;
     currentTaskInfo: TaskInfo | undefined;
+    setCurrentTask: (event: React.MouseEvent<HTMLLIElement>) => void
     changeCurrentTask: (title: string, description: string, time: string) => void
     updateList: () => void
 }
@@ -51,17 +52,16 @@ function TaskPage() {
     }
 
     //Передаем данные о задаче в фокусе
-    const targetTask = (event: React.MouseEvent<HTMLDivElement>) => {
+    const setCurrentTask = (event: React.MouseEvent<HTMLLIElement>) => {
         if(event.target instanceof HTMLElement) {
-            if(event.target.classList.contains('task-list__task')) {
-                FindTask((event.target.id).split('-')[1]).then((data) => setCurrentTaskInfo(data))
-            }
+            FindTask((event.target.id).split('-')[1]).then((data) => setCurrentTaskInfo(data))
         }
     }
 
     const contextValue = {
         tasks, 
-        currentTaskInfo, 
+        currentTaskInfo,
+        setCurrentTask, 
         changeCurrentTask,
         updateList
     }
@@ -71,7 +71,7 @@ function TaskPage() {
 
     return (
         <TaskInfoContext.Provider value={contextValue}>
-            <div className='task-page' onClick={event => targetTask(event)}>
+            <div className='task-page'>
                 <SideBar />
                 <TaskList />
                 <TaskInfoWindow />
