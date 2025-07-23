@@ -1,4 +1,4 @@
-import {useContext} from "react";
+import {useContext, useRef, type RefObject} from "react";
 import '../../styles.scss';
 import Task from './task';
 import type { TaskInfo } from './task-page';
@@ -22,6 +22,18 @@ const SortedTasks = ({ tasks } : {tasks : Array<TaskInfo> | undefined}) => {
 function TaskList() {
 
     const taskList = useContext(TaskInfoContext)
+    const taskListCompletedRef = useRef<HTMLUListElement>(null)
+
+    const changeVisibleList = (list: RefObject<HTMLUListElement | null>) => {
+        if(list.current) {
+            if(list.current.style.display == 'none') {
+                list.current.style.display = 'block'
+            }
+            else {
+                list.current.style.display = 'none'
+            }
+        }
+    }
 
     if(taskList != undefined) {
 
@@ -29,13 +41,17 @@ function TaskList() {
             <div className='task-list'>
                 <CreateTaskForm />
                 
-                <div className='task-list task-list__section' id='inbox-list'>
+                <ul className='task-list__section' id='inbox-list'>
                     <SortedTasks tasks={taskList.tasks?.filter(task => task.completed === false)}/>
-                </div>
+                </ul>
 
-                <div className='task-list task-list__section task-list__section--completed' id='completed-list'>
+                <span className='task-list__title' onClick={() => changeVisibleList(taskListCompletedRef)}>
+                    <h5 style={{float: 'left', fontWeight: 700}}>Выполнено</h5>
+                </span>
+
+                <ul className='task-list__section task-list__section--completed' ref={taskListCompletedRef} id='completed-list'>
                     <SortedTasks tasks={taskList.tasks?.filter(task => task.completed === true)}/>
-                </div>
+                </ul>
             </div>    
         )
     }
