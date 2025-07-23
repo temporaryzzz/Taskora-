@@ -7,7 +7,7 @@ import { AddTask } from '../../scripts/dataTaskManager';
 function CreateTaskForm() {
 
     const taskList = useContext(TaskInfoContext)
-    const inputTitleTaskRef = useRef<HTMLTextAreaElement>(null)
+    const inputTitleTaskRef = useRef<HTMLInputElement>(null)
     const [taskTitle, setTaskTitile] = useState<string>()
 
     const createTask = (event : FormEvent) => {
@@ -29,11 +29,11 @@ function CreateTaskForm() {
 
     return (
         <form className='create-task' onSubmit={(event) => createTask(event)}>
-            <textarea className='create-task create-task__title-area'
+            <input className='create-task create-task__title-area'
                     placeholder='Добавить задачу...' 
                     ref={inputTitleTaskRef} 
                     onChange={(e) => {setTaskTitile(e.target.value)}}>
-            </textarea>    
+            </input>    
         </form>
     )
 }

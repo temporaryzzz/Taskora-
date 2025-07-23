@@ -50,7 +50,6 @@ function Task(task: TaskInfo) {
         <div className='task-list__task' ref={taskRef} id={`task-${task.id}`}> 
             <input type='checkbox' id='completed' ref={taskCheckbox} onChange={setStateTask}></input>
             <h4>{task.title}</h4> 
-            <p>{task.description}</p>
         </div>    
     )
 }

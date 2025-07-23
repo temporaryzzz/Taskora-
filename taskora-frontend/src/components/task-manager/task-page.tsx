@@ -17,7 +17,7 @@ export type TaskInfo = {
 type TaskPageType = {
     tasks: Array<TaskInfo> | undefined;
     currentTaskInfo: TaskInfo | undefined;
-    changeCurrentTask: (title: string, description: string) => void
+    changeCurrentTask: (title: string, description: string, time: string) => void
     updateList: () => void
 }
 
@@ -32,7 +32,7 @@ function TaskPage() {
             setTasks([...tasks])
     }
 
-    const changeCurrentTask = (title: string, description: string) => {
+    const changeCurrentTask = (title: string, description: string, time: string) => {
         if(tasks != undefined) {
             const currentTaskIndex = tasks.findIndex(task => task.id === currentTaskInfo?.id)
             if(currentTaskIndex != undefined && currentTaskInfo != undefined) {
@@ -41,7 +41,8 @@ function TaskPage() {
                 //Нужно для того чтобы своевременно обновился contextValue
                 tasks[currentTaskIndex].title = title
                 tasks[currentTaskIndex].description = description
-                ChangeTask(currentTaskInfo.id, title, description, currentTaskInfo.time)
+                tasks[currentTaskIndex].time = time
+                ChangeTask(currentTaskInfo.id, title, description, time)
                 updateList()
                 setCurrentTaskInfo(tasks[currentTaskIndex])
             }

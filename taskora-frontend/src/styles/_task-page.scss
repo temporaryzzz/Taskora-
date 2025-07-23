@@ -38,7 +38,7 @@
   color: vars.$fgColor-default;
   margin-top: 5px;
   width: 100%;
-  min-height: 40px;
+  height: 40px;
   overflow: hidden;
   align-items: center;
   text-decoration: none;
@@ -109,7 +109,7 @@
   background-repeat: no-repeat;
 }
 
-.task-info-winow {
+.task-info-window {
   @include mixins.default-border;
   height: 95vh;
   width: 29vw;
@@ -117,7 +117,7 @@
   margin-left: 5px;
 }
 
-.task-info-winow__title {
+.task-info-window__title {
   @include mixins.textarea-default;
   width: 100%;
   height: 50px;
@@ -125,13 +125,30 @@
   background-color: transparent;
 }
 
-.task-info-winow__description {
+.task-info-window__description {
   @include mixins.textarea-default;
   width: 100%;
-  height: fit-content;
+  min-height: 600px;
   font-size: smaller;
   margin-top: 10px;
   background-color: transparent;
+}
+
+.task-info-window__date {
+  background-color: transparent;
+  margin-top: 10px;
+  width: fit-content;
+  height: fit-content;
+  color: vars.$bright-blue;
+  font-size: smaller;
+  float: left;
+  outline: none;
+  border: none;
+}
+
+.task-info-window__date:hover {
+  background-color: vars.$light-gray;
+  cursor: pointer;
 }
 
 //мб потом вынести в отдельный файл с формами
