@@ -9,7 +9,7 @@ function Task(task: TaskInfo) {
         completedClass: "task-list__task--completed"
     }
 
-    const taskRef = useRef<HTMLDivElement>(null);
+    const taskRef = useRef<HTMLLIElement>(null);
     const taskCheckbox = useRef<HTMLInputElement>(null);
     const [taskCompletedState, setTaskCompletedState] = useState(task.completed)
 
@@ -47,10 +47,10 @@ function Task(task: TaskInfo) {
     useEffect(InizializateStateTask, [task])
 
     return (
-        <div className='task-list__task' ref={taskRef} id={`task-${task.id}`}> 
+        <li className='task-list__task' ref={taskRef} id={`task-${task.id}`}> 
             <input type='checkbox' id='completed' ref={taskCheckbox} onChange={setStateTask}></input>
             <h4>{task.title}</h4> 
-        </div>    
+        </li>    
     )
 }
 

@@ -7,14 +7,13 @@ function SideBar() {
     
 
     return (
-        <div className='side-bar'> 
-            <h4>SIDE-BAR</h4> 
+        <ul className='side-bar'> 
             <SideBarButton active={true}/>
             <SideBarButton active={false}/>
             <SideBarButton active={false}/>
             <SideBarButton active={false}/>
             <SideBarButton active={false}/>
-        </div>    
+        </ul>    
     )
 }
 

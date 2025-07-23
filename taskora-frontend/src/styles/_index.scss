@@ -48,7 +48,7 @@ button,
 fieldset,
 select,
 textarea {
-  border-radius: 8px;
+  border-radius: 7px;
   transition-duration: 0.2s;
 }
 
@@ -94,6 +94,10 @@ a {
 }
 a:hover {
   color: vars.$muted-blue;
+}
+
+h5 {
+  margin: 0;
 }
 
 button {

@@ -6,7 +6,7 @@ type SideBarButton = {
 };
 
 function SideBarButton(props: SideBarButton) {
-    const activeRef = useRef<HTMLButtonElement>(null);
+    const activeRef = useRef<HTMLLIElement>(null);
 
     const setActiveButton = (active: boolean) => {
         if(active == true) {
@@ -21,10 +21,13 @@ function SideBarButton(props: SideBarButton) {
     useEffect(() => {setActiveButton(props.active)}, [props.active])
 
     return (
-        <button className='side-bar__button' ref={activeRef}>
-            <div className='side-bar__icon side-bar__icon--inbox-list'></div>
-            <h5>TASK-LIST</h5> 
-        </button>    
+        <li>
+            <li className='side-bar__button' ref={activeRef}>
+                <div className='icon icon--inbox-list'></div>
+                <h5>TASK-LIST</h5> 
+            </li>    
+        </li>
+
     )
 }
 

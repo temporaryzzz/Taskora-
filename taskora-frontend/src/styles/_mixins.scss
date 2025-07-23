@@ -20,11 +20,6 @@
   }
 }
 
-@mixin default-border($d: none){
-  border: 2px solid vars.$light-gray;
-  border-radius: 7px;
-}
-
 @mixin overflow-default {
   overflow-x: hidden;
   overflow-y:scroll;
