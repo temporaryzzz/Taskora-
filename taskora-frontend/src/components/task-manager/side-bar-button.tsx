@@ -21,12 +21,10 @@ function SideBarButton(props: SideBarButton) {
     useEffect(() => {setActiveButton(props.active)}, [props.active])
 
     return (
-        <li>
-            <li className='side-bar__item' ref={activeRef}>
-                <div className='icon icon--inbox-list'></div>
-                <h5>TASK-LIST</h5> 
-            </li>    
-        </li>
+        <li className='side-bar__item' ref={activeRef}>
+            <div className='icon icon--inbox-list'></div>
+            <h5>TASK-LIST</h5> 
+        </li>    
 
     )
 }

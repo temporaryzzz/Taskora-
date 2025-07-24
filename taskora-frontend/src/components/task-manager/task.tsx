@@ -47,7 +47,7 @@ function Task(task: TaskInfo) {
 
     }
 
-    useEffect(InizializateStateTask, [task])
+    useEffect(InizializateStateTask, [])
 
     return (
         <li className='task-list__task' ref={taskRef} id={`task-${task.id}`} onClick={event => taskList?.setCurrentTask(event, task.id)}> 
