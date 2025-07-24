@@ -50,9 +50,9 @@ function Task(task: TaskInfo) {
     useEffect(InizializateStateTask, [task])
 
     return (
-        <li className='task-list__task' ref={taskRef} id={`task-${task.id}`} onClick={event => taskList?.setCurrentTask(event)}> 
+        <li className='task-list__task' ref={taskRef} id={`task-${task.id}`} onClick={event => taskList?.setCurrentTask(event, task.id)}> 
             <input type='checkbox' id='completed' ref={taskCheckbox} onChange={setStateTask}></input>
-            <h4>{task.title}</h4> 
+            <h4 onClick={event => taskList?.setCurrentTask(event, task.id)}>{task.title}</h4> 
         </li>    
     )
 }

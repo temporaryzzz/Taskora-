@@ -17,7 +17,7 @@ export type TaskInfo = {
 type TaskPageType = {
     tasks: Array<TaskInfo> | undefined;
     currentTaskInfo: TaskInfo | undefined;
-    setCurrentTask: (event: React.MouseEvent<HTMLLIElement>) => void
+    setCurrentTask: (event: React.MouseEvent<HTMLLIElement | HTMLHeadingElement>, id: string) => void
     changeCurrentTask: (title: string, description: string, time: string) => void
     updateList: () => void
 }
@@ -52,9 +52,9 @@ function TaskPage() {
     }
 
     //Передаем данные о задаче в фокусе
-    const setCurrentTask = (event: React.MouseEvent<HTMLLIElement>) => {
+    const setCurrentTask = (event: React.MouseEvent<HTMLLIElement | HTMLHeadElement>, id: string) => {
         if(event.target instanceof HTMLElement) {
-            FindTask((event.target.id).split('-')[1]).then((data) => setCurrentTaskInfo(data))
+            FindTask(id).then((data) => setCurrentTaskInfo(data))
         }
     }
 
