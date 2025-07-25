@@ -28,8 +28,8 @@ function CreateTaskForm() {
     }
 
     return (
-        <form className='create-task' onSubmit={(event) => createTask(event)}>
-            <input className='create-task__title-input'
+        <form className='create-task-form' onSubmit={(event) => createTask(event)}>
+            <input className='create-task-form__title-input'
                     placeholder='Добавить задачу...' 
                     ref={inputTitleTaskRef} 
                     onChange={(e) => {setTaskTitile(e.target.value)}}>

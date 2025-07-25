@@ -52,7 +52,7 @@ function TaskPage() {
     }
 
     //Передаем данные о задаче в фокусе
-    const setCurrentTask = (event: React.MouseEvent<HTMLLIElement | HTMLHeadElement>, id: string) => {
+    const setCurrentTask = (event: React.MouseEvent<HTMLLIElement | HTMLHeadingElement>, id: string) => {
         if(event.target instanceof HTMLElement) {
             FindTask(id).then((data) => setCurrentTaskInfo(data))
         }

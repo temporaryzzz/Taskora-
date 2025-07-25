@@ -4,6 +4,7 @@
 
 .task-page {
   display: flex;
+  position: relative;
 }
 
 .task-list {
@@ -48,6 +49,7 @@
   overflow: hidden;
 }
 
+
 .task-list__task:hover {
   background-color: vars.$ultra-light-gray;
   border-radius: 7px;
@@ -64,6 +66,11 @@
   color: vars.$strong-gray;
   margin-left: 10px;
   font-size: 12px;
+}
+
+.task-list__task--active {
+  background-color: vars.$light-gray;
+  border-radius: 7px;
 }
 
 .task-list__task--completed {
@@ -123,6 +130,7 @@
   width: 30vw;
   padding: 5px;
   outline: none;
+  position: relative;
 }
 
 .task-info-window__title {
@@ -165,24 +173,4 @@
   height: 400px;
   background-color: vars.$light-gray;
   bottom: 60px;
-}
-
-//мб потом вынести в отдельный файл с формами
-.create-task {
-  border: none;
-  width: 98%;
-  margin-left: 1%;
-  margin-right: 1%;
-  margin-bottom: 2%;
-  padding: 5px;
-  background-color: transparent;
-}
-
-.create-task__title-input {
-  @include mixins.textarea-default;
-  border-radius: 4px;
-  align-content: center;
-  padding: 10px;
-  height: 35px;
-  background-color: vars.$light-gray;
 }

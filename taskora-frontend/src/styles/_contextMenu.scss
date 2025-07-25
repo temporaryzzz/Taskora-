@@ -1,0 +1,16 @@
+@use "index";
+@use "vars";
+@use "mixins";
+
+.context-menu {
+  background-color: black;
+  display: none;
+  width: 150px;
+  height: 250px;
+  position: absolute;
+  z-index: 100;
+}
+ 
+.context-menu--active {
+  display: block;
+}

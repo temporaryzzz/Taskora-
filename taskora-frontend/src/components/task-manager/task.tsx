@@ -3,11 +3,13 @@ import { ChangeStateTask } from '../../scripts/dataTaskManager';
 import '../../styles.scss';
 import type { TaskInfo } from './task-page';
 import { TaskInfoContext } from "./task-page";
+import ContextMenu from '../contextMenu';
 
 function Task(task: TaskInfo) {
     const stateClasses ={
         defaultClass: "task-list__task",
-        completedClass: "task-list__task--completed"
+        completedClass: "task-list__task--completed",
+        activeClass: "task-list__task--active"
     }
 
     const taskList = useContext(TaskInfoContext)
@@ -15,6 +17,9 @@ function Task(task: TaskInfo) {
     const taskRef = useRef<HTMLLIElement>(null);
     const taskCheckbox = useRef<HTMLInputElement>(null);
     const [taskCompletedState, setTaskCompletedState] = useState(task.completed)
+    const [contextMenuActive, setContextMenuActive] = useState(false)
+    const [mouseX, setMouseX] = useState<number>(0)
+    const [mouseY, setMouseY] = useState<number>(0)
 
     const InizializateStateTask = () => {
         if(task.completed === true) {
@@ -47,12 +52,44 @@ function Task(task: TaskInfo) {
 
     }
 
+    const setActiveClass = () => {
+        if(taskRef.current) {
+            if(taskList?.currentTaskInfo?.id == task.id) {
+                taskRef.current.classList.add(stateClasses.activeClass)
+            }
+            else {
+                taskRef.current.classList.remove(stateClasses.activeClass)
+            }
+        }
+    }
+
+    const OnMouseUp = (event: React.MouseEvent<HTMLLIElement | HTMLHeadingElement>) => {
+        taskList?.setCurrentTask(event, task.id)
+        setContextMenuActive(false)
+    }
+
+    const OnContextMenu = (event: React.MouseEvent<HTMLLIElement | HTMLHeadingElement>) => {
+        event.preventDefault()
+        setMouseX(event.clientX - 297)//Это ширина side-bar(потом перепишу как то более адекватно)
+        setMouseY(event.clientY - 59)//Это высота header
+        setContextMenuActive(!contextMenuActive)
+    }
+
+    document.addEventListener('mousedown', () => { setContextMenuActive(false) })
+
     useEffect(InizializateStateTask, [])
+    useEffect(setActiveClass, [taskList?.currentTaskInfo])
 
     return (
-        <li className='task-list__task' ref={taskRef} id={`task-${task.id}`} onClick={event => taskList?.setCurrentTask(event, task.id)}> 
+        <li className='task-list__task' 
+            ref={taskRef} id={`task-${task.id}`} 
+            onMouseUp={event => OnMouseUp(event)} 
+            onContextMenu={event => OnContextMenu(event)}> 
+            
             <input type='checkbox' id='completed' ref={taskCheckbox} onChange={setStateTask}></input>
-            <h4 onClick={event => taskList?.setCurrentTask(event, task.id)}>{task.title}</h4> 
+            <h4 onMouseUp={event => OnMouseUp(event)}>{task.title}</h4>
+            <ContextMenu active={contextMenuActive} x={mouseX} y={mouseY}/> 
+
         </li>    
     )
 }

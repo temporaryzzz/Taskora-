@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import '../../styles.scss';
 import { TaskInfoContext } from "./task-page";
 
@@ -13,6 +13,7 @@ function TaskInfoWindow() {
     const [taskTitle, setTaskTitle] = useState<string | undefined>(currentTaskInfo?.title)
     const [taskDescription, setTaskDescription] = useState<string | undefined>(currentTaskInfo?.description)
     const [taskTime, setTaskTime] = useState<string | undefined>(currentTaskInfo?.time)
+    const dateMenuRef = useRef<HTMLDivElement>(null)
 
     //Обновление данных
     useEffect(() => {
@@ -21,9 +22,21 @@ function TaskInfoWindow() {
         setTaskTime(currentTaskInfo?.time)
     }, [currentTaskInfo])
 
+    const changeVisibleDateMenu = () => {
+        if(dateMenuRef.current) {
+            if(dateMenuRef.current.style.display == 'none') {
+                dateMenuRef.current.style.display = 'block'
+            }
+
+            else {
+                dateMenuRef.current.style.display = 'none'
+            }
+        }
+    }
+
     return (
         <div className='task-info-window' style={{visibility: `${currentTaskInfo == undefined?'hidden':'visible'}`}}>
-            <textarea className='task-info-window task-info-window__title' 
+            <textarea className='task-info-window__title' 
                 value={taskTitle}
                 onChange={(e) => {
                     setTaskTitle(e.target.value)
@@ -31,7 +44,7 @@ function TaskInfoWindow() {
                 }}> 
             </textarea>
 
-            <textarea className='task-info-window task-info-window__description' 
+            <textarea className='task-info-window__description' 
                 value={taskDescription}
                 placeholder='Добавьте описание...'
                                 onChange={(e) => {
@@ -39,10 +52,18 @@ function TaskInfoWindow() {
                     changeCurrentTask(taskTitle??'', e.target.value, taskTime??'')
                 }}>
             </textarea>
+            
+            <div className='task-info-window__menu-date' style={{display: 'none'}} ref={dateMenuRef}>
+                <input type='time'></input>
+                <input type='date'></input>
+            </div>
 
-            <span className='task-info-window task-info-window__date'>
+            <button 
+                className='task-info-window__date'
+                onFocus={() => {changeVisibleDateMenu()}}
+                onBlur={() => {changeVisibleDateMenu()}}>
                 <p>четверг, 24 июля, {taskTime}</p>
-            </span>
+            </button>
         </div>    
     )
 }

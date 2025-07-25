@@ -65,12 +65,13 @@ input[type='checkbox'] {
 }
 
 input[type='checkbox']:checked {
-  border: 2px solid gray;
-  background-color: gray;
+  border: 2px solid vars.$light-gray;
+  background-color: vars.$ultra-light-gray;
 }
 
 input[type='checkbox']::after {
   content: "\2713";
+  color: vars.$bgColor-default;
   width: 0px;
   height: 0px;
   transition: 500ms;
