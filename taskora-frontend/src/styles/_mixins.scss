@@ -28,6 +28,8 @@
 @mixin textarea-default {
   text-align: start;
   border: none;
+  border-radius: 0px;
+  padding: 10px;
   outline:none;
   resize: none;
 }

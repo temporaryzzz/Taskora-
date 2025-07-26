@@ -50,5 +50,9 @@ const FindTask = async (id: string) => {
     return dataValues
 }
 
+const DeleteTask = (id: string) => {
+    fetch(`http://localhost:3002/tasks/${id}`, {method: 'DELETE'})
+}
+
 export default InizializateTasks
-export {ChangeStateTask, ChangeTask, FindTask, AddTask}
+export {ChangeStateTask, ChangeTask, FindTask, AddTask, DeleteTask}

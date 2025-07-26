@@ -12,7 +12,7 @@ function Task(task: TaskInfo) {
         activeClass: "task-list__task--active"
     }
 
-    const taskList = useContext(TaskInfoContext)
+    const taskManagerContext = useContext(TaskInfoContext)
 
     const taskRef = useRef<HTMLLIElement>(null);
     const taskCheckbox = useRef<HTMLInputElement>(null);
@@ -54,7 +54,7 @@ function Task(task: TaskInfo) {
 
     const setActiveClass = () => {
         if(taskRef.current) {
-            if(taskList?.currentTaskInfo?.id == task.id) {
+            if(taskManagerContext?.currentTaskInfo?.id == task.id) {
                 taskRef.current.classList.add(stateClasses.activeClass)
             }
             else {
@@ -64,13 +64,13 @@ function Task(task: TaskInfo) {
     }
 
     const OnMouseUp = (event: React.MouseEvent<HTMLLIElement | HTMLHeadingElement>) => {
-        taskList?.setCurrentTask(event, task.id)
+        taskManagerContext?.setCurrentTask(event, task.id)
         setContextMenuActive(false)
     }
 
     const OnContextMenu = (event: React.MouseEvent<HTMLLIElement | HTMLHeadingElement>) => {
         event.preventDefault()
-        setMouseX(event.clientX - 297)//Это ширина side-bar(потом перепишу как то более адекватно)
+        setMouseX(event.clientX - 297)//Это ширина side-bar(потом привяжу к реальной ширине)
         setMouseY(event.clientY - 59)//Это высота header
         setContextMenuActive(!contextMenuActive)
     }
@@ -78,7 +78,7 @@ function Task(task: TaskInfo) {
     document.addEventListener('mousedown', () => { setContextMenuActive(false) })
 
     useEffect(InizializateStateTask, [])
-    useEffect(setActiveClass, [taskList?.currentTaskInfo])
+    useEffect(setActiveClass, [taskManagerContext?.currentTaskInfo])
 
     return (
         <li className='task-list__task' 

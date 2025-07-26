@@ -47,12 +47,13 @@
   width: 100%;
   height: 40px;
   overflow: hidden;
+  flex-wrap: nowrap;
 }
 
 
 .task-list__task:hover {
   background-color: vars.$ultra-light-gray;
-  border-radius: 7px;
+  border-radius: vars.$border-radius-default;
   border: none;
 }
 
@@ -62,15 +63,9 @@
   font-size: 14px;
 }
 
-.task-list__task p {
-  color: vars.$strong-gray;
-  margin-left: 10px;
-  font-size: 12px;
-}
-
 .task-list__task--active {
   background-color: vars.$light-gray;
-  border-radius: 7px;
+  border-radius: vars.$border-radius-default;
 }
 
 .task-list__task--completed {
@@ -96,7 +91,7 @@
 .side-bar__item {
   display: flex;
   background-color: transparent;
-  border-radius: 7px;
+  border-radius: vars.$border-radius-default;
   color: vars.$fgColor-default;
   width: 100%;
   height: 40px;
@@ -128,7 +123,6 @@
 .task-info-window {
   height: 95vh;
   width: 30vw;
-  padding: 5px;
   outline: none;
   position: relative;
 }
@@ -136,6 +130,7 @@
 .task-info-window__title {
   @include mixins.textarea-default;
   width: 100%;
+  border-bottom: 1px solid vars.$ultra-light-gray;
   min-height: 50px;
   font-size: larger;
   font-weight: 700;

@@ -21,7 +21,7 @@ const SortedTasks = ({ tasks } : {tasks : Array<TaskInfo> | undefined}) => {
 
 function TaskList() {
 
-    const taskList = useContext(TaskInfoContext)
+    const taskManagerContext = useContext(TaskInfoContext)
     const taskListCompletedRef = useRef<HTMLUListElement>(null)
 
     const changeVisibleList = (list: RefObject<HTMLUListElement | null>) => {
@@ -35,14 +35,14 @@ function TaskList() {
         }
     }
 
-    if(taskList != undefined) {
+    if(taskManagerContext != undefined) {
 
         return (
             <div className='task-list'>
                 <CreateTaskForm />
                 
                 <ul className='task-list__section' id='inbox-list'>
-                    <SortedTasks tasks={taskList.tasks?.filter(task => task.completed === false)}/>
+                    <SortedTasks tasks={taskManagerContext.tasks?.filter(task => task.completed === false)}/>
                 </ul>
 
                 <span className='task-list__title' onClick={() => changeVisibleList(taskListCompletedRef)}>
@@ -50,7 +50,7 @@ function TaskList() {
                 </span>
 
                 <ul className='task-list__section task-list__section--completed' ref={taskListCompletedRef} id='completed-list'>
-                    <SortedTasks tasks={taskList.tasks?.filter(task => task.completed === true)}/>
+                    <SortedTasks tasks={taskManagerContext.tasks?.filter(task => task.completed === true)}/>
                 </ul>
             </div>    
         )
