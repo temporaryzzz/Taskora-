@@ -16,6 +16,7 @@ function Task(task: TaskInfo) {
 
     const taskRef = useRef<HTMLLIElement>(null);
     const taskCheckbox = useRef<HTMLInputElement>(null);
+
     const [taskCompletedState, setTaskCompletedState] = useState(task.completed)
     const [contextMenuActive, setContextMenuActive] = useState(false)
     const [mouseX, setMouseX] = useState<number>(0)
@@ -70,9 +71,14 @@ function Task(task: TaskInfo) {
 
     const OnContextMenu = (event: React.MouseEvent<HTMLLIElement | HTMLHeadingElement>) => {
         event.preventDefault()
-        setMouseX(event.clientX - 297)//Это ширина side-bar(потом привяжу к реальной ширине)
-        setMouseY(event.clientY - 59)//Это высота header
-        setContextMenuActive(!contextMenuActive)
+        const taskListElement = document.querySelector('.task-list')
+        
+        if(taskListElement) {
+            const {left, top} = taskListElement.getBoundingClientRect()
+            setMouseX(event.clientX - (left - taskListElement.scrollLeft)) 
+            setMouseY(event.clientY - (top - taskListElement.scrollTop))
+            setContextMenuActive(!contextMenuActive)
+        }
     }
 
     document.addEventListener('mousedown', () => { setContextMenuActive(false) })

@@ -61,6 +61,7 @@ function TaskInfoWindow() {
             <button 
                 className='task-info-window__date'
                 onFocus={() => {changeVisibleDateMenu()}}
+                //Постаить потом слушательна документ, с проверкой
                 onBlur={() => {changeVisibleDateMenu()}}>
                 <p>четверг, 24 июля, {taskTime}</p>
             </button>
