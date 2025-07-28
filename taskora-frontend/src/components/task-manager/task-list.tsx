@@ -40,7 +40,7 @@ function TaskList() {
         return (
             <div className='task-list'>
                 <CreateTaskForm />
-                
+
                 <ul className='task-list__section' id='inbox-list'>
                     <SortedTasks tasks={taskManagerContext.tasks?.filter(task => task.completed === false)}/>
                 </ul>

@@ -7,8 +7,8 @@
   border: 1px solid vars.$light-gray;
   border-radius: vars.$border-radius-default;
   display: none;
-  width: 180px;
-  height: 350px;
+  width: 200px;
+  height: 370px;
   position: absolute;
   padding: 5px;
   z-index: 100;
@@ -20,7 +20,6 @@
 }
 
 .context-menu__item {
-  border-bottom:1px solid vars.$light-gray;
   color: vars.$fgColor-default;
   font-size: 14px;
   width: 100%;
@@ -30,10 +29,15 @@
   text-align: start;
 }
 
-.context-menu__item p {
+.context-menu__title {
+  display: flex;
+  justify-self: start;
+}
+
+.context-menu p {
   color: vars.$strong-gray;
-  margin-left: 10px;
   font-size: 12px;
+  margin: 5px;
 }
 
 .context-menu__item:hover {
@@ -44,4 +48,20 @@
 
 .context-menu__item--delete {
   color: vars.$redAccent;
+}
+
+.context-menu__item--priority {
+  align-content: center;
+  height: 28px;
+  width: 28px;  
+  margin: 5px;
+  margin-bottom: 10px;
+  padding: 0;
+  border: none;
+}
+
+.context-menu__container {
+  display: flex;
+  justify-content: space-between;
+  border-bottom:1px solid vars.$light-gray;
 }

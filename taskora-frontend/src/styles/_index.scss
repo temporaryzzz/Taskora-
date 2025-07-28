@@ -55,9 +55,9 @@ textarea {
 input[type='checkbox'] {
     width: 15px;
     height: 15px;
-    border-radius: 4px;
+    border-radius: 3px;
     vertical-align: middle;
-    border: 2px solid vars.$greenAccent;
+    border: 2px solid vars.$bright-gray;
     appearance: none;
     -webkit-appearance: none;
     outline: none;
@@ -65,8 +65,8 @@ input[type='checkbox'] {
 }
 
 input[type='checkbox']:checked {
-  border: 2px solid vars.$light-gray;
-  background-color: vars.$ultra-light-gray;
+  border: 2px solid transparent !important;
+  background-color: vars.$muted-light-gray;
 }
 
 input[type='checkbox']::after {

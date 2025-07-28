@@ -81,6 +81,12 @@ function Task(task: TaskInfo) {
         }
     }
 
+    const setColorCheckbox = (color: string) => {
+        if(taskCheckbox.current) {
+            taskCheckbox.current.style.borderColor = color
+        }
+    }
+
     document.addEventListener('mousedown', () => { setContextMenuActive(false) })
 
     useEffect(InizializateStateTask, [])
@@ -94,7 +100,7 @@ function Task(task: TaskInfo) {
             
             <input type='checkbox' id='completed' ref={taskCheckbox} onChange={setStateTask}></input>
             <h4 onMouseUp={event => OnMouseUp(event)}>{task.title}</h4>
-            <ContextMenu active={contextMenuActive} x={mouseX} y={mouseY}/> 
+            <ContextMenu setColorPriority={setColorCheckbox} active={contextMenuActive} x={mouseX} y={mouseY}/> 
 
         </li>    
     )
