@@ -12,6 +12,13 @@ function Task(task: TaskInfo) {
         activeClass: "task-list__task--active"
     }
 
+    const stateColors = {
+        red: '#d52b24',
+        blue: '#1962e8',
+        green: '#238636',
+        gray: '#818c99b3',
+    }
+
     const taskManagerContext = useContext(TaskInfoContext)
 
     const taskRef = useRef<HTMLLIElement>(null);
@@ -22,11 +29,31 @@ function Task(task: TaskInfo) {
     const [mouseX, setMouseX] = useState<number>(0)
     const [mouseY, setMouseY] = useState<number>(0)
 
-    const InizializateStateTask = () => {
+    const InizializateTask = () => {
         if(task.completed === true) {
 
             if (taskRef.current) taskRef.current.classList.add(stateClasses.completedClass)
-            if (taskCheckbox.current) taskCheckbox.current.checked = true  
+
+            if (taskCheckbox.current) {
+                taskCheckbox.current.checked = true  
+            }
+        }
+
+        if (taskCheckbox.current) {
+            switch (task.priority){
+                case 'red' :
+                    taskCheckbox.current.style.borderColor = stateColors.red
+                    break
+                case 'blue' :
+                    taskCheckbox.current.style.borderColor = stateColors.blue
+                    break
+                case 'green' :
+                    taskCheckbox.current.style.borderColor = stateColors.green
+                    break
+                case 'default' :
+                    taskCheckbox.current.style.borderColor = stateColors.gray
+                    break
+            }
         }
     }
 
@@ -81,15 +108,20 @@ function Task(task: TaskInfo) {
         }
     }
 
-    const setColorCheckbox = (color: string) => {
+    const setPriority = (color: string, priority: 'red' | 'blue' | 'green' | 'default') => {
         if(taskCheckbox.current) {
             taskCheckbox.current.style.borderColor = color
+            if(taskManagerContext?.currentTaskInfo) {
+                const currentTask = taskManagerContext.currentTaskInfo
+                currentTask.priority = priority
+                taskManagerContext.changeCurrentTask(currentTask.title, currentTask.description, currentTask.time, priority)
+            }
         }
     }
 
     document.addEventListener('mousedown', () => { setContextMenuActive(false) })
 
-    useEffect(InizializateStateTask, [])
+    useEffect(InizializateTask, [])
     useEffect(setActiveClass, [taskManagerContext?.currentTaskInfo])
 
     return (
@@ -100,7 +132,7 @@ function Task(task: TaskInfo) {
             
             <input type='checkbox' id='completed' ref={taskCheckbox} onChange={setStateTask}></input>
             <h4 onMouseUp={event => OnMouseUp(event)}>{task.title}</h4>
-            <ContextMenu setColorPriority={setColorCheckbox} active={contextMenuActive} x={mouseX} y={mouseY}/> 
+            <ContextMenu setColorPriority={setPriority} active={contextMenuActive} x={mouseX} y={mouseY}/> 
 
         </li>    
     )

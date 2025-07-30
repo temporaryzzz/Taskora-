@@ -4,7 +4,7 @@ import { TaskInfoContext } from "./task-manager/task-page";
 import { DeleteTask } from '../scripts/dataTaskManager';
 
 
-function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (color: string) => void, active: boolean, x: number, y: number}) {
+function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (color: string, priority: 'red' | 'blue' | 'green' | 'default') => void, active: boolean, x: number, y: number}) {
     const stateClasses = {
         hiddenMenu: 'context-menu',
         activeMenu: 'context-menu--active'
@@ -53,19 +53,19 @@ function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (colo
                 <p>Приоритет</p>
             </span>
             <ul className='context-menu__container'>
-                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority(stateColors.red)}>
+                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority(stateColors.red, 'red')}>
                     <img src='/red-priority-icon.svg' width={'23px'} height={'23px'} style={{margin: '0 auto'}}></img>
                 </li>
 
-                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority(stateColors.blue)}>
+                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority(stateColors.blue, 'blue')}>
                     <img src='/blue-priority-icon.svg' width={'23px'} height={'23px'} style={{margin: '0 auto'}}></img>
                 </li>
 
-                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority(stateColors.green)}>
+                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority(stateColors.green, 'green')}>
                     <img src='/green-priority-icon.svg' width={'23px'} height={'23px'} style={{margin: '0 auto'}}></img>
                 </li>
 
-                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority(stateColors.blue)}>
+                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority(stateColors.gray, 'default')}>
                     <img src='/gray-priority-icon.svg' width={'23px'} height={'23px'} style={{margin: '0 auto'}}></img>
                 </li>
             </ul>

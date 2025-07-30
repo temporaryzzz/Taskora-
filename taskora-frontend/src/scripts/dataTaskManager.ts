@@ -7,10 +7,10 @@ const InizializateTasks = async () => {
     return dataValues
 }
 
-const ChangeTask = (id: string, title : string, description : string, time : string) => {
+const ChangeTask = (id: string, title : string, description : string, time : string, priority: 'red' | 'blue' | 'green' | 'default') => {
     fetch(`http://localhost:3002/tasks/${id}`, {
         method: 'PATCH',
-        body: JSON.stringify({title: title, description: description, time: time}),
+        body: JSON.stringify({title: title, description: description, time: time, priority: priority}),
     })
 
 }
@@ -33,13 +33,14 @@ const ChangeStateTask = (state: boolean, id: string) => {
     }
 }
 
-const AddTask = (id: string, title : string, description : string, time : string) => {
+const AddTask = (id: string, title : string, description : string, time : string, priority: 'red' | 'blue' | 'green' | 'default') => {
     fetch(`http://localhost:3002/tasks`,
     { method: 'POST', body: JSON.stringify({id: id, 
                                             title: title, 
                                             description: description, 
                                             time: time,
-                                            completed: false }) })
+                                            completed: false,
+                                            priority: priority }) })
 }
 
 //Найти таск по id
