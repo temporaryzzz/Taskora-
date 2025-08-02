@@ -101,11 +101,11 @@
 }
 
 .side-bar__item:hover {
-  background-color: vars.$light-gray;
+  background-color: vars.$ultra-light-gray;
 }
 
 .side-bar__item--active {
-  background-color: vars.$ultra-light-gray;
+  background-color: vars.$light-gray;
 }
 
 .icon {
@@ -162,10 +162,97 @@
   cursor: pointer;
 }
 
-.task-info-window__menu-date {
+.calendar-wrapper {
+  background-color: vars.$bgColor-lightAccent;
+  bottom: 60px;
+  border: 1px solid vars.$light-gray;
+  border-radius: vars.$border-radius-default;
   position: absolute;
+  padding: 5px;
   width: 300px;
   height: 400px;
-  background-color: vars.$light-gray;
-  bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.calendar-wrapper__header {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 5%;
+}
+
+.calendar-wrapper__month {
+  width: 35%;
+  color: vars.$bright-blue;
+}
+
+.calendar-wrapper__month p {
+  font-size: smaller;
+}
+
+.calendar-wrapper__month-button {
+  background-color: transparent;
+  border: 2px solid vars.$light-gray;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.calendar-wrapper__month-button:hover {
+  background-color: vars.$ultra-light-gray;
+}
+
+.calendar-wrapper__container {
+  display: flex;
+  justify-content: space-around;
+  background-color: transparent;
+  margin-top: 10px;
+  width: 100%;
+  height: 5%;
+}
+
+.calendar-wrapper__container--weeks {
+  display: table;
+  justify-content: space-around;
+  background-color: transparent;
+  margin-top: 10px;
+  width: 100%;
+  height: 5%;
+}
+
+.calendar-wrapper__day {
+  background-color: transparent;
+  border-radius: vars.$border-radius-default;
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  color: vars.$strong-gray;
+}
+
+.calendar-wrapper__date {
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  align-content: center;
+  width: 25px;
+  height: 25px;
+  margin: 2px;
+  font-size: 14px;
+}
+
+.calendar-wrapper__date:hover {
+  background-color: vars.$ultra-light-gray;
+  cursor: pointer;
+}
+
+.calendar-wrapper__date--today {
+  color: vars.$bright-blue;
+  border-color: vars.$muted-blue;
+}
+
+.calendar-wrapper__date--not-included {
+  color: vars.$strong-gray;
 }

@@ -1,6 +1,7 @@
-import { useEffect, useState, useContext, useRef } from 'react';
+import { useEffect, useState, useContext} from 'react';
 import '../../styles.scss';
 import { TaskInfoContext } from "./task-page";
+import Calendar from '../calendar';
 
 function TaskInfoWindow() {
     const taskInfo = useContext(TaskInfoContext)
@@ -13,7 +14,6 @@ function TaskInfoWindow() {
     const [taskTitle, setTaskTitle] = useState<string | undefined>(currentTaskInfo?.title)
     const [taskDescription, setTaskDescription] = useState<string | undefined>(currentTaskInfo?.description)
     const [taskTime, setTaskTime] = useState<string | undefined>(currentTaskInfo?.time)
-    const dateMenuRef = useRef<HTMLDivElement>(null)
 
     //Обновление данных
     useEffect(() => {
@@ -22,25 +22,13 @@ function TaskInfoWindow() {
         setTaskTime(currentTaskInfo?.time)
     }, [currentTaskInfo])
 
-    const changeVisibleDateMenu = () => {
-        if(dateMenuRef.current) {
-            if(dateMenuRef.current.style.display == 'none') {
-                dateMenuRef.current.style.display = 'block'
-            }
-
-            else {
-                dateMenuRef.current.style.display = 'none'
-            }
-        }
-    }
-
     return (
         <div className='task-info-window' style={{visibility: `${currentTaskInfo == undefined?'hidden':'visible'}`}}>
             <textarea className='task-info-window__title' 
                 value={taskTitle}
                 onChange={(e) => {
                     setTaskTitle(e.target.value)
-                    changeCurrentTask(e.target.value, taskDescription??'', taskTime??'')
+                    changeCurrentTask(e.target.value, taskDescription??'', taskTime??'', currentTaskInfo?.priority??'default')
                 }}> 
             </textarea>
 
@@ -49,22 +37,11 @@ function TaskInfoWindow() {
                 placeholder='Добавьте описание...'
                                 onChange={(e) => {
                     setTaskDescription(e.target.value)
-                    changeCurrentTask(taskTitle??'', e.target.value, taskTime??'')
+                    changeCurrentTask(taskTitle??'', e.target.value, taskTime??'', currentTaskInfo?.priority??'default')
                 }}>
             </textarea>
             
-            <div className='task-info-window__menu-date' style={{display: 'none'}} ref={dateMenuRef}>
-                <input type='time'></input>
-                <input type='date'></input>
-            </div>
-
-            <button 
-                className='task-info-window__date'
-                onFocus={() => {changeVisibleDateMenu()}}
-                //Постаить потом слушательна документ, с проверкой
-                onBlur={() => {changeVisibleDateMenu()}}>
-                <p>четверг, 24 июля, {taskTime}</p>
-            </button>
+            <Calendar />
         </div>    
     )
 }

@@ -71,6 +71,8 @@ function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (colo
             </ul>
 
             <li className='context-menu__item'>Перенести на завтра</li>
+            <li className='context-menu__item'>Добавить подзадачу</li>
+            <li className='context-menu__item'>Прикрепить файл</li>
             <li className='context-menu__item context-menu__item--delete' onMouseDown={() => deleteTask()}>
                     Удалить
             </li>
