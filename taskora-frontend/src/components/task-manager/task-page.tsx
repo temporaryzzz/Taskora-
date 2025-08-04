@@ -10,6 +10,7 @@ export type TaskInfo = {
   id: string;
   title: string;
   description: string;
+  date: string | undefined;
   time: string;
   completed: boolean;
   priority: 'red' | 'blue' | 'green' | 'default';
@@ -19,7 +20,7 @@ type TaskPageType = {
     tasks: Array<TaskInfo> | undefined;
     currentTaskInfo: TaskInfo | undefined;
     setCurrentTask: (event: React.MouseEvent<HTMLLIElement | HTMLHeadingElement>, id: string) => void
-    changeCurrentTask: (title: string, description: string, time: string, priority: 'red' | 'blue' | 'green' | 'default') => void
+    changeCurrentTask: (title: string, description: string, date: string | undefined, time: string, priority: 'red' | 'blue' | 'green' | 'default') => void
     updateList: () => void
 }
 
@@ -34,7 +35,7 @@ function TaskPage() {
             setTasks([...tasks])
     }
 
-    const changeCurrentTask = (title: string, description: string, time: string, priority: 'red' | 'blue' | 'green' | 'default') => {
+    const changeCurrentTask = (title: string, description: string, date: string | undefined, time: string, priority: 'red' | 'blue' | 'green' | 'default') => {
         if(tasks != undefined) {
             const currentTaskIndex = tasks.findIndex(task => task.id === currentTaskInfo?.id)
             if(currentTaskIndex != undefined && currentTaskInfo != undefined) {
@@ -43,9 +44,10 @@ function TaskPage() {
                 //Нужно для того чтобы своевременно обновился contextValue
                 tasks[currentTaskIndex].title = title
                 tasks[currentTaskIndex].description = description
+                tasks[currentTaskIndex].date = date
                 tasks[currentTaskIndex].time = time
                 tasks[currentTaskIndex].priority = priority
-                ChangeTask(currentTaskInfo.id, title, description, time, priority)
+                ChangeTask(currentTaskInfo.id, title, description, date, time, priority)
                 updateList()
                 setCurrentTaskInfo(tasks[currentTaskIndex])
             }

@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext} from 'react';
 import '../../styles.scss';
 import { TaskInfoContext } from "./task-page";
-import Calendar from '../calendar';
+import Calendar from '../calendar/calendar';
 
 function TaskInfoWindow() {
     const taskInfo = useContext(TaskInfoContext)
@@ -28,7 +28,7 @@ function TaskInfoWindow() {
                 value={taskTitle}
                 onChange={(e) => {
                     setTaskTitle(e.target.value)
-                    changeCurrentTask(e.target.value, taskDescription??'', taskTime??'', currentTaskInfo?.priority??'default')
+                    changeCurrentTask(e.target.value, taskDescription??'', currentTaskInfo?.date, taskTime??'', currentTaskInfo?.priority??'default')
                 }}> 
             </textarea>
 
@@ -37,7 +37,7 @@ function TaskInfoWindow() {
                 placeholder='Добавьте описание...'
                                 onChange={(e) => {
                     setTaskDescription(e.target.value)
-                    changeCurrentTask(taskTitle??'', e.target.value, taskTime??'', currentTaskInfo?.priority??'default')
+                    changeCurrentTask(taskTitle??'', e.target.value, currentTaskInfo?.date, taskTime??'', currentTaskInfo?.priority??'default')
                 }}>
             </textarea>
             

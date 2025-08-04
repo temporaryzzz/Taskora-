@@ -1,7 +1,7 @@
-import '../styles.scss';
-import { useEffect, useRef, useState } from "react";
-//import { TaskInfoContext } from "./task-page";
-
+import '../../styles.scss';
+import { useContext, useEffect, useRef, useState } from "react";
+import { TaskInfoContext } from "../task-manager/task-page";
+import DateButton from './date-button';
 
 const RenderDate = ({dates, week, currentDate}: {dates: number[], week: number, currentDate: {year: number, month: number}}) => {
 
@@ -11,37 +11,37 @@ const RenderDate = ({dates, week, currentDate}: {dates: number[], week: number, 
         dates.map(date => {
             if(week == 1 && date > 7) {
                 if(date == todayDate.getDate() && currentDate.month == todayDate.getMonth() + 1 && currentDate.year == todayDate.getFullYear()) {
-                    return <li className='calendar-wrapper__date calendar-wrapper__date--today' id='calendar' key={date}>{date}</li>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} key={date}/>
                 }
                 else{
-                    return <li className='calendar-wrapper__date calendar-wrapper__date--not-included' id='calendar' key={date}>{date}</li>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--not-included'} currentDate={currentDate} key={date}/>
                 }
             }
 
             if(week == 5 && date < 23) {
                 if(date == todayDate.getDate() && currentDate.month == todayDate.getMonth() - 1 && currentDate.year == todayDate.getFullYear()) {
-                    return <li className='calendar-wrapper__date calendar-wrapper__date--today' id='calendar' key={date}>{date}</li>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} key={date}/>
                 }
                 else{
-                    return <li className='calendar-wrapper__date calendar-wrapper__date--not-included' id='calendar' key={date}>{date}</li>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--not-included'} currentDate={currentDate} key={date}/>
                 }
             }
 
             if(week == 6 && date < 30) {
                 if(date == todayDate.getDate() && currentDate.month == todayDate.getMonth() - 1 && currentDate.year == todayDate.getFullYear()) {
-                    return <li className='calendar-wrapper__date calendar-wrapper__date--today' id='calendar' key={date}>{date}</li>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} key={date}/>
                 }
                 else{
-                    return <li className='calendar-wrapper__date calendar-wrapper__date--not-included' id='calendar' key={date}>{date}</li>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--not-included'} currentDate={currentDate} key={date}/>
                 }
             }
 
             else {
                 if(date == todayDate.getDate() && currentDate.month == todayDate.getMonth() && currentDate.year == todayDate.getFullYear()) {
-                    return <li className='calendar-wrapper__date calendar-wrapper__date--today' id='calendar' key={date}>{date}</li>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} key={date}/>
                 }
                 else{
-                    return <li className='calendar-wrapper__date' id='calendar' key={date}>{date}</li>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date'} currentDate={currentDate} key={date}/>
                 }
             }
         })
@@ -58,10 +58,13 @@ function Calendar () {
         'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
         'Октябрь', 'Ноябрь', 'Декабрь']
 
-    const [date] = useState(new Date())
+    const taskDate = useContext(TaskInfoContext)?.currentTaskInfo?.date
+
+    const [date, setDate] = useState(new Date())
     const [currentMonth, setCurrentMonth] = useState(date.getMonth())
     const [currentYear, setCurrentYear] = useState(date.getFullYear())
     const [firstDayCurrentMonth, setFirstDayCurrentMonth] = useState((new Date(currentYear, currentMonth, 1)).getDay())
+    const [dateButton, setDateButton] = useState('Установите дату')
     const [dates, setDates] = useState<number[]>([])
     const calendarRef = useRef<HTMLDivElement>(null)
 
@@ -125,6 +128,15 @@ function Calendar () {
 
     useEffect(() => setFirstDayCurrentMonth((new Date(currentYear, currentMonth, 1)).getDay()), [currentMonth])
     useEffect(() => InizializateDates(), [firstDayCurrentMonth, currentMonth])
+    useEffect(() => {setDate(new Date(taskDate??date))}, [taskDate])
+    useEffect(() => {
+        if(taskDate != undefined) {
+            setDateButton(daysState[date.getDay()] + ', ' + date.getDate() + ' ' + monthState[date.getMonth()] + ' ' + date.getFullYear())
+        }
+        else {
+            setDateButton('Установите дату')
+        }
+    }, [date])
 
     return(
         <div>
@@ -182,7 +194,7 @@ function Calendar () {
             <button 
                 className='task-info-window__date'
                 onClick={ChangeStateCalendar}>
-                    {daysState[date.getDay()]}, {date.getDate()} {monthState[date.getMonth()]}
+                    {dateButton}
             </button>
         </div>
     )

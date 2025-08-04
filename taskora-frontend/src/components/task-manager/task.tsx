@@ -114,7 +114,7 @@ function Task(task: TaskInfo) {
             if(taskManagerContext?.currentTaskInfo) {
                 const currentTask = taskManagerContext.currentTaskInfo
                 currentTask.priority = priority
-                taskManagerContext.changeCurrentTask(currentTask.title, currentTask.description, currentTask.time, priority)
+                taskManagerContext.changeCurrentTask(currentTask.title, currentTask.description, currentTask.date, currentTask.time, priority)
             }
         }
     }
