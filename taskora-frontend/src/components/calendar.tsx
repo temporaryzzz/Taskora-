@@ -17,7 +17,8 @@ const RenderDate = ({dates, week, currentDate}: {dates: number[], week: number, 
                     return <li className='calendar-wrapper__date calendar-wrapper__date--not-included' id='calendar' key={date}>{date}</li>
                 }
             }
-            if(week == 5 && date < 24) {
+
+            if(week == 5 && date < 23) {
                 if(date == todayDate.getDate() && currentDate.month == todayDate.getMonth() - 1 && currentDate.year == todayDate.getFullYear()) {
                     return <li className='calendar-wrapper__date calendar-wrapper__date--today' id='calendar' key={date}>{date}</li>
                 }
@@ -25,6 +26,16 @@ const RenderDate = ({dates, week, currentDate}: {dates: number[], week: number, 
                     return <li className='calendar-wrapper__date calendar-wrapper__date--not-included' id='calendar' key={date}>{date}</li>
                 }
             }
+
+            if(week == 6 && date < 30) {
+                if(date == todayDate.getDate() && currentDate.month == todayDate.getMonth() - 1 && currentDate.year == todayDate.getFullYear()) {
+                    return <li className='calendar-wrapper__date calendar-wrapper__date--today' id='calendar' key={date}>{date}</li>
+                }
+                else{
+                    return <li className='calendar-wrapper__date calendar-wrapper__date--not-included' id='calendar' key={date}>{date}</li>
+                }
+            }
+
             else {
                 if(date == todayDate.getDate() && currentDate.month == todayDate.getMonth() && currentDate.year == todayDate.getFullYear()) {
                     return <li className='calendar-wrapper__date calendar-wrapper__date--today' id='calendar' key={date}>{date}</li>
@@ -50,16 +61,21 @@ function Calendar () {
     const [date] = useState(new Date())
     const [currentMonth, setCurrentMonth] = useState(date.getMonth())
     const [currentYear, setCurrentYear] = useState(date.getFullYear())
-    const [firstDayCurrentMonth, setFirstDayCurrentMonth] = useState((new Date(date.getFullYear(), currentMonth, 1)).getDay())
+    const [firstDayCurrentMonth, setFirstDayCurrentMonth] = useState((new Date(currentYear, currentMonth, 1)).getDay())
     const [dates, setDates] = useState<number[]>([])
     const calendarRef = useRef<HTMLDivElement>(null)
 
     const InizializateDates = () => {
         const newDates = []
-        for(let i = 0; i < 35; i++) {
-            newDates.push(new Date(currentYear, currentMonth, (i + 2) - firstDayCurrentMonth).getDate())
-        }
+        for(let i = 0; i < 42; i++) {
+            if(firstDayCurrentMonth == 0) {
+                newDates.push(new Date(currentYear, currentMonth, (i + 2) - 7).getDate())
+            }
 
+            else {
+                newDates.push(new Date(currentYear, currentMonth, (i + 2) - firstDayCurrentMonth).getDate())
+            }
+        }
         setDates(newDates)
     }
 
@@ -108,7 +124,7 @@ function Calendar () {
     })
 
     useEffect(() => setFirstDayCurrentMonth((new Date(currentYear, currentMonth, 1)).getDay()), [currentMonth])
-    useEffect(() => InizializateDates(), [firstDayCurrentMonth])
+    useEffect(() => InizializateDates(), [firstDayCurrentMonth, currentMonth])
 
     return(
         <div>
@@ -156,6 +172,9 @@ function Calendar () {
 
                     <ul className='calendar-wrapper__container' id='calendar'>
                        <RenderDate dates={dates.slice(28, 35)} week={5} currentDate={{year:currentYear,month:currentMonth}}/>
+                    </ul>
+                    <ul className='calendar-wrapper__container' id='calendar'>
+                       <RenderDate dates={dates.slice(35, 42)} week={6} currentDate={{year:currentYear,month:currentMonth}}/>
                     </ul>
                 </ul>
             </div>
