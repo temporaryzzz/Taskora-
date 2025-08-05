@@ -132,6 +132,8 @@ function Calendar () {
     useEffect(() => {
         if(taskDate != undefined) {
             setDateButton(daysState[date.getDay()] + ', ' + date.getDate() + ' ' + monthState[date.getMonth()] + ' ' + date.getFullYear())
+            setCurrentMonth(date.getMonth())
+            setCurrentYear(date.getFullYear())
         }
         else {
             setDateButton('Установите дату')
