@@ -57,7 +57,7 @@ input[type='checkbox'] {
     height: 15px;
     border-radius: 3px;
     vertical-align: middle;
-    border: 2px solid vars.$bright-gray;
+    border: 2px solid vars.$border-default;
     appearance: none;
     -webkit-appearance: none;
     outline: none;
@@ -66,7 +66,7 @@ input[type='checkbox'] {
 
 input[type='checkbox']:checked {
   border: 2px solid transparent !important;
-  background-color: vars.$muted-light-gray;
+  background-color: vars.$completed-element;
 }
 
 input[type='checkbox']::after {
@@ -90,11 +90,11 @@ input[type='checkbox']:checked::after {
 
 a {
   font-weight: 500;
-  color: vars.$muted-blue;
+  color: vars.$muted-blueAccent;
   text-decoration: none;
 }
 a:hover {
-  color: vars.$muted-blue;
+  color: vars.$muted-blueAccent;
 }
 
 h5 {

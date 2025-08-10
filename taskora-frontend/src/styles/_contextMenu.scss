@@ -4,7 +4,7 @@
 
 .context-menu {
   background-color: vars.$bgColor-lightAccent;
-  border: 1px solid vars.$light-gray;
+  border: 1px solid vars.$border-default;
   border-radius: vars.$border-radius-default;
   display: none;
   width: 200px;
@@ -35,13 +35,13 @@
 }
 
 .context-menu p {
-  color: vars.$strong-gray;
+  color: vars.$muted-element;
   font-size: 12px;
   margin: 5px;
 }
 
 .context-menu__item:hover {
-  background-color: vars.$muted-light-gray;
+  background-color: vars.$muted-hover-element;
   border-radius: 3px;
   cursor: pointer;
 }
@@ -63,5 +63,5 @@
 .context-menu__container {
   display: flex;
   justify-content: space-between;
-  border-bottom:1px solid vars.$light-gray;
+  border-bottom:1px solid vars.$border-default;
 }

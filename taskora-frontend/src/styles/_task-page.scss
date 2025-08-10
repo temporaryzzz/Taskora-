@@ -13,7 +13,7 @@
     max-height: 93vh;
     position: relative;
     width: 50vw;
-    border-right: 1px solid vars.$light-gray;
+    border-right: 1px solid vars.$border-default;
     padding: 7px;  
 }
 
@@ -39,7 +39,7 @@
 
 .task-list__task {
   align-items: center;
-  border-bottom: 1px solid vars.$light-gray;
+  border-bottom: 1px solid vars.$border-default;
   background: transparent;
   color: vars.$fgColor-default;
   display: flex;
@@ -52,7 +52,7 @@
 
 
 .task-list__task:hover {
-  background-color: vars.$ultra-light-gray;
+  background-color: vars.$hover-element;
   border-radius: vars.$border-radius-default;
   border: none;
 }
@@ -64,20 +64,24 @@
 }
 
 .task-list__task--active {
-  background-color: vars.$light-gray;
+  background-color: vars.$bgColor-current;
   border-radius: vars.$border-radius-default;
 }
 
 .task-list__task--completed {
-  color: vars.$ultra-light-gray;
+  color: vars.$completed-element;
 }
 
 .task-list__task--completed p{
-  color: vars.$ultra-light-gray;
+  color: vars.$completed-element;
+}
+
+.task-list__task--completed:hover {
+  background-color: vars.$muted-hover-element;
 }
 
 .side-bar {
-  border-right: 1px solid vars.$light-gray;
+  border-right: 1px solid vars.$border-default;
   height: 95vh;
   width: 20vw;
   padding: 5px;
@@ -85,7 +89,7 @@
 
 .side-bar__items-list {
   padding: 10px;
-  border-bottom: 1px solid vars.$light-gray;
+  border-bottom: 1px solid vars.$border-default;
 }
 
 .side-bar__item {
@@ -101,11 +105,11 @@
 }
 
 .side-bar__item:hover {
-  background-color: vars.$ultra-light-gray;
+  background-color: vars.$hover-element;
 }
 
 .side-bar__item--active {
-  background-color: vars.$light-gray;
+  background-color: vars.$bgColor-current;
 }
 
 .icon {
@@ -130,7 +134,7 @@
 .task-info-window__title {
   @include mixins.textarea-default;
   width: 100%;
-  border-bottom: 1px solid vars.$ultra-light-gray;
+  border-bottom: 1px solid vars.$border-default;
   min-height: 50px;
   font-size: larger;
   font-weight: 750;
@@ -151,21 +155,21 @@
   margin-top: 10px;
   width: fit-content;
   height: fit-content;
-  color: vars.$bright-blue;
+  color: vars.$bright-blueAccent;
   font-size: smaller;
   float: left;
   border: none;
 }
 
 .task-info-window__date:hover {
-  background-color: vars.$light-gray;
+  background-color: vars.$bgColor-current;
   cursor: pointer;
 }
 
 .calendar-wrapper {
   background-color: vars.$bgColor-lightAccent;
   bottom: 60px;
-  border: 1px solid vars.$light-gray;
+  border: 1px solid vars.$border-default;
   border-radius: vars.$border-radius-default;
   position: absolute;
   padding: 5px;
@@ -185,7 +189,7 @@
 
 .calendar-wrapper__month {
   width: 35%;
-  color: vars.$bright-blue;
+  color: vars.$bright-blueAccent;
 }
 
 .calendar-wrapper__month p {
@@ -194,7 +198,7 @@
 
 .calendar-wrapper__month-button {
   background-color: transparent;
-  border: 2px solid vars.$light-gray;
+  border: 2px solid vars.$border-default;
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -202,7 +206,7 @@
 }
 
 .calendar-wrapper__month-button:hover {
-  background-color: vars.$ultra-light-gray;
+  background-color: vars.$hover-element;
 }
 
 .calendar-wrapper__container {
@@ -229,7 +233,7 @@
   width: 22px;
   height: 22px;
   font-size: 12px;
-  color: vars.$strong-gray;
+  color: vars.$muted-element;
 }
 
 .calendar-wrapper__date {
@@ -244,19 +248,19 @@
 }
 
 .calendar-wrapper__date:hover {
-  background-color: vars.$ultra-light-gray;
+  background-color: vars.$hover-element;
   cursor: pointer;
 }
 
 .calendar-wrapper__date--target {
-  background-color: vars.$bright-blue;
+  background-color: vars.$bright-blueAccent;
 }
 
 .calendar-wrapper__date--today {
-  color: vars.$bright-blue;
-  border-color: vars.$muted-blue;
+  color: vars.$muted-blueAccent;
+  border-color: vars.$muted-blueAccent;
 }
 
 .calendar-wrapper__date--not-included {
-  color: vars.$strong-gray;
+  color: vars.$muted-element;
 }
