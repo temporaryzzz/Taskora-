@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { TaskInfoContext } from "../task-manager/task-page";
 import DateButton from './date-button';
 
-const RenderDate = ({dates, week, currentDate}: {dates: number[], week: number, currentDate: {year: number, month: number, date: number |undefined}}) => {
+const RenderDate = ({dates, week, currentDate, targetDate}: {dates: number[], week: number, currentDate: {year: number, month: number}, targetDate: Date | undefined}) => {
 
     const [todayDate] = useState(new Date())
 
@@ -37,7 +37,7 @@ const RenderDate = ({dates, week, currentDate}: {dates: number[], week: number, 
                 }
             }
 
-            if(date == currentDate.date) {
+            if(date == targetDate?.getDate() && currentDate.year == targetDate?.getFullYear() && currentDate.month == targetDate?.getMonth()) {
                 return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--target'} currentDate={currentDate} key={date}/>
             }
 
@@ -66,7 +66,7 @@ function Calendar () {
     const taskDate = useContext(TaskInfoContext)?.currentTaskInfo?.date
 
     const [date, setDate] = useState(new Date())
-    const [currentDate, setCurrentDate] = useState<number | undefined>(date.getDate())
+    const [targetDate, setTargetDate] = useState<Date | undefined>()
     const [currentMonth, setCurrentMonth] = useState(date.getMonth())
     const [currentYear, setCurrentYear] = useState(date.getFullYear())
     const [firstDayCurrentMonth, setFirstDayCurrentMonth] = useState((new Date(currentYear, currentMonth, 1)).getDay())
@@ -137,13 +137,13 @@ function Calendar () {
     useEffect(() => {
         if(taskDate != undefined) {
             setDateButton(daysState[date.getDay()] + ', ' + date.getDate() + ' ' + monthState[date.getMonth()] + ' ' + date.getFullYear())
-            setCurrentDate(date.getDate())
+            setTargetDate(date)
             setCurrentMonth(date.getMonth())
             setCurrentYear(date.getFullYear())
         }
         else {
             //Если дата не задана
-            setCurrentDate(undefined)
+            setTargetDate(undefined)
             setDateButton('Установите дату')
         }
     }, [date])
@@ -175,28 +175,28 @@ function Calendar () {
 
                 <ul className='calendar-wrapper__container calendar-wrapper__container--weeks' id='calendar'>
                     <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(0, 7)} week={1} currentDate={{year:currentYear,month:currentMonth,date:currentDate}}/>
+                       <RenderDate dates={dates.slice(0, 7)} week={1} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate}/>
                     </ul>
 
                     <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(7, 14)} week={2} currentDate={{year:currentYear,month:currentMonth,date:currentDate}}/>
+                       <RenderDate dates={dates.slice(7, 14)} week={2} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate}/>
                     </ul>
 
                     <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(14, 21)} week={3} currentDate={{year:currentYear,month:currentMonth,date:currentDate}}/>
-
-                    </ul>
-
-                    <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(21, 28)} week={4} currentDate={{year:currentYear,month:currentMonth,date:currentDate}}/>
+                       <RenderDate dates={dates.slice(14, 21)} week={3} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate}/>
 
                     </ul>
 
                     <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(28, 35)} week={5} currentDate={{year:currentYear,month:currentMonth,date:currentDate}}/>
+                       <RenderDate dates={dates.slice(21, 28)} week={4} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate}/>
+
+                    </ul>
+
+                    <ul className='calendar-wrapper__container' id='calendar'>
+                       <RenderDate dates={dates.slice(28, 35)} week={5} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate}/>
                     </ul>
                     <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(35, 42)} week={6} currentDate={{year:currentYear,month:currentMonth,date:currentDate}}/>
+                       <RenderDate dates={dates.slice(35, 42)} week={6} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate}/>
                     </ul>
                 </ul>
             </div>
