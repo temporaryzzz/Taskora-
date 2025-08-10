@@ -248,6 +248,10 @@
   cursor: pointer;
 }
 
+.calendar-wrapper__date--target {
+  background-color: vars.$bright-blue;
+}
+
 .calendar-wrapper__date--today {
   color: vars.$bright-blue;
   border-color: vars.$muted-blue;
