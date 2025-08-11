@@ -271,19 +271,32 @@
   border: none;
   border-radius: vars.$border-radius-default;
   font-size: 14px;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23333"/></svg>');
-  background-position: right 10px center;
-  background-repeat: no-repeat;
-  padding-right: 30px; /* Место для стрелки */
+}
+
+.dropdown-menu::after {
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23555"/></svg>');
+  position: absolute;
+  right: 10px;
+  rotate: -90deg;
+  transition: 0.2s;
 }
 
 .dropdown-menu--time {
   left: 1%;
   margin-top: 10px;
+  padding-left: 5px;
 }
 
 .dropdown-menu--active {
   background-color: vars.$muted-hover-element;
+}
+
+.dropdown-menu--active::after {
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23222"/></svg>');
+  position: absolute;
+  transition: 0.2s;
+  right: 10px;
+  rotate: 0deg;
 }
 
 .dropdown-menu:hover {
