@@ -1,6 +1,6 @@
 import '../../styles.scss';
 import { useContext, useEffect, useRef, useState } from "react";
-import { TaskInfoContext } from "../task-manager/task-page";
+import { TaskInfoContext} from "../task-manager/task-page";
 import DateButton from './date-button';
 
 const RenderDate = ({dates, week, currentDate, targetDate}: {dates: number[], week: number, currentDate: {year: number, month: number}, targetDate: Date | undefined}) => {
@@ -63,16 +63,21 @@ function Calendar () {
         'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
         'Октябрь', 'Ноябрь', 'Декабрь']
 
-    const taskDate = useContext(TaskInfoContext)?.currentTaskInfo?.date
+    const taskInfo = useContext(TaskInfoContext)
+    const taskDate = taskInfo?.currentTaskInfo?.date
+    const taskTime = taskInfo?.currentTaskInfo?.time
 
     const [date, setDate] = useState(new Date())
     const [targetDate, setTargetDate] = useState<Date | undefined>()
     const [currentMonth, setCurrentMonth] = useState(date.getMonth())
     const [currentYear, setCurrentYear] = useState(date.getFullYear())
     const [firstDayCurrentMonth, setFirstDayCurrentMonth] = useState((new Date(currentYear, currentMonth, 1)).getDay())
-    const [dateButton, setDateButton] = useState('Установите дату')
+    const [dateButtonValue, setDateButtonValue] = useState('Установите дату')
     const [dates, setDates] = useState<number[]>([])
+    const [time, setTime] = useState(taskTime)
     const calendarRef = useRef<HTMLDivElement>(null)
+    const dropdownMenuRef = useRef<HTMLDivElement>(null)
+    const dropdownMenuContentRef = useRef<HTMLDivElement>(null)
 
     const InizializateDates = () => {
         const newDates = []
@@ -88,7 +93,7 @@ function Calendar () {
         setDates(newDates)
     }
 
-    const changeCurrentMonth = (direction: '+' | '-') => {
+    const ChangeCurrentMonth = (direction: '+' | '-') => {
         if(direction == '+') {
             if(currentMonth !== 11) {
                 setCurrentMonth(currentMonth + 1)
@@ -122,11 +127,46 @@ function Calendar () {
         }
     }
 
+    const ChangeVisibleDropdownMenu = () => {
+        if(dropdownMenuContentRef.current && dropdownMenuRef.current) {
+            if(dropdownMenuContentRef.current.style.display == 'none') {
+                dropdownMenuContentRef.current.style.display = 'flex'
+                dropdownMenuRef.current.classList.add('dropdown-menu--active')
+            }
+
+            else {
+                dropdownMenuContentRef.current.style.display = 'none'
+                if(dropdownMenuRef.current.classList.contains('dropdown-menu--active')) {
+                    dropdownMenuRef.current.classList.remove('dropdown-menu--active')
+                }
+            }
+        }
+    }
+
+    const ChangeTime = (time: string) => {
+        setTime(time)
+        if(taskInfo?.currentTaskInfo) {
+            taskInfo.changeCurrentTask(taskInfo.currentTaskInfo.title, taskInfo.currentTaskInfo.description,
+                taskDate, time, taskInfo.currentTaskInfo.priority)
+        }
+    }
+
     document.addEventListener('mousedown', (e) => { 
         if(e.target instanceof HTMLElement) {
             if(e.target.id !== 'calendar' && !e.target.classList.contains('task-info-window__date')){
-                if(calendarRef.current)  
+                if(calendarRef.current)  {
                     calendarRef.current.style.display = 'none'
+                }
+
+                if(dropdownMenuContentRef.current) {
+                    dropdownMenuContentRef.current.style.display = 'none'
+                }
+
+                if(dropdownMenuRef.current) {
+                    if(dropdownMenuRef.current.classList.contains('dropdown-menu--active')) {
+                        dropdownMenuRef.current.classList.remove('dropdown-menu--active')
+                    }
+                }
             }
         }
     })
@@ -135,8 +175,16 @@ function Calendar () {
     useEffect(() => InizializateDates(), [firstDayCurrentMonth, currentMonth])
     useEffect(() => {setDate(new Date(taskDate??date))}, [taskDate])
     useEffect(() => {
+        if(taskTime == '') {
+            setTime('Срок исполнения')
+        }
+        else {
+            setTime(taskTime)
+        }
+    }, [taskTime])
+    useEffect(() => {
         if(taskDate != undefined) {
-            setDateButton(daysState[date.getDay()] + ', ' + date.getDate() + ' ' + monthState[date.getMonth()] + ' ' + date.getFullYear())
+            setDateButtonValue(daysState[date.getDay()] + ', ' + date.getDate() + ' ' + monthState[date.getMonth()] + ' ' + date.getFullYear())
             setTargetDate(date)
             setCurrentMonth(date.getMonth())
             setCurrentYear(date.getFullYear())
@@ -144,7 +192,7 @@ function Calendar () {
         else {
             //Если дата не задана
             setTargetDate(undefined)
-            setDateButton('Установите дату')
+            setDateButtonValue('Установите дату')
         }
     }, [date])
 
@@ -153,13 +201,13 @@ function Calendar () {
             <div className='calendar-wrapper' id='calendar' style={{display: 'none'}} ref={calendarRef}>
                 <div className='calendar-wrapper__header' id='calendar'>
                     <button className='calendar-wrapper__month-button' id='calendar' 
-                        onClick={() => changeCurrentMonth('-')}>
+                        onClick={() => ChangeCurrentMonth('-')}>
                     </button>
                     <div className='calendar-wrapper__month' id='calendar'>
                         <p>{monthState[currentMonth + 12]} {currentYear}</p>
                     </div>
                     <button className='calendar-wrapper__month-button' id='calendar' 
-                        onClick={() => changeCurrentMonth('+')}>
+                        onClick={() => ChangeCurrentMonth('+')}>
                     </button>
                 </div>
 
@@ -199,12 +247,67 @@ function Calendar () {
                        <RenderDate dates={dates.slice(35, 42)} week={6} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate}/>
                     </ul>
                 </ul>
+
+                <div className="dropdown-menu dropdown-menu--time" id="calendar" ref={dropdownMenuRef}>
+                    <button className="dropdown-menu__select-btn" onClick={ChangeVisibleDropdownMenu} id="calendar">{time}</button>
+                    <div id="calendar" className="dropdown-menu__content" style={{display: 'none'}} ref={dropdownMenuContentRef}>
+                        <button onClick={() => ChangeTime('00:00')} className="dropdown-menu__option-btn" id="calendar">00:00</button>
+                        <button onClick={() => ChangeTime('00:30')} className="dropdown-menu__option-btn" id="calendar">00:30</button>
+                        <button onClick={() => ChangeTime('01:00')} className="dropdown-menu__option-btn" id="calendar">01:00</button>
+                        <button onClick={() => ChangeTime('01:30')} className="dropdown-menu__option-btn" id="calendar">01:30</button>
+                        <button onClick={() => ChangeTime('02:00')} className="dropdown-menu__option-btn" id="calendar">02:00</button>
+                        <button onClick={() => ChangeTime('02:30')} className="dropdown-menu__option-btn" id="calendar">02:30</button>
+                        <button onClick={() => ChangeTime('03:00')} className="dropdown-menu__option-btn" id="calendar">03:00</button>
+                        <button onClick={() => ChangeTime('03:30')} className="dropdown-menu__option-btn" id="calendar">03:30</button>
+                        <button onClick={() => ChangeTime('04:00')} className="dropdown-menu__option-btn" id="calendar">04:00</button>
+                        <button onClick={() => ChangeTime('04:30')} className="dropdown-menu__option-btn" id="calendar">04:30</button>
+                        <button onClick={() => ChangeTime('05:00')} className="dropdown-menu__option-btn" id="calendar">05:00</button>
+                        <button onClick={() => ChangeTime('05:30')} className="dropdown-menu__option-btn" id="calendar">05:30</button>
+                        <button onClick={() => ChangeTime('06:00')} className="dropdown-menu__option-btn" id="calendar">06:00</button>
+                        <button onClick={() => ChangeTime('06:30')} className="dropdown-menu__option-btn" id="calendar">06:30</button>
+                        <button onClick={() => ChangeTime('07:00')} className="dropdown-menu__option-btn" id="calendar">07:00</button>
+                        <button onClick={() => ChangeTime('07:30')} className="dropdown-menu__option-btn" id="calendar">07:30</button>
+                        <button onClick={() => ChangeTime('08:00')} className="dropdown-menu__option-btn" id="calendar">08:00</button>
+                        <button onClick={() => ChangeTime('08:30')} className="dropdown-menu__option-btn" id="calendar">08:30</button>
+                        <button onClick={() => ChangeTime('09:00')} className="dropdown-menu__option-btn" id="calendar">09:00</button>
+                        <button onClick={() => ChangeTime('09:30')} className="dropdown-menu__option-btn" id="calendar">09:30</button>
+                        <button onClick={() => ChangeTime('10:00')} className="dropdown-menu__option-btn" id="calendar">10:00</button>
+                        <button onClick={() => ChangeTime('10:30')} className="dropdown-menu__option-btn" id="calendar">10:30</button>
+                        <button onClick={() => ChangeTime('11:00')} className="dropdown-menu__option-btn" id="calendar">11:00</button>
+                        <button onClick={() => ChangeTime('11:30')} className="dropdown-menu__option-btn" id="calendar">11:30</button>
+                        <button onClick={() => ChangeTime('12:00')} className="dropdown-menu__option-btn" id="calendar">12:00</button>
+                        <button onClick={() => ChangeTime('12:30')} className="dropdown-menu__option-btn" id="calendar">12:30</button>
+                        <button onClick={() => ChangeTime('13:00')} className="dropdown-menu__option-btn" id="calendar">13:00</button>
+                        <button onClick={() => ChangeTime('13:30')} className="dropdown-menu__option-btn" id="calendar">13:30</button>
+                        <button onClick={() => ChangeTime('14:00')} className="dropdown-menu__option-btn" id="calendar">14:00</button>
+                        <button onClick={() => ChangeTime('14:30')} className="dropdown-menu__option-btn" id="calendar">14:30</button>
+                        <button onClick={() => ChangeTime('15:00')} className="dropdown-menu__option-btn" id="calendar">15:00</button>
+                        <button onClick={() => ChangeTime('15:30')} className="dropdown-menu__option-btn" id="calendar">15:30</button>
+                        <button onClick={() => ChangeTime('16:00')} className="dropdown-menu__option-btn" id="calendar">16:00</button>
+                        <button onClick={() => ChangeTime('16:30')} className="dropdown-menu__option-btn" id="calendar">16:30</button>
+                        <button onClick={() => ChangeTime('17:00')} className="dropdown-menu__option-btn" id="calendar">17:00</button>
+                        <button onClick={() => ChangeTime('17:30')} className="dropdown-menu__option-btn" id="calendar">17:30</button>
+                        <button onClick={() => ChangeTime('18:00')} className="dropdown-menu__option-btn" id="calendar">18:00</button>
+                        <button onClick={() => ChangeTime('18:30')} className="dropdown-menu__option-btn" id="calendar">18:30</button>
+                        <button onClick={() => ChangeTime('19:00')} className="dropdown-menu__option-btn" id="calendar">19:00</button>
+                        <button onClick={() => ChangeTime('19:30')} className="dropdown-menu__option-btn" id="calendar">19:30</button>
+                        <button onClick={() => ChangeTime('20:00')} className="dropdown-menu__option-btn" id="calendar">20:00</button>
+                        <button onClick={() => ChangeTime('20:30')} className="dropdown-menu__option-btn" id="calendar">20:30</button>
+                        <button onClick={() => ChangeTime('21:00')} className="dropdown-menu__option-btn" id="calendar">21:00</button>
+                        <button onClick={() => ChangeTime('21:30')} className="dropdown-menu__option-btn" id="calendar">21:30</button>
+                        <button onClick={() => ChangeTime('22:00')} className="dropdown-menu__option-btn" id="calendar">22:00</button>
+                        <button onClick={() => ChangeTime('22:30')} className="dropdown-menu__option-btn" id="calendar">22:30</button>
+                        <button onClick={() => ChangeTime('23:00')} className="dropdown-menu__option-btn" id="calendar">23:00</button>
+                        <button onClick={() => ChangeTime('23:30')} className="dropdown-menu__option-btn" id="calendar">23:30</button>
+                    </div>
+                </div>
+
             </div>
 
             <button 
                 className='task-info-window__date'
                 onClick={ChangeStateCalendar}>
-                    {dateButton}
+                    {dateButtonValue + ', ' + taskTime}
             </button>
         </div>
     )

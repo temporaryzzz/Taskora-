@@ -173,7 +173,7 @@
   border-radius: vars.$border-radius-default;
   position: absolute;
   padding: 5px;
-  width: 300px;
+  width: 280px;
   height: 400px;
   display: flex;
   flex-direction: column;
@@ -222,7 +222,6 @@
   display: table;
   justify-content: space-around;
   background-color: transparent;
-  margin-top: 10px;
   width: 100%;
   height: 5%;
 }
@@ -239,11 +238,11 @@
 .calendar-wrapper__date {
   background-color: transparent;
   border: 1px solid transparent;
+  color: vars.$fgColor-default;
   border-radius: 50%;
   align-content: center;
   width: 25px;
   height: 25px;
-  margin: 2px;
   font-size: 14px;
 }
 
@@ -263,4 +262,89 @@
 
 .calendar-wrapper__date--not-included {
   color: vars.$muted-element;
+}
+
+.dropdown-menu {
+  width: 98%;
+  position: absolute;
+  background-color: transparent;
+  border: none;
+  border-radius: vars.$border-radius-default;
+  font-size: 14px;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23333"/></svg>');
+  background-position: right 10px center;
+  background-repeat: no-repeat;
+  padding-right: 30px; /* Место для стрелки */
+}
+
+.dropdown-menu--time {
+  left: 1%;
+  margin-top: 10px;
+}
+
+.dropdown-menu--active {
+  background-color: vars.$muted-hover-element;
+}
+
+.dropdown-menu:hover {
+  background-color: vars.$muted-hover-element;
+  cursor: pointer;
+}
+
+.dropdown-menu:focus {
+  outline: none;
+  background-color: vars.$muted-hover-element;
+}
+
+.dropdown-menu__select-btn {
+  width: 100%;
+  background-color: transparent;
+  color: vars.$bright-blueAccent;
+  text-align: start;
+}
+
+.dropdown-menu__option-btn {
+  width: 100%;
+  background-color: transparent;
+  color: vars.$fgColor-default;
+  text-align: start;
+}
+
+.dropdown-menu__option-btn:hover {
+  background-color: vars.$hover-element;
+  cursor: pointer;
+}
+
+.dropdown-menu__option-btn:focus {
+  outline: none;
+  background-color: vars.$hover-element;
+}
+
+.dropdown-menu__content {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  margin-top: 3px;
+  background-color: vars.$bgColor-default;
+  border: 1px solid vars.$border-default;
+  border-radius: vars.$border-radius-default;
+  width: 100%;
+  max-height: 120px;
+  overflow: hidden;
+  overflow-y: scroll;
+  z-index: 1;
+}
+
+.dropdown-menu__content::-webkit-scrollbar {
+  width: 6px;               
+}
+
+.dropdown-menu__content::-webkit-scrollbar-track {
+  background: transparent;        
+}
+
+.dropdown-menu__content::-webkit-scrollbar-thumb {
+  background-color: vars.$hover-element;  
+  height: 25px;  
+  border-radius: 20px;       
 }
