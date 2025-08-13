@@ -45,6 +45,14 @@ function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (colo
         }
     }
 
+    const PostponeUntilTomorrow = () => {
+        if(taskManagerContext && currentTask) {
+            const now = new Date()
+            const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
+            taskManagerContext.changeCurrentTask(currentTask.title, currentTask.description, String(tomorrow), currentTask.time, currentTask.priority)
+        }
+    }
+
     useEffect(() => changeVisibleMenu(active), [active])
 
     return (
@@ -70,7 +78,7 @@ function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (colo
                 </li>
             </ul>
 
-            <li className='context-menu__item'>Перенести на завтра</li>
+            <li className='context-menu__item' onMouseDown={PostponeUntilTomorrow}>Перенести на завтра</li>
             <li className='context-menu__item'>Добавить подзадачу</li>
             <li className='context-menu__item'>Прикрепить файл</li>
             <li className='context-menu__item context-menu__item--delete' onMouseDown={() => deleteTask()}>
