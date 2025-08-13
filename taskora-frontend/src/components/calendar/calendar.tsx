@@ -118,7 +118,7 @@ function Calendar () {
     const ChangeStateCalendar = () => {
         if(calendarRef.current) {
             if(calendarRef.current.style.display == 'none') {
-                calendarRef.current.style.display = 'block'
+                calendarRef.current.style.display = 'flex'
             }
 
             else {
@@ -307,7 +307,7 @@ function Calendar () {
             <button 
                 className='task-info-window__date'
                 onClick={ChangeStateCalendar}>
-                    {dateButtonValue + ', ' + taskTime}
+                    {dateButtonValue + (taskTime!==''?', ':'') + taskTime}
             </button>
         </div>
     )
