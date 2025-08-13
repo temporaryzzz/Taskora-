@@ -327,6 +327,7 @@
   background-color: transparent;
   color: vars.$fgColor-default;
   text-align: start;
+  padding-left: 10px;
 }
 
 .dropdown-menu__option-btn:hover {
@@ -337,6 +338,10 @@
 .dropdown-menu__option-btn:focus {
   outline: none;
   background-color: vars.$hover-element;
+}
+
+.dropdown-menu__option-btn--current {
+  color: vars.$bright-blueAccent;
 }
 
 .dropdown-menu__content {

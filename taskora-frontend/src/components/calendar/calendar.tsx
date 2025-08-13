@@ -53,7 +53,25 @@ const RenderDate = ({dates, week, currentDate, targetDate}: {dates: number[], we
     )
 }
 
+const RenderTimeBtn = ({ChangeTime, currentTime} : {ChangeTime(time : string) : void, currentTime : string | undefined}) => {
+    
+    const preliminaryTime = ['00:00', '00:30', '01:00', '01:30', '02:00', '02:30', '03:00', '03:30', '04:00', '04:30', '05:00', '05:30',
+        '06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
+        '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30',
+        '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30'
+    ]
 
+    return (
+        preliminaryTime.map(time => {
+            if(currentTime !== time) {
+                return <button onClick={() => ChangeTime(time)} className="dropdown-menu__option-btn" id="calendar" key={time}>{time}</button>
+            }
+            else {
+                return <button onClick={() => ChangeTime(time)} className="dropdown-menu__option-btn dropdown-menu__option-btn--current" id="calendar" key={time}>{time}</button>
+            }
+        })
+    )
+}
 
 function Calendar () {
 
@@ -251,54 +269,7 @@ function Calendar () {
                 <div className="dropdown-menu dropdown-menu--time" id="calendar" ref={dropdownMenuRef}>
                     <button className="dropdown-menu__select-btn" onClick={ChangeVisibleDropdownMenu} id="calendar">{time}</button>
                     <div id="calendar" className="dropdown-menu__content" style={{display: 'none'}} ref={dropdownMenuContentRef}>
-                        <button onClick={() => ChangeTime('00:00')} className="dropdown-menu__option-btn" id="calendar">00:00</button>
-                        <button onClick={() => ChangeTime('00:30')} className="dropdown-menu__option-btn" id="calendar">00:30</button>
-                        <button onClick={() => ChangeTime('01:00')} className="dropdown-menu__option-btn" id="calendar">01:00</button>
-                        <button onClick={() => ChangeTime('01:30')} className="dropdown-menu__option-btn" id="calendar">01:30</button>
-                        <button onClick={() => ChangeTime('02:00')} className="dropdown-menu__option-btn" id="calendar">02:00</button>
-                        <button onClick={() => ChangeTime('02:30')} className="dropdown-menu__option-btn" id="calendar">02:30</button>
-                        <button onClick={() => ChangeTime('03:00')} className="dropdown-menu__option-btn" id="calendar">03:00</button>
-                        <button onClick={() => ChangeTime('03:30')} className="dropdown-menu__option-btn" id="calendar">03:30</button>
-                        <button onClick={() => ChangeTime('04:00')} className="dropdown-menu__option-btn" id="calendar">04:00</button>
-                        <button onClick={() => ChangeTime('04:30')} className="dropdown-menu__option-btn" id="calendar">04:30</button>
-                        <button onClick={() => ChangeTime('05:00')} className="dropdown-menu__option-btn" id="calendar">05:00</button>
-                        <button onClick={() => ChangeTime('05:30')} className="dropdown-menu__option-btn" id="calendar">05:30</button>
-                        <button onClick={() => ChangeTime('06:00')} className="dropdown-menu__option-btn" id="calendar">06:00</button>
-                        <button onClick={() => ChangeTime('06:30')} className="dropdown-menu__option-btn" id="calendar">06:30</button>
-                        <button onClick={() => ChangeTime('07:00')} className="dropdown-menu__option-btn" id="calendar">07:00</button>
-                        <button onClick={() => ChangeTime('07:30')} className="dropdown-menu__option-btn" id="calendar">07:30</button>
-                        <button onClick={() => ChangeTime('08:00')} className="dropdown-menu__option-btn" id="calendar">08:00</button>
-                        <button onClick={() => ChangeTime('08:30')} className="dropdown-menu__option-btn" id="calendar">08:30</button>
-                        <button onClick={() => ChangeTime('09:00')} className="dropdown-menu__option-btn" id="calendar">09:00</button>
-                        <button onClick={() => ChangeTime('09:30')} className="dropdown-menu__option-btn" id="calendar">09:30</button>
-                        <button onClick={() => ChangeTime('10:00')} className="dropdown-menu__option-btn" id="calendar">10:00</button>
-                        <button onClick={() => ChangeTime('10:30')} className="dropdown-menu__option-btn" id="calendar">10:30</button>
-                        <button onClick={() => ChangeTime('11:00')} className="dropdown-menu__option-btn" id="calendar">11:00</button>
-                        <button onClick={() => ChangeTime('11:30')} className="dropdown-menu__option-btn" id="calendar">11:30</button>
-                        <button onClick={() => ChangeTime('12:00')} className="dropdown-menu__option-btn" id="calendar">12:00</button>
-                        <button onClick={() => ChangeTime('12:30')} className="dropdown-menu__option-btn" id="calendar">12:30</button>
-                        <button onClick={() => ChangeTime('13:00')} className="dropdown-menu__option-btn" id="calendar">13:00</button>
-                        <button onClick={() => ChangeTime('13:30')} className="dropdown-menu__option-btn" id="calendar">13:30</button>
-                        <button onClick={() => ChangeTime('14:00')} className="dropdown-menu__option-btn" id="calendar">14:00</button>
-                        <button onClick={() => ChangeTime('14:30')} className="dropdown-menu__option-btn" id="calendar">14:30</button>
-                        <button onClick={() => ChangeTime('15:00')} className="dropdown-menu__option-btn" id="calendar">15:00</button>
-                        <button onClick={() => ChangeTime('15:30')} className="dropdown-menu__option-btn" id="calendar">15:30</button>
-                        <button onClick={() => ChangeTime('16:00')} className="dropdown-menu__option-btn" id="calendar">16:00</button>
-                        <button onClick={() => ChangeTime('16:30')} className="dropdown-menu__option-btn" id="calendar">16:30</button>
-                        <button onClick={() => ChangeTime('17:00')} className="dropdown-menu__option-btn" id="calendar">17:00</button>
-                        <button onClick={() => ChangeTime('17:30')} className="dropdown-menu__option-btn" id="calendar">17:30</button>
-                        <button onClick={() => ChangeTime('18:00')} className="dropdown-menu__option-btn" id="calendar">18:00</button>
-                        <button onClick={() => ChangeTime('18:30')} className="dropdown-menu__option-btn" id="calendar">18:30</button>
-                        <button onClick={() => ChangeTime('19:00')} className="dropdown-menu__option-btn" id="calendar">19:00</button>
-                        <button onClick={() => ChangeTime('19:30')} className="dropdown-menu__option-btn" id="calendar">19:30</button>
-                        <button onClick={() => ChangeTime('20:00')} className="dropdown-menu__option-btn" id="calendar">20:00</button>
-                        <button onClick={() => ChangeTime('20:30')} className="dropdown-menu__option-btn" id="calendar">20:30</button>
-                        <button onClick={() => ChangeTime('21:00')} className="dropdown-menu__option-btn" id="calendar">21:00</button>
-                        <button onClick={() => ChangeTime('21:30')} className="dropdown-menu__option-btn" id="calendar">21:30</button>
-                        <button onClick={() => ChangeTime('22:00')} className="dropdown-menu__option-btn" id="calendar">22:00</button>
-                        <button onClick={() => ChangeTime('22:30')} className="dropdown-menu__option-btn" id="calendar">22:30</button>
-                        <button onClick={() => ChangeTime('23:00')} className="dropdown-menu__option-btn" id="calendar">23:00</button>
-                        <button onClick={() => ChangeTime('23:30')} className="dropdown-menu__option-btn" id="calendar">23:30</button>
+                        <RenderTimeBtn ChangeTime={ChangeTime} currentTime={time}/>
                     </div>
                 </div>
 
