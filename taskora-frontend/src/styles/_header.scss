@@ -6,6 +6,7 @@
     display: flex;
     background-color: vars.$bgColor-lightAccent;
     width: 100vw;
+    min-height: 5vh;
 }
 
 .tabs__tab {

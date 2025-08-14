@@ -10,7 +10,7 @@
 .task-list {
     @include mixins.flex-start(column);
     @include mixins.overflow-default;
-    max-height: 93vh;
+    max-height: 95vh;
     position: relative;
     width: 50vw;
     border-right: 1px solid vars.$border-default;
@@ -20,16 +20,17 @@
 .task-list::-webkit-scrollbar { width: 0; }
 
 .task-list__section {
-    width: 100%;
-    border: none;
-    padding: 0px;
-    text-align: center;
-    overflow: visible;
+  width: 100%;
+  border: none;
+  padding: 0px;
+  text-align: center;
+  overflow: visible;
+  margin-bottom: 15px;
 }
 
 .task-list__title {
-  margin-top: 50px;
-  margin-bottom: 10px;
+  margin-top: 40px;
+  margin-bottom: 5px;
   height: fit-content;
 }
 
@@ -152,6 +153,9 @@
 
 .task-info-window__date {
   background-color: transparent;
+  position: absolute;
+  left: 5px;
+  bottom: 25px;
   margin-top: 10px;
   width: fit-content;
   height: fit-content;
