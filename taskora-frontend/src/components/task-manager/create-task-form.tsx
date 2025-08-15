@@ -19,8 +19,8 @@ function CreateTaskForm() {
             if(taskList && taskList.tasks) {
                 const taskId = String(Number(taskList?.tasks[taskList.tasks?.length - 1].id) + 1)
                 
-                taskList?.tasks?.push({id: taskId, title: taskTitle??'', description: '', date: '', time: '', completed: false, priority: 'default'})
-                AddTask(taskId, taskTitle??'', '', '', '', 'default')
+                taskList?.tasks?.push({id: taskId, title: taskTitle??'', description: '', date: '', completed: false, priority: 'default'})
+                AddTask(taskId, taskTitle??'', '', '', 'default')
                 taskList?.updateList()
                 
                 if(inputTitleTaskRef.current) inputTitleTaskRef.current.value = ''

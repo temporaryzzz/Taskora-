@@ -10,8 +10,10 @@ function DateButton({date, elementClass, currentDate} : {date: number, elementCl
     const ChangeDate = () => {
         if(taskManagerContext?.currentTaskInfo){
             const currentTaskInfo = taskManagerContext.currentTaskInfo
-            const newDate = new Date(currentDate.year, currentDate.month, date)
-            taskManagerContext?.changeCurrentTask(currentTaskInfo.title, currentTaskInfo.description, String(newDate) ,currentTaskInfo.time, currentTaskInfo.priority)
+            const hours = new Date(taskManagerContext.currentTaskInfo.date).getHours()
+            const minutes = new Date(taskManagerContext.currentTaskInfo.date).getMinutes()
+            const newDate = new Date(currentDate.year, currentDate.month, date, hours, minutes)
+            taskManagerContext?.changeCurrentTask(currentTaskInfo.title, currentTaskInfo.description, String(newDate), currentTaskInfo.priority)
         }
     }
 

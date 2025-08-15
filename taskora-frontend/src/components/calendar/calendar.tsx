@@ -53,7 +53,7 @@ const RenderDate = ({dates, week, currentDate, targetDate}: {dates: number[], we
     )
 }
 
-const RenderTimeBtn = ({ChangeTime, currentTime} : {ChangeTime(time : string) : void, currentTime : string | undefined}) => {
+const RenderTimeBtn = ({ChangeTime, currentTime} : {ChangeTime(time : {hours: number, minutes: number}) : void, currentTime : string | undefined}) => {
     
     const preliminaryTime = ['00:00', '00:30', '01:00', '01:30', '02:00', '02:30', '03:00', '03:30', '04:00', '04:30', '05:00', '05:30',
         '06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
@@ -63,11 +63,15 @@ const RenderTimeBtn = ({ChangeTime, currentTime} : {ChangeTime(time : string) : 
 
     return (
         preliminaryTime.map(time => {
+            const splitTime = time.split('')
+            const newHours = splitTime[0]=='0'?Number(splitTime[1]):Number(splitTime[0] + splitTime[1])
+            const newMinutes = splitTime[3]=='0'?Number(splitTime[4]):Number(splitTime[3] + splitTime[4])
+            const newTime = {hours: newHours, minutes: newMinutes}
             if(currentTime !== time) {
-                return <button onClick={() => ChangeTime(time)} className="dropdown-menu__option-btn" id="calendar" key={time}>{time}</button>
+                return <button onClick={() => ChangeTime(newTime)} className="dropdown-menu__option-btn" id="calendar" key={time}>{time}</button>
             }
             else {
-                return <button onClick={() => ChangeTime(time)} className="dropdown-menu__option-btn dropdown-menu__option-btn--current" id="calendar" key={time}>{time}</button>
+                return <button onClick={() => ChangeTime(newTime)} className="dropdown-menu__option-btn dropdown-menu__option-btn--current" id="calendar" key={time}>{time}</button>
             }
         })
     )
@@ -83,29 +87,29 @@ function Calendar () {
 
     const taskInfo = useContext(TaskInfoContext)
     const taskDate = taskInfo?.currentTaskInfo?.date
-    const taskTime = taskInfo?.currentTaskInfo?.time
-
-    const [date, setDate] = useState(new Date())
-    const [targetDate, setTargetDate] = useState<Date | undefined>()
+    
+    const [date, setDate] = useState(new Date())//Рендер дат в отсутсвие taskDate, если taskDate есть, то открывает календарь сразу на нужном месте
+    const [targetDate, setTargetDate] = useState<Date | undefined>()//Если taskDate есть, то принимает то же значение что и date
     const [currentMonth, setCurrentMonth] = useState(date.getMonth())
     const [currentYear, setCurrentYear] = useState(date.getFullYear())
     const [firstDayCurrentMonth, setFirstDayCurrentMonth] = useState((new Date(currentYear, currentMonth, 1)).getDay())
     const [dateButtonValue, setDateButtonValue] = useState('Установите дату')
+    const [timeButtonValue, setTimeButtonValue] = useState('')
     const [dates, setDates] = useState<number[]>([])
-    const [time, setTime] = useState(taskTime)
+
     const calendarRef = useRef<HTMLDivElement>(null)
     const dropdownMenuRef = useRef<HTMLDivElement>(null)
     const dropdownMenuContentRef = useRef<HTMLDivElement>(null)
 
     const InizializateDates = () => {
         const newDates = []
-        for(let i = 0; i < 42; i++) {
+        for(let i = 1; i < 43; i++) {//6 строк по 7 дней
             if(firstDayCurrentMonth == 0) {
-                newDates.push(new Date(currentYear, currentMonth, (i + 2) - 7).getDate())
+                newDates.push(new Date(currentYear, currentMonth, i - 6).getDate())
             }
 
             else {
-                newDates.push(new Date(currentYear, currentMonth, (i + 2) - firstDayCurrentMonth).getDate())
+                newDates.push(new Date(currentYear, currentMonth, (i + 1) - firstDayCurrentMonth).getDate())
             }
         }
         setDates(newDates)
@@ -161,24 +165,23 @@ function Calendar () {
         }
     }
 
-    const ChangeTime = (time: string) => {
-        setTime(time)
+    const ChangeTime = (time: {hours: number, minutes: number}) => {
         if(taskInfo?.currentTaskInfo) {
             if(targetDate == undefined) {
                 taskInfo.changeCurrentTask(taskInfo.currentTaskInfo.title, taskInfo.currentTaskInfo.description,
-                    String(new Date(currentYear, currentMonth, new Date().getDate())), time, taskInfo.currentTaskInfo.priority)
+                    String(new Date(currentYear, currentMonth, new Date().getDate(), time.hours, time.minutes)), taskInfo.currentTaskInfo.priority)
             }
             else{
                 taskInfo.changeCurrentTask(taskInfo.currentTaskInfo.title, taskInfo.currentTaskInfo.description,
-                    taskInfo.currentTaskInfo.date, time, taskInfo.currentTaskInfo.priority)
+                    String(new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), time.hours, time.minutes)), taskInfo.currentTaskInfo.priority)
             }
         }
     }
 
     const Cleaner = () => {
-        if(taskInfo?.currentTaskInfo && time) {
+        if(taskInfo?.currentTaskInfo) {
             taskInfo.changeCurrentTask(taskInfo.currentTaskInfo.title, taskInfo.currentTaskInfo.description,
-                '', '', taskInfo.currentTaskInfo.priority)
+            '', taskInfo.currentTaskInfo.priority)
         }
     }
 
@@ -206,24 +209,41 @@ function Calendar () {
     useEffect(() => InizializateDates(), [firstDayCurrentMonth, currentMonth])
     useEffect(() => {setDate(new Date(taskDate??new Date()))}, [taskDate])
     useEffect(() => {
-        if(taskTime == '') {
-            setTime('Срок исполнения')
-        }
-        else {
-            setTime(taskTime)
-        }
-    }, [taskTime])
-    useEffect(() => {
-        if(taskDate != '') {
+        if(taskDate != '' && taskDate != undefined) {
             setDateButtonValue(daysState[date.getDay()] + ', ' + date.getDate() + ' ' + monthState[date.getMonth()] + ' ' + date.getFullYear())
             setTargetDate(date)
             setCurrentMonth(date.getMonth())
             setCurrentYear(date.getFullYear())
+
+            let hours = ''
+            let minutes = ''
+
+            if(date.getHours() < 10) {
+                hours = '0' + date.getHours()
+            }
+            else {
+                hours = String(date.getHours())
+            }
+
+            if(date.getMinutes() < 10) {
+                minutes = '0' + date.getMinutes()
+            }
+            else {
+                minutes = String(date.getMinutes())
+            }
+
+            if(date.getMinutes() !== 59) {
+                setTimeButtonValue(hours + ':' + minutes)
+            }
+            else{
+                setTimeButtonValue('')
+            }
         }
         else {
             //Если дата не задана
             setTargetDate(undefined)
             setDateButtonValue('Установите дату')
+            setTimeButtonValue('')
         }
     }, [date])
 
@@ -280,9 +300,9 @@ function Calendar () {
                 </ul>
 
                 <div className="dropdown-menu dropdown-menu--time" id="calendar" ref={dropdownMenuRef}>
-                    <button className="dropdown-menu__select-btn" onClick={ChangeVisibleDropdownMenu} id="calendar">{time}</button>
+                    <button className="dropdown-menu__select-btn" onClick={ChangeVisibleDropdownMenu} id="calendar">{timeButtonValue==''?'Срок исполнения':timeButtonValue}</button>
                     <div id="calendar" className="dropdown-menu__content" style={{display: 'none'}} ref={dropdownMenuContentRef}>
-                        <RenderTimeBtn ChangeTime={ChangeTime} currentTime={time}/>
+                        <RenderTimeBtn ChangeTime={ChangeTime} currentTime={timeButtonValue}/>
                     </div>
                 </div>
 
@@ -294,7 +314,7 @@ function Calendar () {
             <button 
                 className='task-info-window__date'
                 onClick={ChangeStateCalendar}>
-                    {dateButtonValue + (taskTime!==''?', ':'') + taskTime}
+                    {dateButtonValue + (timeButtonValue==''?timeButtonValue:', ' + timeButtonValue)}
             </button>
         </div>
     )

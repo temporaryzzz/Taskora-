@@ -12,8 +12,7 @@ const SortedTasks = ({ tasks } : {tasks : Array<TaskInfo> | undefined}) => {
             <Task id={task.id} 
             title={task.title} 
             description={task.description} 
-            date={task.date}
-            time={task.time} 
+            date={task.date} 
             completed={task.completed}
             priority={task.priority}
             key={task.id}/>

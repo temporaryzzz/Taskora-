@@ -49,7 +49,7 @@ function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (colo
         if(taskManagerContext && currentTask) {
             const now = new Date()
             const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
-            taskManagerContext.changeCurrentTask(currentTask.title, currentTask.description, String(tomorrow), currentTask.time, currentTask.priority)
+            taskManagerContext.changeCurrentTask(currentTask.title, currentTask.description, String(tomorrow), currentTask.priority)
         }
     }
 
