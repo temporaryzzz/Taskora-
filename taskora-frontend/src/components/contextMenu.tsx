@@ -48,7 +48,11 @@ function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (colo
     const PostponeUntilTomorrow = () => {
         if(taskManagerContext && currentTask) {
             const now = new Date()
-            const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
+            const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 23, 59)
+            if(currentTask.date != '') {
+                tomorrow.setHours(new Date(currentTask.date).getHours())
+                tomorrow.setMinutes(new Date(currentTask.date).getMinutes())
+            }
             taskManagerContext.changeCurrentTask(currentTask.title, currentTask.description, String(tomorrow), currentTask.priority)
         }
     }
