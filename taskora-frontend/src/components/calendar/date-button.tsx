@@ -16,7 +16,7 @@ function DateButton({date, elementClass, currentDate} : {date: number, elementCl
     }
 
     return(
-        <li className={elementClass} id='calendar' onMouseDown={() => ChangeDate()}>{date}</li>
+        <li className={elementClass} id='calendar' onMouseDown={ChangeDate}>{date}</li>
     )
 }
 

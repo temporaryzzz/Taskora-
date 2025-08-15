@@ -164,8 +164,21 @@ function Calendar () {
     const ChangeTime = (time: string) => {
         setTime(time)
         if(taskInfo?.currentTaskInfo) {
+            if(targetDate == undefined) {
+                taskInfo.changeCurrentTask(taskInfo.currentTaskInfo.title, taskInfo.currentTaskInfo.description,
+                    String(new Date(currentYear, currentMonth, new Date().getDate())), time, taskInfo.currentTaskInfo.priority)
+            }
+            else{
+                taskInfo.changeCurrentTask(taskInfo.currentTaskInfo.title, taskInfo.currentTaskInfo.description,
+                    taskInfo.currentTaskInfo.date, time, taskInfo.currentTaskInfo.priority)
+            }
+        }
+    }
+
+    const Cleaner = () => {
+        if(taskInfo?.currentTaskInfo && time) {
             taskInfo.changeCurrentTask(taskInfo.currentTaskInfo.title, taskInfo.currentTaskInfo.description,
-                taskDate, time, taskInfo.currentTaskInfo.priority)
+                '', '', taskInfo.currentTaskInfo.priority)
         }
     }
 
@@ -191,7 +204,7 @@ function Calendar () {
 
     useEffect(() => setFirstDayCurrentMonth((new Date(currentYear, currentMonth, 1)).getDay()), [currentMonth])
     useEffect(() => InizializateDates(), [firstDayCurrentMonth, currentMonth])
-    useEffect(() => {setDate(new Date(taskDate??date))}, [taskDate])
+    useEffect(() => {setDate(new Date(taskDate??new Date()))}, [taskDate])
     useEffect(() => {
         if(taskTime == '') {
             setTime('Срок исполнения')
@@ -201,7 +214,7 @@ function Calendar () {
         }
     }, [taskTime])
     useEffect(() => {
-        if(taskDate != undefined) {
+        if(taskDate != '') {
             setDateButtonValue(daysState[date.getDay()] + ', ' + date.getDate() + ' ' + monthState[date.getMonth()] + ' ' + date.getFullYear())
             setTargetDate(date)
             setCurrentMonth(date.getMonth())
@@ -272,6 +285,9 @@ function Calendar () {
                         <RenderTimeBtn ChangeTime={ChangeTime} currentTime={time}/>
                     </div>
                 </div>
+
+                <button className='calendar-wrapper__btn' id='calendar' onClick={Cleaner}>Очистить</button>
+                <button className='calendar-wrapper__btn calendar-wrapper__btn--blue' id='calendar'>Ок</button>
 
             </div>
 

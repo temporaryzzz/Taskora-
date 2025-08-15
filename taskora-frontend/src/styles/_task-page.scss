@@ -32,6 +32,7 @@
   margin-top: 40px;
   margin-bottom: 5px;
   height: fit-content;
+  text-align: center;
 }
 
 .task-list__title:hover {
@@ -376,4 +377,32 @@
   background-color: vars.$hover-element;  
   height: 25px;  
   border-radius: 20px;       
+}
+
+.calendar-wrapper__btn {
+  background-color: transparent;
+  color: vars.$bright-blueAccent;
+  border: 1px solid vars.$bright-blueAccent;
+  width: 47%;
+  font-size: 14px;
+  position: absolute;
+  bottom: 8px;
+}
+
+.calendar-wrapper__btn:hover {
+  background-color: vars.$hover-element;
+  transition: 0.3s;
+}
+
+.calendar-wrapper__btn--blue {
+  background-color: vars.$bright-blueAccent;
+  color: vars.$fgColor-default;
+  right: 5px;
+}
+
+.calendar-wrapper__btn--blue:hover {
+  background-color: vars.$muted-blueAccent;
+  border: 1px solid vars.$muted-blueAccent;
+  color: vars.$fgColor-default;
+  transition: 0.3s;
 }
