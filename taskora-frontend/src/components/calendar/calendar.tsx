@@ -308,8 +308,14 @@ function Calendar () {
                     </div>
                 </div>
 
+                <div className="dropdown-menu dropdown-menu--time" id="calendar">
+                    <button className="dropdown-menu__select-btn" id="calendar">Напоминание</button>
+                    <div id="calendar" className="dropdown-menu__content" style={{display: 'none'}}>
+                    </div>
+                </div>
+
                 <button className='calendar-wrapper__btn' id='calendar' onClick={Cleaner}>Очистить</button>
-                <button className='calendar-wrapper__btn calendar-wrapper__btn--blue' id='calendar'>На завтра</button>
+                <button className='calendar-wrapper__btn calendar-wrapper__btn--blue' id='calendar'>Ок</button>
 
             </div>
 

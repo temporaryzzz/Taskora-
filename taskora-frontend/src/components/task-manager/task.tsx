@@ -19,6 +19,9 @@ function Task(task: TaskInfo) {
         gray: '#818c99b3',
     }
 
+    const monthState = ['янв.', 'фев.', 'мар.', 'апр.', 'мая', 'июня', 
+        'июля', 'авг.', 'сен.', 'окт.', 'ноя.', 'дек.']
+
     const taskManagerContext = useContext(TaskInfoContext)
 
     const taskRef = useRef<HTMLLIElement>(null);
@@ -26,6 +29,7 @@ function Task(task: TaskInfo) {
 
     const [taskCompletedState, setTaskCompletedState] = useState(task.completed)
     const [contextMenuActive, setContextMenuActive] = useState(false)
+    const [dateMessage, setDateMessage] = useState('')
     const [mouseX, setMouseX] = useState<number>(0)
     const [mouseY, setMouseY] = useState<number>(0)
 
@@ -123,6 +127,26 @@ function Task(task: TaskInfo) {
 
     useEffect(InizializateTask, [])
     useEffect(setActiveClass, [taskManagerContext?.currentTaskInfo])
+    useEffect(() => {
+        if(String(new Date(task.date)) == 'Invalid Date') {
+            console.log(task.date)
+            setDateMessage('')
+        }
+        else {
+            const date = new Date(task.date).getDate()
+            const month = new Date(task.date).getMonth()
+            let hours = new Date(task.date).getHours()
+            let minutes = new Date(task.date).getMinutes()
+
+            if(minutes != 59) {
+                setDateMessage(String(date) + ' ' + monthState[month] + '  ' 
+                + String(hours<10?'0'+String(hours):hours) + ':' + String(minutes<10?'0'+String(minutes):minutes))
+            }
+            else {
+                setDateMessage(String(date) + ' ' + monthState[month])
+            }
+        }
+    }, [task])
 
     return (
         <li className='task-list__task' 
@@ -132,6 +156,9 @@ function Task(task: TaskInfo) {
             
             <input type='checkbox' id='completed' ref={taskCheckbox} onChange={setStateTask}></input>
             <h4 onMouseUp={event => OnMouseUp(event)}>{task.title}</h4>
+            <div className='task-list__task-date'>
+                <p>{dateMessage}</p>
+            </div>
             <ContextMenu setColorPriority={setPriority} active={contextMenuActive} x={mouseX} y={mouseY}/> 
 
         </li>    
