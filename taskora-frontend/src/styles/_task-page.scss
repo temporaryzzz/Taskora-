@@ -180,6 +180,11 @@
   cursor: pointer;
 }
 
+.task-info-window__date--expired {
+  color: vars.$redAccent;
+
+}
+
 .calendar-wrapper {
   background-color: vars.$bgColor-lightAccent;
   bottom: 60px;

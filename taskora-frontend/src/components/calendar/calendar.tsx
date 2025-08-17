@@ -98,6 +98,7 @@ function Calendar () {
     const [dates, setDates] = useState<number[]>([])
 
     const calendarRef = useRef<HTMLDivElement>(null)
+    const taskInfoWindowDateRef = useRef<HTMLButtonElement>(null)
     const dropdownMenuRef = useRef<HTMLDivElement>(null)
     const dropdownMenuContentRef = useRef<HTMLDivElement>(null)
 
@@ -248,6 +249,16 @@ function Calendar () {
             setTimeButtonValue('')
         }
     }, [date])
+    useEffect(() => {
+        if(targetDate && targetDate < new Date()) {
+            taskInfoWindowDateRef?.current?.classList.add('task-info-window__date--expired')
+        }
+        else {
+            if(taskInfoWindowDateRef?.current?.classList.contains('task-info-window__date--expired')) {
+                taskInfoWindowDateRef.current.classList.remove('task-info-window__date--expired')
+            }
+        }
+    }, [targetDate])
 
     return(
         <div>
@@ -321,7 +332,8 @@ function Calendar () {
 
             <button 
                 className='task-info-window__date'
-                onClick={ChangeStateCalendar}>
+                onClick={ChangeStateCalendar}
+                ref={taskInfoWindowDateRef}>
                     {dateButtonValue + (timeButtonValue==''?timeButtonValue:', ' + timeButtonValue)}
             </button>
         </div>
