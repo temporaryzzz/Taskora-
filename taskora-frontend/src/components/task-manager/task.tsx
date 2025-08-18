@@ -95,8 +95,8 @@ function Task(task: TaskInfo) {
         }
     }
 
-    const OnMouseUp = (event: React.MouseEvent<HTMLLIElement | HTMLHeadingElement>) => {
-        taskManagerContext?.setCurrentTask(event, task.id)
+    const OnMouseUp = () => {
+        taskManagerContext?.setCurrentTask(task.id)
         setContextMenuActive(false)
     }
 
@@ -129,7 +129,6 @@ function Task(task: TaskInfo) {
     useEffect(setActiveClass, [taskManagerContext?.currentTaskInfo])
     useEffect(() => {
         if(String(new Date(task.date)) == 'Invalid Date') {
-            console.log(task.date)
             setDateMessage('')
         }
         else {
@@ -151,11 +150,11 @@ function Task(task: TaskInfo) {
     return (
         <li className='task-list__task' 
             ref={taskRef} id={`task-${task.id}`} 
-            onMouseUp={event => OnMouseUp(event)} 
+            onMouseUp={() => OnMouseUp()} 
             onContextMenu={event => OnContextMenu(event)}> 
             
             <input type='checkbox' id='completed' ref={taskCheckbox} onChange={setStateTask}></input>
-            <h4 onMouseUp={event => OnMouseUp(event)}>{task.title}</h4>
+            <h4 onMouseUp={() => OnMouseUp()}>{task.title}</h4>
             <div className='task-list__task-date'>
                 <p>{dateMessage}</p>
             </div>

@@ -3,7 +3,7 @@ import '../../styles.scss';
 import SideBar from './side-bar';
 import TaskInfoWindow from './task-info-window';
 import TaskList from './task-list';
-import InizializateTasks, { FindTask, ChangeTask } from '../../scripts/dataTaskManager' 
+import InizializateTasks, { ChangeTask } from '../../scripts/dataTaskManager' 
 
 
 export type TaskInfo = {
@@ -18,7 +18,7 @@ export type TaskInfo = {
 type TaskPageType = {
     tasks: Array<TaskInfo> | undefined;
     currentTaskInfo: TaskInfo | undefined;
-    setCurrentTask: (event: React.MouseEvent<HTMLLIElement | HTMLHeadingElement>, id: string) => void
+    setCurrentTask: (id: string) => void
     changeCurrentTask: (title: string, description: string, date: string, priority: 'red' | 'blue' | 'green' | 'default') => void
     updateList: () => void
 }
@@ -54,9 +54,10 @@ function TaskPage() {
     }
 
     //Передаем данные о задаче в фокусе
-    const setCurrentTask = (event: React.MouseEvent<HTMLLIElement | HTMLHeadingElement>, id: string) => {
-        if(event.target instanceof HTMLElement) {
-            FindTask(id).then((data) => setCurrentTaskInfo(data))
+    const setCurrentTask = (id: string) => {
+        if(tasks) {
+            const currentTaskIndex = tasks.findIndex(task => task.id === id)
+            setCurrentTaskInfo(tasks[currentTaskIndex])
         }
     }
 
@@ -73,7 +74,7 @@ function TaskPage() {
 
     return (
         <TaskInfoContext.Provider value={contextValue}>
-            <div className='task-page'>
+            <div className='task-page' id='task-page'>
                 <SideBar />
                 <TaskList />
                 <TaskInfoWindow />

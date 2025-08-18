@@ -1,9 +1,9 @@
 import '../../styles.scss';
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState, type SetStateAction } from "react";
 import { TaskInfoContext} from "../task-manager/task-page";
 import DateButton from './date-button';
 
-const RenderDate = ({dates, week, currentDate, targetDate}: {dates: number[], week: number, currentDate: {year: number, month: number}, targetDate: Date | undefined}) => {
+const RenderDate = ({dates, week, currentDate, targetDate, setTargetDate}: {dates: number[], week: number, currentDate: {year: number, month: number}, targetDate: Date | undefined, setTargetDate: React.Dispatch<SetStateAction<Date | undefined>>}) => {
 
     const [todayDate] = useState(new Date())
 
@@ -12,41 +12,41 @@ const RenderDate = ({dates, week, currentDate, targetDate}: {dates: number[], we
             //Если в первой строке число больше 7-ми, то это день из предыдущего месяца
             if(week == 1 && date > 7) {
                 if(date == todayDate.getDate() && currentDate.month == todayDate.getMonth() + 1 && currentDate.year == todayDate.getFullYear()) {
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} targetDate={targetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
                 }
                 else{
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--not-included'} currentDate={currentDate} targetDate={targetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--not-included'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
                 }
             }
 
             if(week == 5 && date < 23) {
                 if(date == todayDate.getDate() && currentDate.month == todayDate.getMonth() - 1 && currentDate.year == todayDate.getFullYear()) {
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} targetDate={targetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
                 }
                 else{
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--not-included'} currentDate={currentDate} targetDate={targetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--not-included'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
                 }
             }
 
             if(week == 6 && date < 30) {
                 if(date == todayDate.getDate() && currentDate.month == todayDate.getMonth() - 1 && currentDate.year == todayDate.getFullYear()) {
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} targetDate={targetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
                 }
                 else{
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--not-included'} currentDate={currentDate} targetDate={targetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--not-included'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
                 }
             }
 
             if(date == targetDate?.getDate() && currentDate.year == targetDate?.getFullYear() && currentDate.month == targetDate?.getMonth()) {
-                return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--target'} currentDate={currentDate} targetDate={targetDate} key={date}/>
+                return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--target'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
             }
 
             else {
                 if(date == todayDate.getDate() && currentDate.month == todayDate.getMonth() && currentDate.year == todayDate.getFullYear()) {
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} targetDate={targetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
                 }
                 else{
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date'} currentDate={currentDate} targetDate={targetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
                 }
             }
         })
@@ -96,13 +96,65 @@ function Calendar () {
     const [dateButtonValue, setDateButtonValue] = useState('Установите дату')
     const [timeButtonValue, setTimeButtonValue] = useState('')
     const [dates, setDates] = useState<number[]>([])
+    const [clickOutCalendar, setClickOutCalendar] = useState(false)
 
     const calendarRef = useRef<HTMLDivElement>(null)
     const taskInfoWindowDateRef = useRef<HTMLButtonElement>(null)
     const dropdownMenuRef = useRef<HTMLDivElement>(null)
     const dropdownMenuContentRef = useRef<HTMLDivElement>(null)
 
-    const InizializateDates = () => {
+    const InizializateDate = () => {
+        if(taskDate != '' && taskDate != undefined && taskDate != 'Invalid Date') {
+            setDateButtonValue(daysState[date.getDay()] + ', ' + date.getDate() + ' ' + monthState[date.getMonth()] + ' ' + date.getFullYear())
+            setTargetDate(new Date(date))
+            setCurrentMonth(date.getMonth())
+            setCurrentYear(date.getFullYear())
+
+            let hours = ''
+            let minutes = ''
+
+            if(date.getHours() < 10) {
+                hours = '0' + date.getHours()
+            }
+            else {
+                hours = String(date.getHours())
+            }
+
+            if(date.getMinutes() < 10) {
+                minutes = '0' + date.getMinutes()
+            }
+            else {
+                minutes = String(date.getMinutes())
+            }
+
+            if(date.getMinutes() !== 59) {
+                setTimeButtonValue(hours + ':' + minutes)
+                setDateButtonValue(daysState[date.getDay()] + ', ' + date.getDate() + ' ' + monthState[date.getMonth()] + ' ' + date.getFullYear() + ', ' + hours + ':' + minutes)
+            }
+            else{
+                setTimeButtonValue('')
+            }
+        }
+        else {
+            //Если дата не задана
+            setTargetDate(undefined)
+            setDateButtonValue('Установите дату')
+            setTimeButtonValue('')
+        }
+    }
+
+    const ChangeColorDeadline = () => {
+        if(taskDate && new Date(taskDate) < new Date()) {
+            taskInfoWindowDateRef?.current?.classList.add('task-info-window__date--expired')
+        }
+        else {
+            if(taskInfoWindowDateRef?.current?.classList.contains('task-info-window__date--expired')) {
+                taskInfoWindowDateRef.current.classList.remove('task-info-window__date--expired')
+            }
+        }
+    }
+
+    const InizializateTableDates = () => {
         const newDates = []
         for(let i = 1; i < 43; i++) {//6 строк по 7 дней
             if(firstDayCurrentMonth == 0) {
@@ -142,6 +194,7 @@ function Calendar () {
         if(calendarRef.current) {
             if(calendarRef.current.style.display == 'none') {
                 calendarRef.current.style.display = 'flex'
+                setClickOutCalendar(false)
             }
 
             else {
@@ -167,15 +220,40 @@ function Calendar () {
     }
 
     const ChangeTime = (time: {hours: number, minutes: number}) => {
-        if(taskInfo?.currentTaskInfo) {
-            if(targetDate == undefined) {
-                taskInfo.changeCurrentTask(taskInfo.currentTaskInfo.title, taskInfo.currentTaskInfo.description,
-                    String(new Date(currentYear, currentMonth, new Date().getDate(), time.hours, time.minutes)), taskInfo.currentTaskInfo.priority)
-            }
-            else{
-                taskInfo.changeCurrentTask(taskInfo.currentTaskInfo.title, taskInfo.currentTaskInfo.description,
-                    String(new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), time.hours, time.minutes)), taskInfo.currentTaskInfo.priority)
-            }
+        if(targetDate == undefined) {
+            setTargetDate(new Date(currentYear, currentMonth, new Date().getDate(), time.hours, time.minutes))
+        }
+        else{
+            targetDate.setHours(time.hours)
+            targetDate.setMinutes(time.minutes)
+        }
+
+        ChangeVisibleDropdownMenu()
+
+        let hours = ''
+        let minutes = ''
+
+        if(targetDate && targetDate.getHours() < 10) {
+            hours = '0' + targetDate.getHours()
+        }
+        else {
+            if(targetDate)
+             hours = String(targetDate.getHours())
+        }
+
+        if(targetDate && targetDate.getMinutes() < 10) {
+            minutes = '0' + targetDate.getMinutes()
+        }
+        else {
+            if(targetDate)
+                minutes = String(targetDate.getMinutes())
+        }
+
+        if(targetDate && targetDate.getMinutes() !== 59) {
+            setTimeButtonValue(hours + ':' + minutes)
+        }
+        else{
+            setTimeButtonValue('')
         }
     }
 
@@ -186,79 +264,53 @@ function Calendar () {
         }
     }
 
-    document.addEventListener('mousedown', (e) => { 
-        if(e.target instanceof HTMLElement) {
-            if(e.target.id !== 'calendar' && !e.target.classList.contains('task-info-window__date')){
-                if(calendarRef.current)  {
-                    calendarRef.current.style.display = 'none'
-                }
+    const SendDate = () => {
+        if(targetDate && taskInfo?.currentTaskInfo) {
+            taskInfo?.changeCurrentTask(taskInfo.currentTaskInfo?.title, taskInfo.currentTaskInfo?.description, String(targetDate), taskInfo.currentTaskInfo?.priority)
+        }
 
-                if(dropdownMenuContentRef.current) {
-                    dropdownMenuContentRef.current.style.display = 'none'
-                }
+        ChangeColorDeadline()
+        ChangeStateCalendar()
+    }
 
-                if(dropdownMenuRef.current) {
-                    if(dropdownMenuRef.current.classList.contains('dropdown-menu--active')) {
-                        dropdownMenuRef.current.classList.remove('dropdown-menu--active')
-                    }
+    const ClickOut = (e: MouseEvent) => {
+    if(e.target instanceof HTMLElement) {
+        if(e.target.id !== 'calendar' && !e.target.classList.contains('task-info-window__date') && calendarRef?.current?.style.display =='flex'){
+            if(calendarRef.current)  {
+                calendarRef.current.style.display = 'none'
+                setClickOutCalendar(true)
+            }
+
+            if(dropdownMenuContentRef.current) {
+                dropdownMenuContentRef.current.style.display = 'none'
+            }
+
+            if(dropdownMenuRef.current) {
+                if(dropdownMenuRef.current.classList.contains('dropdown-menu--active')) {
+                    dropdownMenuRef.current.classList.remove('dropdown-menu--active')
                 }
             }
         }
-    })
+    }
+}
+
+    useEffect(() => {
+        document.addEventListener('mousedown', ClickOut)
+        return () => document.removeEventListener('mousedown', ClickOut);
+    }, [])
 
     useEffect(() => setFirstDayCurrentMonth((new Date(currentYear, currentMonth, 1)).getDay()), [currentMonth])
-    useEffect(() => InizializateDates(), [firstDayCurrentMonth, currentMonth])
+    useEffect(() => InizializateTableDates(), [firstDayCurrentMonth, currentMonth])
     useEffect(() => {
         setDate(new Date(taskDate!=''?String(taskDate):new Date()))
+        ChangeColorDeadline()
     }, [taskDate])
     useEffect(() => {
-        if(taskDate != '' && taskDate != undefined && taskDate != 'Invalid Date') {
-            setDateButtonValue(daysState[date.getDay()] + ', ' + date.getDate() + ' ' + monthState[date.getMonth()] + ' ' + date.getFullYear())
-            setTargetDate(date)
-            setCurrentMonth(date.getMonth())
-            setCurrentYear(date.getFullYear())
-
-            let hours = ''
-            let minutes = ''
-
-            if(date.getHours() < 10) {
-                hours = '0' + date.getHours()
-            }
-            else {
-                hours = String(date.getHours())
-            }
-
-            if(date.getMinutes() < 10) {
-                minutes = '0' + date.getMinutes()
-            }
-            else {
-                minutes = String(date.getMinutes())
-            }
-
-            if(date.getMinutes() !== 59) {
-                setTimeButtonValue(hours + ':' + minutes)
-            }
-            else{
-                setTimeButtonValue('')
-            }
-        }
-        else {
-            //Если дата не задана
-            setTargetDate(undefined)
-            setDateButtonValue('Установите дату')
-            setTimeButtonValue('')
-        }
+        InizializateDate()
     }, [date])
     useEffect(() => {
-        if(targetDate && targetDate < new Date()) {
-            taskInfoWindowDateRef?.current?.classList.add('task-info-window__date--expired')
-        }
-        else {
-            if(taskInfoWindowDateRef?.current?.classList.contains('task-info-window__date--expired')) {
-                taskInfoWindowDateRef.current.classList.remove('task-info-window__date--expired')
-            }
-        }
-    }, [targetDate])
+        setDate(new Date(taskDate!=''?String(taskDate):new Date()))
+    }, [clickOutCalendar])
 
     return(
         <div>
@@ -287,28 +339,28 @@ function Calendar () {
 
                 <ul className='calendar-wrapper__container calendar-wrapper__container--weeks' id='calendar'>
                     <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(0, 7)} week={1} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate}/>
+                       <RenderDate dates={dates.slice(0, 7)} week={1} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate}/>
                     </ul>
 
                     <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(7, 14)} week={2} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate}/>
+                       <RenderDate dates={dates.slice(7, 14)} week={2} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate}/>
                     </ul>
 
                     <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(14, 21)} week={3} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate}/>
-
-                    </ul>
-
-                    <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(21, 28)} week={4} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate}/>
+                       <RenderDate dates={dates.slice(14, 21)} week={3} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate}/>
 
                     </ul>
 
                     <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(28, 35)} week={5} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate}/>
+                       <RenderDate dates={dates.slice(21, 28)} week={4} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate}/>
+
+                    </ul>
+
+                    <ul className='calendar-wrapper__container' id='calendar'>
+                       <RenderDate dates={dates.slice(28, 35)} week={5} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate}/>
                     </ul>
                     <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(35, 42)} week={6} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate}/>
+                       <RenderDate dates={dates.slice(35, 42)} week={6} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate}/>
                     </ul>
                 </ul>
 
@@ -326,7 +378,7 @@ function Calendar () {
                 </div>
 
                 <button className='calendar-wrapper__btn' id='calendar' onClick={Cleaner}>Очистить</button>
-                <button className='calendar-wrapper__btn calendar-wrapper__btn--blue' id='calendar'>Ок</button>
+                <button className='calendar-wrapper__btn calendar-wrapper__btn--blue' id='calendar' onMouseDown={SendDate}>Ок</button>
 
             </div>
 
@@ -334,7 +386,7 @@ function Calendar () {
                 className='task-info-window__date'
                 onClick={ChangeStateCalendar}
                 ref={taskInfoWindowDateRef}>
-                    {dateButtonValue + (timeButtonValue==''?timeButtonValue:', ' + timeButtonValue)}
+                    {dateButtonValue}
             </button>
         </div>
     )
