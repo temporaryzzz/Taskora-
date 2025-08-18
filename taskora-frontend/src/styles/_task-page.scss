@@ -126,7 +126,6 @@
 .icon {
   width: 30px;
   height: 15px;
-  margin-right: 5px;
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -292,6 +291,7 @@
 
 .dropdown-menu {
   width: 100%;
+  display: flex;
   background-color: transparent;
   border: none;
   border-radius: vars.$border-radius-default;
@@ -336,6 +336,9 @@
 
 .dropdown-menu__select-btn {
   width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding: 1px;
   background-color: transparent;
   color: vars.$bright-blueAccent;
   text-align: start;
@@ -368,7 +371,7 @@
   flex-direction: column;
   position: absolute;
   left: 5px;
-  margin-top: 3px;
+  margin-top: 28px;
   background-color: vars.$bgColor-default;
   border: 1px solid vars.$border-default;
   border-radius: vars.$border-radius-default;

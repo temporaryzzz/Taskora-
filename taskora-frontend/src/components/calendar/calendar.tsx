@@ -365,14 +365,20 @@ function Calendar () {
                 </ul>
 
                 <div className="dropdown-menu dropdown-menu--time" id="calendar" ref={dropdownMenuRef}>
-                    <button className="dropdown-menu__select-btn" onClick={ChangeVisibleDropdownMenu} id="calendar">{timeButtonValue==''?'Срок исполнения':timeButtonValue}</button>
+                    <button className="dropdown-menu__select-btn" onClick={ChangeVisibleDropdownMenu} id="calendar">
+                        <img src='../../../public/watch-icon.svg' width={'18px'} height={'18px'} style={{marginRight: '7px', marginTop: '2px'}} alt='time'></img>
+                        {timeButtonValue==''?'Срок исполнения':timeButtonValue}
+                    </button>
                     <div id="calendar" className="dropdown-menu__content" style={{display: 'none'}} ref={dropdownMenuContentRef}>
                         <RenderTimeBtn ChangeTime={ChangeTime} currentTime={timeButtonValue}/>
                     </div>
                 </div>
 
                 <div className="dropdown-menu dropdown-menu--time" id="calendar">
-                    <button className="dropdown-menu__select-btn" id="calendar">Напоминание</button>
+                    <button className="dropdown-menu__select-btn" id="calendar">
+                        <img src='../../../public/reminder-icon.svg' width={'18px'} height={'18px'} style={{marginRight: '7px', marginTop: '2px'}} alt='reminder'></img>
+                        Напоминание
+                    </button>
                     <div id="calendar" className="dropdown-menu__content" style={{display: 'none'}}>
                     </div>
                 </div>
