@@ -76,7 +76,7 @@ function TaskPage() {
             if(taskListElement) {
                 const {top} = taskListElement.getBoundingClientRect()
                 setMouseX(event.clientX) 
-                setMouseY(event.clientY - (top - taskListElement.scrollTop))//Считаем от начала taskListElement(потому что task-page не включает в себя шапку)
+                setMouseY(event.clientY - (top - taskListElement.clientTop))//Считаем от начала taskListElement(потому что task-page не включает в себя шапку)
                 setContextMenuActive(!contextMenuActive)
             }
         } 
