@@ -74,6 +74,10 @@
   font-size: 11px;
 }
 
+.task-list__task-date:hover {
+  cursor: pointer;
+}
+
 .task-list__task--active {
   background-color: vars.$bgColor-current;
   border-radius: vars.$border-radius-default;

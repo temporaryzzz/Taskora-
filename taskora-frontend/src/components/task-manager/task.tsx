@@ -3,7 +3,6 @@ import { ChangeStateTask } from '../../scripts/dataTaskManager';
 import '../../styles.scss';
 import type { TaskInfo } from './task-page';
 import { TaskInfoContext } from "./task-page";
-import ContextMenu from '../contextMenu';
 
 function Task(task: TaskInfo) {
     const stateClasses ={
@@ -28,10 +27,7 @@ function Task(task: TaskInfo) {
     const taskCheckbox = useRef<HTMLInputElement>(null);
 
     const [taskCompletedState, setTaskCompletedState] = useState(task.completed)
-    const [contextMenuActive, setContextMenuActive] = useState(false)
     const [dateMessage, setDateMessage] = useState('')
-    const [mouseX, setMouseX] = useState<number>(0)
-    const [mouseY, setMouseY] = useState<number>(0)
 
     const InizializateTask = () => {
         if(task.completed === true) {
@@ -97,33 +93,7 @@ function Task(task: TaskInfo) {
 
     const OnMouseUp = () => {
         taskManagerContext?.setCurrentTask(task.id)
-        setContextMenuActive(false)
     }
-
-    const OnContextMenu = (event: React.MouseEvent<HTMLLIElement | HTMLHeadingElement>) => {
-        event.preventDefault()
-        const taskListElement = document.querySelector('.task-list')
-        
-        if(taskListElement) {
-            const {left, top} = taskListElement.getBoundingClientRect()
-            setMouseX(event.clientX - (left - taskListElement.scrollLeft)) 
-            setMouseY(event.clientY - (top - taskListElement.scrollTop))
-            setContextMenuActive(!contextMenuActive)
-        }
-    }
-
-    const setPriority = (color: string, priority: 'red' | 'blue' | 'green' | 'default') => {
-        if(taskCheckbox.current) {
-            taskCheckbox.current.style.borderColor = color
-            if(taskManagerContext?.currentTaskInfo) {
-                const currentTask = taskManagerContext.currentTaskInfo
-                currentTask.priority = priority
-                taskManagerContext.changeCurrentTask(currentTask.title, currentTask.description, currentTask.date, priority)
-            }
-        }
-    }
-
-    document.addEventListener('mousedown', () => { setContextMenuActive(false) })
 
     useEffect(InizializateTask, [])
     useEffect(setActiveClass, [taskManagerContext?.currentTaskInfo])
@@ -145,21 +115,42 @@ function Task(task: TaskInfo) {
                 setDateMessage(String(date) + ' ' + monthState[month])
             }
         }
+
+        if(taskCheckbox.current) {
+            switch (task.priority) {
+
+                case 'red':  {
+                    taskCheckbox.current.style.borderColor = stateColors.red;
+                    break
+                }
+                case 'blue': {
+                    taskCheckbox.current.style.borderColor = stateColors.blue;
+                    break
+                }
+                case 'green': {
+                    taskCheckbox.current.style.borderColor = stateColors.green;
+                    break
+                }
+                case 'default': {
+                    taskCheckbox.current.style.borderColor = stateColors.gray;
+                    break
+                }
+
+            }
+        }
+
     }, [task])
 
     return (
         <li className='task-list__task' 
             ref={taskRef} id={`task-${task.id}`} 
-            onMouseUp={() => OnMouseUp()} 
-            onContextMenu={event => OnContextMenu(event)}> 
+            onMouseUp={() => OnMouseUp()}> 
             
             <input type='checkbox' id='completed' ref={taskCheckbox} onChange={setStateTask}></input>
-            <h4 onMouseUp={() => OnMouseUp()}>{task.title}</h4>
-            <div className='task-list__task-date'>
-                <p>{dateMessage}</p>
+            <h4 onMouseUp={() => OnMouseUp()} id='task'>{task.title}</h4>
+            <div className='task-list__task-date' id='task'>
+                <p id='task'>{dateMessage}</p>
             </div>
-            <ContextMenu setColorPriority={setPriority} active={contextMenuActive} x={mouseX} y={mouseY}/> 
-
         </li>    
     )
 }
