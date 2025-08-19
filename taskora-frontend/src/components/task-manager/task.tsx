@@ -12,10 +12,10 @@ function Task(task: TaskInfo) {
     }
 
     const stateColors = {
-        red: '#d52b24',
-        blue: '#1962e8',
-        green: '#238636',
-        gray: '#818c99b3',
+        highest: '#d52b24',
+        high: '#1962e8',
+        middle: '#238636',
+        default: '#818c99b3',
     }
 
     const monthState = ['янв.', 'фев.', 'мар.', 'апр.', 'мая', 'июня', 
@@ -41,17 +41,17 @@ function Task(task: TaskInfo) {
 
         if (taskCheckbox.current) {
             switch (task.priority){
-                case 'red' :
-                    taskCheckbox.current.style.borderColor = stateColors.red
+                case 'highest' :
+                    taskCheckbox.current.style.borderColor = stateColors.highest
                     break
-                case 'blue' :
-                    taskCheckbox.current.style.borderColor = stateColors.blue
+                case 'high' :
+                    taskCheckbox.current.style.borderColor = stateColors.high
                     break
-                case 'green' :
-                    taskCheckbox.current.style.borderColor = stateColors.green
+                case 'middle' :
+                    taskCheckbox.current.style.borderColor = stateColors.middle
                     break
                 case 'default' :
-                    taskCheckbox.current.style.borderColor = stateColors.gray
+                    taskCheckbox.current.style.borderColor = stateColors.default
                     break
             }
         }
@@ -119,20 +119,20 @@ function Task(task: TaskInfo) {
         if(taskCheckbox.current) {
             switch (task.priority) {
 
-                case 'red':  {
-                    taskCheckbox.current.style.borderColor = stateColors.red;
+                case 'highest':  {
+                    taskCheckbox.current.style.borderColor = stateColors.highest;
                     break
                 }
-                case 'blue': {
-                    taskCheckbox.current.style.borderColor = stateColors.blue;
+                case 'high': {
+                    taskCheckbox.current.style.borderColor = stateColors.high;
                     break
                 }
-                case 'green': {
-                    taskCheckbox.current.style.borderColor = stateColors.green;
+                case 'middle': {
+                    taskCheckbox.current.style.borderColor = stateColors.middle;
                     break
                 }
                 case 'default': {
-                    taskCheckbox.current.style.borderColor = stateColors.gray;
+                    taskCheckbox.current.style.borderColor = stateColors.default;
                     break
                 }
 

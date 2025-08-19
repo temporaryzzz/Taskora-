@@ -13,14 +13,14 @@ export type TaskInfo = {
   description: string;
   date: string;
   completed: boolean;
-  priority: 'red' | 'blue' | 'green' | 'default';
+  priority: 'highest' | 'high' | 'middle' | 'default';
 };
 
 type TaskPageType = {
     tasks: Array<TaskInfo> | undefined;
     currentTaskInfo: TaskInfo | undefined;
     setCurrentTask: (id: string) => void
-    changeCurrentTask: (title: string, description: string, date: string, priority: 'red' | 'blue' | 'green' | 'default') => void
+    changeCurrentTask: (title: string, description: string, date: string, priority: 'highest' | 'high' | 'middle' | 'default') => void
     updateList: () => void
 }
 
@@ -40,7 +40,7 @@ function TaskPage() {
             setTasks([...tasks])
     }
 
-    const changeCurrentTask = (title: string, description: string, date: string, priority: 'red' | 'blue' | 'green' | 'default') => {
+    const changeCurrentTask = (title: string, description: string, date: string, priority: 'highest' | 'high' | 'middle' | 'default') => {
         if(tasks != undefined) {
             const currentTaskIndex = tasks.findIndex(task => task.id === currentTaskInfo?.id)
             if(currentTaskIndex != undefined && currentTaskInfo != undefined) {
@@ -86,7 +86,7 @@ function TaskPage() {
         }
     }
 
-    const setPriority = (priority: 'red' | 'blue' | 'green' | 'default') => {
+    const setPriority = (priority: 'highest' | 'high' | 'middle' | 'default') => {
         if(currentTaskInfo) {
             changeCurrentTask(currentTaskInfo.title, currentTaskInfo.description, currentTaskInfo.date, priority)
         }

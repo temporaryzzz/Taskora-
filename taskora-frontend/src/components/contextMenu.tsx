@@ -4,7 +4,7 @@ import { TaskInfoContext } from "./task-manager/task-page";
 import { DeleteTask } from '../scripts/dataTaskManager';
 
 
-function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (priority: 'red' | 'blue' | 'green' | 'default') => void, active: boolean, x: number, y: number}) {
+function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (priority: 'highest' | 'high' | 'middle' | 'default') => void, active: boolean, x: number, y: number}) {
     const stateClasses = {
         hiddenMenu: 'context-menu',
         activeMenu: 'context-menu--active'
@@ -58,15 +58,15 @@ function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (prio
                 <p>Приоритет</p>
             </span>
             <ul className='context-menu__container'>
-                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority('red')}>
+                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority('highest')}>
                     <img src='/red-priority-icon.svg' width={'23px'} height={'23px'} style={{margin: '0 auto'}}></img>
                 </li>
 
-                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority('blue')}>
+                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority('high')}>
                     <img src='/blue-priority-icon.svg' width={'23px'} height={'23px'} style={{margin: '0 auto'}}></img>
                 </li>
 
-                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority('green')}>
+                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority('middle')}>
                     <img src='/green-priority-icon.svg' width={'23px'} height={'23px'} style={{margin: '0 auto'}}></img>
                 </li>
 
