@@ -5,6 +5,8 @@ import SingUpForm from './components/singup';
 import Header from './components/header';
 import TaskPage from './components/task-manager/task-page';
 
+console.log(document.cookie)
+
 function App() {
 
   return (

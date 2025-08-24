@@ -3,7 +3,8 @@ import { useContext, useEffect, useRef, useState, type SetStateAction } from "re
 import { TaskInfoContext} from "../task-manager/task-page";
 import DateButton from './date-button';
 
-const RenderDate = ({dates, week, currentDate, targetDate, setTargetDate}: {dates: number[], week: number, currentDate: {year: number, month: number}, targetDate: Date | undefined, setTargetDate: React.Dispatch<SetStateAction<Date | undefined>>}) => {
+const RenderDate = ({dates, week, currentDate, targetDate, setTargetDate, ChangeCurrentMonth}: 
+    {dates: number[], week: number, currentDate: {year: number, month: number}, targetDate: Date | undefined, setTargetDate: React.Dispatch<SetStateAction<Date | undefined>>, ChangeCurrentMonth: (direction: '+' | '-') => void}) => {
 
     const [todayDate] = useState(new Date())
 
@@ -12,41 +13,50 @@ const RenderDate = ({dates, week, currentDate, targetDate, setTargetDate}: {date
             //Если в первой строке число больше 7-ми, то это день из предыдущего месяца
             if(week == 1 && date > 7) {
                 if(date == todayDate.getDate() && currentDate.month == todayDate.getMonth() + 1 && currentDate.year == todayDate.getFullYear()) {
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={{year: currentDate.year, month: currentDate.month - 1}} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth} direction={'-'} key={date}/>
+                }
+                if(date == targetDate?.getDate() && currentDate.year == targetDate?.getFullYear() && currentDate.month - 1 == targetDate?.getMonth()) {
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--target'} currentDate={{year: currentDate.year, month: currentDate.month - 1}} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth} direction={'-'} key={date}/>
                 }
                 else{
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--not-included'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--not-included'} currentDate={{year: currentDate.year, month: currentDate.month - 1}} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth} direction={'-'} key={date}/>
                 }
             }
 
             if(week == 5 && date < 23) {
                 if(date == todayDate.getDate() && currentDate.month == todayDate.getMonth() - 1 && currentDate.year == todayDate.getFullYear()) {
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={{year: currentDate.year, month: currentDate.month + 1}} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth} direction={'+'} key={date}/>
+                }
+                if(date == targetDate?.getDate() && currentDate.year == targetDate?.getFullYear() && currentDate.month + 1 == targetDate?.getMonth()) {
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--target'} currentDate={{year: currentDate.year, month: currentDate.month + 1}} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth} direction={'+'} key={date}/>
                 }
                 else{
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--not-included'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--not-included'} currentDate={{year: currentDate.year, month: currentDate.month + 1}} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth} direction={'+'} key={date}/>
                 }
             }
 
             if(week == 6 && date < 30) {
                 if(date == todayDate.getDate() && currentDate.month == todayDate.getMonth() - 1 && currentDate.year == todayDate.getFullYear()) {
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={{year: currentDate.year, month: currentDate.month + 1}} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth} direction={'+'} key={date}/>
+                }
+                if(date == targetDate?.getDate() && currentDate.year == targetDate?.getFullYear() && currentDate.month + 1 == targetDate?.getMonth()) {
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--target'} currentDate={{year: currentDate.year, month: currentDate.month + 1}} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth} direction={'+'} key={date}/>
                 }
                 else{
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--not-included'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--not-included'} currentDate={{year: currentDate.year, month: currentDate.month + 1}} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth} direction={'+'} key={date}/>
                 }
             }
 
             if(date == targetDate?.getDate() && currentDate.year == targetDate?.getFullYear() && currentDate.month == targetDate?.getMonth()) {
-                return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--target'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
+                return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--target'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth} direction={'0'} key={date}/>
             }
 
             else {
                 if(date == todayDate.getDate() && currentDate.month == todayDate.getMonth() && currentDate.year == todayDate.getFullYear()) {
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date calendar-wrapper__date--today'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth} direction={'0'} key={date}/>
                 }
                 else{
-                    return <DateButton date={date} elementClass={'calendar-wrapper__date'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} key={date}/>
+                    return <DateButton date={date} elementClass={'calendar-wrapper__date'} currentDate={currentDate} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth} direction={'0'} key={date}/>
                 }
             }
         })
@@ -169,6 +179,7 @@ function Calendar () {
     }
 
     const ChangeCurrentMonth = (direction: '+' | '-') => {
+        console.log(currentMonth)
         if(direction == '+') {
             if(currentMonth !== 11) {
                 setCurrentMonth(currentMonth + 1)
@@ -339,34 +350,34 @@ function Calendar () {
 
                 <ul className='calendar-wrapper__container calendar-wrapper__container--weeks' id='calendar'>
                     <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(0, 7)} week={1} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate}/>
+                       <RenderDate dates={dates.slice(0, 7)} week={1} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth}/>
                     </ul>
 
                     <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(7, 14)} week={2} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate}/>
+                       <RenderDate dates={dates.slice(7, 14)} week={2} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth}/>
                     </ul>
 
                     <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(14, 21)} week={3} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate}/>
-
-                    </ul>
-
-                    <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(21, 28)} week={4} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate}/>
+                       <RenderDate dates={dates.slice(14, 21)} week={3} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth}/>
 
                     </ul>
 
                     <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(28, 35)} week={5} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate}/>
+                       <RenderDate dates={dates.slice(21, 28)} week={4} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth}/>
+
+                    </ul>
+
+                    <ul className='calendar-wrapper__container' id='calendar'>
+                       <RenderDate dates={dates.slice(28, 35)} week={5} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth}/>
                     </ul>
                     <ul className='calendar-wrapper__container' id='calendar'>
-                       <RenderDate dates={dates.slice(35, 42)} week={6} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate}/>
+                       <RenderDate dates={dates.slice(35, 42)} week={6} currentDate={{year:currentYear,month:currentMonth}} targetDate={targetDate} setTargetDate={setTargetDate} ChangeCurrentMonth={ChangeCurrentMonth}/>
                     </ul>
                 </ul>
 
                 <div className="dropdown-menu dropdown-menu--time" id="calendar" ref={dropdownMenuRef}>
                     <button className="dropdown-menu__select-btn" onClick={ChangeVisibleDropdownMenu} id="calendar">
-                        <img src='../../../public/watch-icon.svg' width={'18px'} height={'18px'} style={{marginRight: '7px', marginTop: '2px'}} alt='time'></img>
+                        <img src='/watch-icon.svg' width={'18px'} height={'18px'} style={{marginRight: '7px', marginTop: '2px'}} alt='time'></img>
                         {timeButtonValue==''?'Срок исполнения':timeButtonValue}
                     </button>
                     <div id="calendar" className="dropdown-menu__content" style={{display: 'none'}} ref={dropdownMenuContentRef}>
@@ -376,7 +387,7 @@ function Calendar () {
 
                 <div className="dropdown-menu dropdown-menu--time" id="calendar">
                     <button className="dropdown-menu__select-btn" id="calendar">
-                        <img src='../../../public/reminder-icon.svg' width={'18px'} height={'18px'} style={{marginRight: '7px', marginTop: '2px'}} alt='reminder'></img>
+                        <img src='/reminder-icon.svg' width={'18px'} height={'18px'} style={{marginRight: '7px', marginTop: '2px'}} alt='reminder'></img>
                         Напоминание
                     </button>
                     <div id="calendar" className="dropdown-menu__content" style={{display: 'none'}}>

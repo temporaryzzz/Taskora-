@@ -39,9 +39,18 @@
   cursor: pointer;
 }
 
+.task-list__title::after {
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23555"/></svg>');
+  position: absolute;
+  transition: 0.2s;
+  right: 10px;
+  rotate: 0deg;
+}
+
 .task-list__task {
   align-items: center;
-  border-bottom: 1px solid vars.$border-default;
+  border: 1px solid vars.$border-default;
+  border-radius: vars.$border-radius-default;
   background: transparent;
   color: vars.$fgColor-default;
   display: flex;
