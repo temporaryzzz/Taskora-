@@ -290,6 +290,7 @@ function Calendar () {
             if(calendarRef.current)  {
                 calendarRef.current.style.display = 'none'
                 setClickOutCalendar(true)
+
             }
 
             if(dropdownMenuContentRef.current) {

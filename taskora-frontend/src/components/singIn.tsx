@@ -1,14 +1,18 @@
 //import { useState } from 'react';
-import type { FormEvent } from 'react';
+import type { FormEvent, SetStateAction } from 'react';
 import { useNavigate } from 'react-router';
 import '../styles.scss';
 
 
-function SingInForm() {
+function SingInForm({setUsername} : {setUsername: React.Dispatch<SetStateAction<string>>}) {
     const navigate = useNavigate()
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault()
+        const loginInputElement = document.getElementById('login') as HTMLInputElement
+        if(loginInputElement){
+            setUsername(loginInputElement.value)
+        }
         navigate('profile', {replace: false})//Для рендиринга этого компонента по url '/main'
     };
 

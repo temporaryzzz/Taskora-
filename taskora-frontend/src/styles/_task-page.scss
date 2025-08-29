@@ -130,6 +130,7 @@
 
 .side-bar__item:hover {
   background-color: vars.$hover-element;
+  cursor: pointer;
 }
 
 .side-bar__item--active {

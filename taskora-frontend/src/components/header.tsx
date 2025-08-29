@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import '../styles.scss';
 
@@ -8,10 +8,10 @@ type ActiveTab = 'profile' | 'task-lists' | 'task-board';
 
 type HeaderProps = {
   active: ActiveTab;
+  username: string;
 };
 
 function Header(props: HeaderProps) {
-    const [userName] = useState('Username')
 
     const navigate = useNavigate()
 
@@ -50,7 +50,7 @@ function Header(props: HeaderProps) {
                     ref={profileRef} 
                     className="tabs__tab" 
                     onClick={() => navigate('../profile', {replace: false})}>
-                        {userName}
+                        {props.username}
                 </button> 
 
                 <button 

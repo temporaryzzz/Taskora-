@@ -4,29 +4,32 @@ import SingInForm from './components/singIn';
 import SingUpForm from './components/singup';
 import Header from './components/header';
 import TaskPage from './components/task-manager/task-page';
+import { useState } from 'react';
 
 console.log(document.cookie)
 
 function App() {
 
+  const [username, setUsername] = useState<string>("")
+
   return (
     <BrowserRouter>
         <Routes>
-            <Route path='' element={<SingInForm />} />
+            <Route path='' element={<SingInForm setUsername={setUsername}/>} />
             <Route path='sing-up' element={<SingUpForm />} />
             <Route path='profile' element={
               <>
-                <Header active="profile"/>
+                <Header active="profile" username={username}/>
                 <div>PROFILE</div>
               </>} />
             <Route path='task-lists' element={
               <>
-                <Header active="task-lists"/>
+                <Header active="task-lists" username={username}/>
                 <TaskPage />
               </>} />
             <Route path='task-board' element={
               <>
-                <Header active="task-board"/>
+                <Header active="task-board" username={username}/>
                 <div>TASK-BOARD</div>
               </>} />
         </Routes>

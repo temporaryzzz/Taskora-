@@ -38,6 +38,14 @@ function TaskList() {
 
     if(taskManagerContext != undefined) {
 
+        if(!taskManagerContext.tasks) {
+            return (
+                <div style={{textAlign: 'center', width: '70%'}}>
+                    <h2>ПОКА ПУСТО...</h2>
+                </div>
+            )
+        }
+
         return (
             <div className='task-list'>
                 <CreateTaskForm />
