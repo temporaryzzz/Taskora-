@@ -5,6 +5,7 @@ import SingUpForm from './components/singup';
 import Header from './components/header';
 import TaskPage from './components/task-manager/task-page';
 import { useState } from 'react';
+import ProfilePage from './components/profile/profile-page';
 
 console.log(document.cookie)
 
@@ -20,7 +21,7 @@ function App() {
             <Route path='profile' element={
               <>
                 <Header active="profile" username={username}/>
-                <div>PROFILE</div>
+                <ProfilePage />
               </>} />
             <Route path='task-lists' element={
               <>

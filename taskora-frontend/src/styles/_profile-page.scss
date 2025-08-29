@@ -1,0 +1,73 @@
+@use "index";
+@use "vars";
+@use "mixins";
+
+main {
+    display: grid;
+    grid-template-columns: 40vw 55vw;
+    grid-template-rows: 30vh 30vh 30vh;
+    justify-content: space-evenly;
+}
+
+main h1, h2, h3, h4, h5{
+    margin: 0px;
+}
+
+.profile-card {
+    display: flex;
+    background-color: vars.$bgColor-lightAccent;
+    padding: 20px;
+    flex-wrap: nowrap;
+    border-radius: 12px;
+}
+
+.profile-card--user {
+    margin-top: 15px;
+    width: 40vw;
+    min-width: 450px;
+    grid-row: span 1
+}
+
+.profile-card--settings {
+    margin-top: 15px;
+    width: 55vw;
+    min-width: 450px;
+    grid-row: span 3;
+}
+
+.profile-card--stats {
+    margin-top: 15px;
+    width: 40vw;
+    min-width: 450px;
+    grid-row: span 2
+}
+
+.user-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.user-preview__image {
+    height: 200px;
+    width: 200px;
+    background-color: vars.$muted-blueAccent;
+    border-radius: 50%;
+    border: 1px solid vars.$border-default;
+    margin-right: 25px;
+}
+
+.user-preview__title {
+    width: fit-content;
+    height: min-content;
+}
+
+.user-preview__username h1 {
+    margin-bottom: 5px;
+}
+
+.user-preview__other-info h5 {
+    margin-bottom: 5px;
+    width: fit-content;
+    height: min-content;
+}
