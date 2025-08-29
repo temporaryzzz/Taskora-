@@ -3,8 +3,17 @@ import { useContext, useEffect, useRef, useState, type SetStateAction } from "re
 import { TaskInfoContext} from "../task-manager/task-page";
 import DateButton from './date-button';
 
-const RenderDate = ({dates, week, currentDate, targetDate, setTargetDate, ChangeCurrentMonth}: 
-    {dates: number[], week: number, currentDate: {year: number, month: number}, targetDate: Date | undefined, setTargetDate: React.Dispatch<SetStateAction<Date | undefined>>, ChangeCurrentMonth: (direction: '+' | '-') => void}) => {
+type RenderDateProps = {
+    dates: number[];
+    week: number;
+    currentDate: {year: number, month: number};
+    targetDate: Date | undefined;
+    setTargetDate: React.Dispatch<SetStateAction<Date | undefined>>;
+    ChangeCurrentMonth: (direction: '+' | '-') => void;
+}
+
+const RenderDate = (props: RenderDateProps) => {
+    const {dates, week, currentDate, targetDate, setTargetDate, ChangeCurrentMonth} = props
 
     const [todayDate] = useState(new Date())
 

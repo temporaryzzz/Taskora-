@@ -2,21 +2,31 @@ import { type SetStateAction } from 'react';
 import '../../styles.scss';
 //import { TaskInfoContext } from "../task-manager/task-page";
 
+type DateButtonProps = {
+    date: number;
+    elementClass: string;
+    currentDate: {year: number, month: number};
+    targetDate: Date | undefined;
+    setTargetDate: React.Dispatch<SetStateAction<Date | undefined>>;
+    ChangeCurrentMonth: (direction: '+' | '-') => void;
+    direction: '+' | '-' | '0';
+}
 
-function DateButton({date, elementClass, currentDate, targetDate, setTargetDate, ChangeCurrentMonth, direction} : 
-    {date: number, elementClass: string, currentDate: {year: number, month: number}, targetDate: Date | undefined, 
-    setTargetDate: React.Dispatch<SetStateAction<Date | undefined>>, ChangeCurrentMonth: (direction: '+' | '-') => void, direction: '+' | '-' | '0'}) {
+
+function DateButton(props: DateButtonProps) {
 
     const ChangeDate = () => {
-        const newDate = new Date(currentDate.year, currentDate.month, date, targetDate!=undefined?targetDate.getHours(): 23, targetDate!=undefined?targetDate.getMinutes(): 59)
-        if(direction != '0') {
-            ChangeCurrentMonth(direction)
+        const newDate = new Date(props.currentDate.year, props.currentDate.month, props.date, 
+            props.targetDate!=undefined?props.targetDate.getHours(): 23, props.targetDate!=undefined?props.targetDate.getMinutes(): 59)
+            
+        if(props.direction != '0') {
+            props.ChangeCurrentMonth(props.direction)
         }
-        setTargetDate(newDate)
+        props.setTargetDate(newDate)
     }
 
     return(
-        <li className={elementClass} id='calendar' onMouseDown={ChangeDate}>{date}</li>
+        <li className={props.elementClass} id='calendar' onMouseDown={ChangeDate}>{props.date}</li>
     )
 }
 
