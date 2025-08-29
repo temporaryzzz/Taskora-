@@ -10,12 +10,12 @@ console.log(document.cookie)
 
 function App() {
 
-  const [username, setUsername] = useState<string>("")
+  const [username] = useState<string>("Profile")
 
   return (
     <BrowserRouter>
         <Routes>
-            <Route path='' element={<SingInForm setUsername={setUsername}/>} />
+            <Route path='' element={<SingInForm />} />
             <Route path='sing-up' element={<SingUpForm />} />
             <Route path='profile' element={
               <>
