@@ -39,11 +39,13 @@ function TaskList() {
     if(taskManagerContext != undefined) {
 
         if(!taskManagerContext.tasks) {
-            return (
-                <div style={{textAlign: 'center', width: '70%'}}>
-                    <h2>ПОКА ПУСТО...</h2>
-                </div>
-            )
+            setTimeout(() => {
+                return (
+                    <div style={{textAlign: 'center', width: '70%'}}>
+                        <h2>ПОКА ПУСТО...</h2>
+                    </div>
+                )
+            }, 300)
         }
 
         return (

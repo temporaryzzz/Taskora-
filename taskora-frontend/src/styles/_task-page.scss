@@ -3,17 +3,20 @@
 @use "mixins";
 
 .task-page {
-  display: flex;
-  position: relative;
+  display: grid;
+  grid-template-columns: repeat(10, 10vw);
+  grid-template-rows: repeat(9, 10vh);
+  justify-content: space-evenly;
 }
 
 .task-list {
     @include mixins.flex-start(column);
     @include mixins.overflow-default;
-    max-height: 95vh;
-    position: relative;
-    width: 50vw;
     border-right: 1px solid vars.$border-default;
+    max-height: 95vh;
+    height: 95vh;
+    position: relative;
+    grid-column: span 5;
     padding: 7px;  
 }
 
@@ -26,6 +29,10 @@
   text-align: center;
   overflow: visible;
   margin-bottom: 15px;
+}
+
+.task-list__section--completed {
+  margin-top: 0px;
 }
 
 .task-list__title {
@@ -105,9 +112,9 @@
 }
 
 .side-bar {
-  border-right: 1px solid vars.$border-default;
   height: 95vh;
-  width: 20vw;
+  grid-column: span 2;
+  border-right: 1px solid vars.$border-default;
   padding: 5px;
 }
 
@@ -150,7 +157,7 @@
 
 .task-info-window {
   height: 95vh;
-  width: 30vw;
+  grid-column: span 3;
   outline: none;
   position: relative;
 }
