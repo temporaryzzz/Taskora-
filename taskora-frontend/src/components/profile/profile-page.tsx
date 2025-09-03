@@ -24,17 +24,17 @@ function ProfilePage() {
                     <h2>Account</h2>
                 </div>
                 <div className='profile-card__paragraph'>
-                    <img src='email-icon.svg' width={'20px'} height={'20px'} style={{marginRight: '10px'}} alt='e-mail icon'>
+                    <img src='email-icon.svg' width={'25px'} height={'25px'} style={{marginRight: '10px'}} alt='e-mail icon'>
                     </img>
                     Электронная почта
                 </div>
                 <div className='profile-card__paragraph'>
-                    <img src='key-icon.svg' width={'20px'} height={'20px'} style={{marginRight: '10px'}} alt='password icon'>
+                    <img src='key-icon.svg' width={'25px'} height={'25px'} style={{marginRight: '10px'}} alt='password icon'>
                     </img>
                     Пароль
                 </div>
                 <div className='profile-card__paragraph'>
-                    <img src='lock-icon.svg' width={'20px'} height={'20px'} style={{marginRight: '10px'}} alt='lock icon'>
+                    <img src='lock-icon.svg' width={'25px'} height={'25px'} style={{marginRight: '10px'}} alt='lock icon'>
                     </img>
                     Двухфакторная аутентификация
                 </div>
