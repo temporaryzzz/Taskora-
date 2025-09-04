@@ -385,7 +385,7 @@ function Calendar () {
                     </ul>
                 </ul>
 
-                <div className="dropdown-menu dropdown-menu--time" id="calendar" ref={dropdownMenuRef}>
+                <div className="dropdown-menu dropdown-menu--time dropdown-menu--with-after" id="calendar" ref={dropdownMenuRef}>
                     <button className="dropdown-menu__select-btn" onClick={ChangeVisibleDropdownMenu} id="calendar">
                         <img src='/watch-icon.svg' width={'18px'} height={'18px'} style={{marginRight: '7px', marginTop: '2px'}} alt='time'></img>
                         {timeButtonValue==''?'Срок исполнения':timeButtonValue}
@@ -395,7 +395,7 @@ function Calendar () {
                     </div>
                 </div>
 
-                <div className="dropdown-menu dropdown-menu--time" id="calendar">
+                <div className="dropdown-menu dropdown-menu--time dropdown-menu--with-after" id="calendar">
                     <button className="dropdown-menu__select-btn" id="calendar">
                         <img src='/reminder-icon.svg' width={'18px'} height={'18px'} style={{marginRight: '7px', marginTop: '2px'}} alt='reminder'></img>
                         Напоминание
