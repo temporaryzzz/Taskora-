@@ -9,5 +9,4 @@ public class TaskoraBackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TaskoraBackendApplication.class, args);
 	}
-
 }

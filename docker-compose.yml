@@ -21,7 +21,7 @@ services:
       networks:
         - taskora-network
       environment:
-        SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/demo
+        SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/taskora-backend
         SPRING_DATASOURCE_USERNAME: postgres
         SPRING_DATASOURCE_PASSWORD: immabriish
         SPRING_JPA_HIBERNATE_DDL_AUTO: update
@@ -29,10 +29,10 @@ services:
         - db
 
   db:
-    image: postgres:15
+    image: postgres:17
     restart: always
     environment:
-      POSTGRES_DB: demo
+      POSTGRES_DB: taskora-backend
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: immabriish
     ports:
