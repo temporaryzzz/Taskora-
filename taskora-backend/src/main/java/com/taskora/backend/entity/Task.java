@@ -16,18 +16,17 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Task {
-    
-    static final int TITLE_LENGTH = 25;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
+    // [fx] В проде nullble = false
     @ManyToOne
-    @JoinColumn(name = "list_id", nullable = false)
+    @JoinColumn(name = "list_id", nullable = true)
     TaskList taskList;
 
-    @Column(nullable = false, length = TITLE_LENGTH)
+    @Column(nullable = false, length = 25)
     String title;
 
     String description;
@@ -47,6 +46,10 @@ public class Task {
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     Date updated_at;
+    
+
+    public Task() {
+    }
 
     
     public Long getId() {

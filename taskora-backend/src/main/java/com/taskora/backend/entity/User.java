@@ -18,11 +18,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "users")
 public class User {
-
-    static final int USERNAME_LENGTH = 25;
-    static final int EMAIL_LENGHT = 100;
-    static final int PASSWORD_LENGHT = 255;
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
@@ -30,13 +26,13 @@ public class User {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     List<TaskList> taskLists = new ArrayList<>();
 
-    @Column(nullable = false, length = USERNAME_LENGTH, unique = true)
+    @Column(nullable = false, length = 25, unique = true)
     String username;
 
-    @Column(nullable = false, length = EMAIL_LENGHT, unique = true)
+    @Column(nullable = false, length = 100, unique = true)
     String email;
 
-    @Column(length = PASSWORD_LENGHT, nullable = false)
+    @Column(length = 255, nullable = false)
     String password;
 
     @CreationTimestamp
