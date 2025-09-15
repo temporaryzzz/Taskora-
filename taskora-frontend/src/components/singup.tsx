@@ -14,7 +14,7 @@ function SingUpForm () {
         event.preventDefault()
 
         try {
-            const response = await fetch("/api/auth/signup", {
+            fetch("/api/auth/signup", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -23,17 +23,23 @@ function SingUpForm () {
                     "username": username,
                     "email": email,
                     "password": password
-                }),
-            });
+                })})
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`Ошибка! Статус: ${response.status}`)
+                    }
 
-            const data = await response.json();
-            console.log("data:", data)
-        } 
+                    navigate('../', {replace: false})
+                    console.log("data:", response.json(), "код: ", response.status)
+                })
+                .catch((error) => {
+                        console.log(error)
+                });
+            } 
         catch (error) {
             console.error('Ошибка:', error);
         }
 
-        navigate('../', {replace: false})//Для рендиринга этого компонента по url '/main'
     };
 
     return (

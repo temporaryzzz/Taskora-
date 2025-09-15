@@ -1,20 +1,84 @@
 //import { useState } from 'react';
-import type { FormEvent } from 'react';
+import { useRef, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import '../styles.scss';
 
 
 function SingInForm() {
     const navigate = useNavigate()
+    const usernameInput = useRef<HTMLInputElement>(null)
+    const passwordInput = useRef<HTMLInputElement>(null)
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault()
-        const loginInputElement = document.getElementById('login') as HTMLInputElement
-        if(loginInputElement){
-            document.cookie = `username=${loginInputElement.value}`
-            console.log(document.cookie)
+        let username = undefined
+        let password = undefined
+
+        if(usernameInput.current) {
+            username = usernameInput.current.value
         }
-        navigate('profile', {replace: false})//Для рендиринга этого компонента по url '/main'
+        else{
+            console.log('error usernameInput')
+            return
+        }
+
+        if(passwordInput.current){
+            password = passwordInput.current.value
+        }
+        else{
+            console.log('error passwordInput')
+            return
+        }
+
+        try {
+            if((/@/.test(username))) {
+                fetch("/api/auth/signup", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "email": username,
+                        "password": password
+                    })})
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error(`Ошибка! Статус: ${response.status}`)
+                        }
+
+                        navigate('profile', {replace: false})//Для рендиринга этого компонента по url '/main'
+                        console.log("data:", response.json(), "код: ", response.status)
+                    })
+                    .catch((error) => {
+                            console.log(error)
+                    });
+            } 
+            else {
+                fetch("/api/auth/signup", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "username": username,
+                        "password": password
+                    })})
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error(`Ошибка! Статус: ${response.status}`)
+                        }
+
+                        navigate('profile', {replace: false})//Для рендиринга этого компонента по url '/main'
+                        console.log("data:", response.json(), "код: ", response.status)
+                    })
+                    .catch((error) => {
+                            console.log(error)
+                    });
+            }
+        }
+        catch (error) {
+            console.error('Ошибка:', error);
+        }
     };
 
     return (
@@ -32,7 +96,8 @@ function SingInForm() {
                     maxLength={16}
                     aria-errormessage="login-errors"
                     data-login
-                    required/>
+                    required
+                    ref={usernameInput}/>
 
                     <span className="field__errors" id="login-errors" data-js-singin-field-errors></span>
                 </p>
@@ -49,7 +114,8 @@ function SingInForm() {
                     title="Пароль должен содержать хотя бы 1 заглавную и 1 строчную букву, a также хотя бы 1 цифру."
                     aria-errormessage="password-errors"
                     data-password
-                    required/>
+                    required
+                    ref={passwordInput}/>
 
                     <span className="field__errors" id="password-errors" data-js-singin-field-errors></span>
                 </p>
