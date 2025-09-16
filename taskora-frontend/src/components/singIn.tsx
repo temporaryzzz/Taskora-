@@ -42,12 +42,14 @@ function SingInForm() {
                         "password": password
                     })})
                     .then((response) => {
-                        if (!response.ok) {
+                        if (response.ok) {
+                            navigate('profile', {replace: false})//Для рендиринга этого компонента по url '/main'
+                            console.log("data:", response.json(), "код: ", response.status)
+                        }
+                        else {
                             throw new Error(`Ошибка! Статус: ${response.status}`)
                         }
 
-                        navigate('profile', {replace: false})//Для рендиринга этого компонента по url '/main'
-                        console.log("data:", response.json(), "код: ", response.status)
                     })
                     .catch((error) => {
                             console.log(error)
@@ -64,12 +66,13 @@ function SingInForm() {
                         "password": password
                     })})
                     .then((response) => {
-                        if (!response.ok) {
+                        if (response.ok) {
+                            navigate('profile', {replace: false})//Для рендиринга этого компонента по url '/main'
+                            console.log("data:", response.json(), "код: ", response.status)
+                        }
+                        else {
                             throw new Error(`Ошибка! Статус: ${response.status}`)
                         }
-
-                        navigate('profile', {replace: false})//Для рендиринга этого компонента по url '/main'
-                        console.log("data:", response.json(), "код: ", response.status)
                     })
                     .catch((error) => {
                             console.log(error)

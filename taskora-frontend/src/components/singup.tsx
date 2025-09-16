@@ -25,12 +25,13 @@ function SingUpForm () {
                     "password": password
                 })})
                 .then((response) => {
-                    if (!response.ok) {
+                    if (response.ok) {
+                        navigate('../', {replace: false})
+                        console.log("data:", response.json(), "код: ", response.status)
+                    }
+                    else {
                         throw new Error(`Ошибка! Статус: ${response.status}`)
                     }
-
-                    navigate('../', {replace: false})
-                    console.log("data:", response.json(), "код: ", response.status)
                 })
                 .catch((error) => {
                         console.log(error)
@@ -55,7 +56,9 @@ function SingUpForm () {
                     name="username" 
                     onChange={(event) => setUsername(event.target.value)}
                     minLength={2}
-                    maxLength={16}
+                    maxLength={18}
+                    pattern="[^@]+"
+                    title='Username должен иметь длину от 4 до 18 символов и не может содержать @'
                     aria-errormessage="username-errors"
                     data-username
                     required/>
@@ -71,6 +74,8 @@ function SingUpForm () {
                     name="email" 
                     onChange={(event) => setEmail(event.target.value)}
                     minLength={6}
+                    pattern=".*@.*"
+                    title='email должен содержать @'
                     aria-errormessage="email-errors"
                     data-email
                     required/>
