@@ -8,7 +8,7 @@ type ActiveTab = 'profile' | 'task-lists' | 'task-board';
 
 type HeaderProps = {
   active: ActiveTab;
-  username: string;
+  username: string | undefined;
 };
 
 function Header(props: HeaderProps) {
