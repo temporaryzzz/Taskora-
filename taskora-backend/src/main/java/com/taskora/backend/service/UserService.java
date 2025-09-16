@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,22 @@ public class UserService {
         return user;
     }
 
+    public User findUserByEmail(String email) {
+        Optional<User> user = repository.findByEmail(email);
+        if (!user.isPresent())
+            return null;
+
+        return user.get();
+    }
+
+    public User findUserByUsername(String username) {
+        Optional<User> user = repository.findByUsername(username);
+        if (!user.isPresent())
+            return null;
+        
+        return user.get();
+    }
+
     public List<UserDTO> findAllUsers() {
         List<User> users = new ArrayList<>();
         users.addAll(repository.findAll());
@@ -73,8 +90,15 @@ public class UserService {
         repository.deleteById(id);
     }
 
-    public boolean isUserExists(UserRequestDTO requestDTO) {
+    public boolean isUserExistsByEmail(UserRequestDTO requestDTO) {
         if (repository.existsByEmail(requestDTO.getEmail())) 
+            return true;
+
+        return false;
+    }
+
+    public boolean isUserExistsByUsername(UserRequestDTO requestDTO) {
+        if (repository.existsByUsername(requestDTO.getUsername()))
             return true;
 
         return false;

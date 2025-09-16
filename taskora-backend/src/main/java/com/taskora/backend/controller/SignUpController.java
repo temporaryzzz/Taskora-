@@ -24,9 +24,10 @@ public class SignUpController {
         this.taskListService = taskListService;
     }
 
+    // [fix] добавить проверку уникальности по username
     @PostMapping("/")
     public ResponseEntity<?> signUp(@RequestBody UserRequestDTO requestDTO) {
-        if (userService.isUserExists(requestDTO))
+        if (userService.isUserExistsByEmail(requestDTO))
             return ResponseEntity
                     .status(409)
                     .body(new ErrorMessageDTO(409, "Пользователь с данным email уже существует"));

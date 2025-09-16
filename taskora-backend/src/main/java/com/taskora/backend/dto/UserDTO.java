@@ -32,4 +32,9 @@ public class UserDTO {
     public void setEmail(String email) {
         this.email = email;
     }
+
+
+    public boolean isEmailEmpty() {
+        return (email == null);
+    }
 }
