@@ -7,6 +7,32 @@ const InizializateTasks = async () => {
     return dataValues
 }
 
+const InizializateLists = async (user_id: number) => {
+
+    try {
+        const response = await fetch(`http://localhost:8080/task/tasks/${user_id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+        });
+
+        if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const lists = await response.json();
+        console.log(lists);
+        return lists
+
+    } 
+    catch (error) {
+        console.error('Ошибка при получении пользователя:', error);
+    }
+
+
+}
+
 const ChangeTask = (id: string, title : string, description : string, date: string, priority: 'highest' | 'high' | 'middle' | 'default') => {
 
     fetch(`http://localhost:3002/tasks/${id}`, {
@@ -56,4 +82,4 @@ const DeleteTask = (id: string) => {
 }
 
 export default InizializateTasks
-export {ChangeStateTask, ChangeTask, FindTask, AddTask, DeleteTask}
+export {InizializateLists, ChangeStateTask, ChangeTask, FindTask, AddTask, DeleteTask}

@@ -1,10 +1,11 @@
 //import { useState } from 'react';
-import { useRef, type FormEvent } from 'react';
+import { useRef, type FormEvent, type SetStateAction} from 'react';
 import { useNavigate } from 'react-router';
+import type { User } from '../App';
 import '../styles.scss';
 
 
-function SingInForm() {
+function SingInForm({setUser} : {setUser: React.Dispatch<SetStateAction<User | undefined>>}) {
     const navigate = useNavigate()
     const usernameInput = useRef<HTMLInputElement>(null)
     const passwordInput = useRef<HTMLInputElement>(null)
@@ -32,7 +33,7 @@ function SingInForm() {
 
         try {
             if((/@/.test(username))) {
-                fetch("/api/auth/signup", {
+                fetch("/api/auth/signin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -42,21 +43,26 @@ function SingInForm() {
                         "password": password
                     })})
                     .then((response) => {
-                        if (response.ok) {
-                            navigate('profile', {replace: false})//Для рендиринга этого компонента по url '/main'
-                            console.log("data:", response.json(), "код: ", response.status)
-                        }
-                        else {
+                        if (!response.ok) {
                             throw new Error(`Ошибка! Статус: ${response.status}`)
                         }
-
+                        console.log("data:", response.json(), "код: ", response.status)
+                        return response.json()
+                    })
+                    .then((data: User) => {
+                        setUser({
+                            username: data.username,
+                            user_id: data.user_id,
+                            email: data.email
+                        })
+                        navigate('profile', {replace: false})
                     })
                     .catch((error) => {
                             console.log(error)
                     });
             } 
             else {
-                fetch("/api/auth/signup", {
+                fetch("/api/auth/signin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -66,13 +72,19 @@ function SingInForm() {
                         "password": password
                     })})
                     .then((response) => {
-                        if (response.ok) {
-                            navigate('profile', {replace: false})//Для рендиринга этого компонента по url '/main'
-                            console.log("data:", response.json(), "код: ", response.status)
-                        }
-                        else {
+                        if (!response.ok) {
                             throw new Error(`Ошибка! Статус: ${response.status}`)
                         }
+                        console.log("data:", response.json(), "код: ", response.status)
+                        return response.json()
+                    })
+                    .then((data: User) => {
+                        setUser({
+                            username: data.username,
+                            user_id: data.user_id,
+                            email: data.email
+                        })
+                        navigate('profile', {replace: false})
                     })
                     .catch((error) => {
                             console.log(error)
