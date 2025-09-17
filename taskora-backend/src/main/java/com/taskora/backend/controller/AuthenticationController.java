@@ -20,10 +20,12 @@ public class AuthenticationController {
     private final UserService userService;
     private final TaskListService taskListService;
     
+    
     public AuthenticationController(UserService userService, TaskListService taskListService) {
         this.userService = userService;
         this.taskListService = taskListService;
     }
+
 
     /**
      * Регистрация пользователя в БД, с проверкой на занятость логина

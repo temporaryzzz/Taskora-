@@ -32,7 +32,6 @@ public class Task {
 
     String description;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     Date due_date;
 
     @Enumerated(EnumType.STRING)

@@ -30,8 +30,20 @@ public class ResponseDTO {
         return new TaskListDTO(taskList.getId(), taskList.getOwner().getId(), taskList.getTitle());
     }
 
+    public List<TaskListDTO> fromTaskListsToDTOList(List<TaskList> taskLists) {
+        return taskLists.stream()
+            .map(this::fromTaskListEntityToDTO)
+            .toList();
+    }
+
     public TaskDTO fromTaskEntityToDTO(Task task) {
         return new TaskDTO(task.getId(), task.getTitle(), task.getDescription(), task.getDue_date(), task.getPriority(), task.getCompleted());
+    }
+
+    public List<TaskDTO> fromTaskListToDTOList(List<Task> tasks) {
+        return tasks.stream()
+            .map(this::fromTaskEntityToDTO)
+            .toList();
     }
 
     public SettingsDTO fromSettingsEntityToDTO(Settings settings) {
