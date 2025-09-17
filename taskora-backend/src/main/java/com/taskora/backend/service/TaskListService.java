@@ -25,6 +25,6 @@ public class TaskListService {
 
         ResponseDTO responseDTO = new ResponseDTO();
 
-        return responseDTO.fromTaskListEntity(taskList);
+        return responseDTO.fromTaskListEntityToDTO(taskList);
     }
 }

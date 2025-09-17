@@ -2,6 +2,8 @@ package com.taskora.backend.entity;
 
 import java.util.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.taskora.backend.dto.Priority;
 
 import jakarta.persistence.Column;
@@ -21,9 +23,8 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-    // [fx] В проде nullble = false
     @ManyToOne
-    @JoinColumn(name = "list_id", nullable = true)
+    @JoinColumn(name = "list_id", nullable = false)
     TaskList taskList;
 
     @Column(nullable = false, length = 25)
@@ -41,15 +42,12 @@ public class Task {
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     Boolean completed;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
+    @CreationTimestamp
+    @Column(updatable = false)
     Date created_at;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @CreationTimestamp
     Date updated_at;
-    
-
-    public Task() {
-    }
 
     
     public Long getId() {
@@ -123,5 +121,4 @@ public class Task {
     public void setUpdated_at(Date updated_at) {
         this.updated_at = updated_at;
     }
-
 }

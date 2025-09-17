@@ -2,22 +2,14 @@ package com.taskora.backend.dto;
 
 public class ErrorMessageDTO {
     
-    int statusCode;
     String message;
-    
-    public ErrorMessageDTO(int statusCode, String message) {
-        this.statusCode = statusCode;
+
+
+    public ErrorMessageDTO(String message) {
         this.message = message;
     }
 
-    public int getStatusCode() {
-        return statusCode;
-    }
-
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
-    }
-
+    
     public String getMessage() {
         return message;
     }
@@ -25,6 +17,5 @@ public class ErrorMessageDTO {
     public void setMessage(String message) {
         this.message = message;
     }
-
-    
+       
 }

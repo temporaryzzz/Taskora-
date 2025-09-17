@@ -6,11 +6,13 @@ public class TaskListDTO {
     Long owner_id;
     String title;
     
+
     public TaskListDTO(Long id, Long owner_id, String title) {
         this.id = id;
         this.owner_id = owner_id;
         this.title = title;
     }
+
 
     public Long getId() {
         return id;
@@ -35,6 +37,4 @@ public class TaskListDTO {
     public void setTitle(String title) {
         this.title = title;
     }
-
-    
 }

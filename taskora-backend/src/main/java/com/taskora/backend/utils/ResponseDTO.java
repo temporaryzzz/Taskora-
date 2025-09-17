@@ -11,27 +11,30 @@ import com.taskora.backend.entity.Task;
 import com.taskora.backend.entity.TaskList;
 import com.taskora.backend.entity.User;
 
+/**
+ * Класс преобразует входные {@code Entity} в соответственные DTO
+ */
 public class ResponseDTO {
     
-    public UserDTO fromUserEntity(User user) {
+    public UserDTO fromUserEntityToDTO(User user) {
         return new UserDTO(user.getId(), user.getUsername(), user.getEmail());
     }
 
-    public List<UserDTO> fromUserEntityList(List<User> users) {
+    public List<UserDTO> fromUserEntityListToDTOList(List<User> users) {
         return users.stream()
-            .map(this::fromUserEntity)
+            .map(this::fromUserEntityToDTO)
             .toList();
     }
 
-    public TaskListDTO fromTaskListEntity(TaskList taskList) {
+    public TaskListDTO fromTaskListEntityToDTO(TaskList taskList) {
         return new TaskListDTO(taskList.getId(), taskList.getOwner().getId(), taskList.getTitle());
     }
 
-    public TaskDTO fromTaskEntity(Task task) {
+    public TaskDTO fromTaskEntityToDTO(Task task) {
         return new TaskDTO(task.getId(), task.getTitle(), task.getDescription(), task.getDue_date(), task.getPriority(), task.getCompleted());
     }
 
-    public SettingsDTO fromSettingsEntity(Settings settings) {
+    public SettingsDTO fromSettingsEntityToDTO(Settings settings) {
         return new SettingsDTO(settings.getDark_mode(), settings.getNotifications_enabled());
     }
 }
