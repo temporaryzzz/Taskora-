@@ -1,8 +1,8 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ChangeStateTask } from '../../scripts/dataTaskManager';
 import '../../styles.scss';
-import type { TaskInfo } from './task-page';
-import { TaskInfoContext } from "./task-page";
+import type { TaskInfo } from '../../App';
+import { TaskInfoContext } from "../../App";
 
 function Task(task: TaskInfo) {
     const stateClasses ={
@@ -76,13 +76,13 @@ function Task(task: TaskInfo) {
             }
         }
 
-        ChangeStateTask(taskCompletedState, task.id)
+        ChangeStateTask(taskCompletedState, task.task_id)
 
     }
 
     const setActiveClass = () => {
         if(taskRef.current) {
-            if(taskManagerContext?.currentTaskInfo?.id == task.id) {
+            if(taskManagerContext?.currentTaskInfo?.task_id == task.task_id) {
                 taskRef.current.classList.add(stateClasses.activeClass)
             }
             else {
@@ -92,7 +92,7 @@ function Task(task: TaskInfo) {
     }
 
     const OnMouseUp = () => {
-        taskManagerContext?.setCurrentTask(task.id)
+        taskManagerContext?.setCurrentTask(task.task_id)
     }
 
     useEffect(InizializateTask, [])
@@ -143,7 +143,7 @@ function Task(task: TaskInfo) {
 
     return (
         <li className='task-list__task' 
-            ref={taskRef} id={`task-${task.id}`} 
+            ref={taskRef} id={`task-${task.task_id}`} 
             onMouseUp={() => OnMouseUp()}> 
             
             <input type='checkbox' id='completed' ref={taskCheckbox} onChange={setStateTask}></input>

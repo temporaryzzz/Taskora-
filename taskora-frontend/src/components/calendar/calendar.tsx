@@ -1,6 +1,6 @@
 import '../../styles.scss';
 import { useContext, useEffect, useRef, useState, type SetStateAction } from "react";
-import { TaskInfoContext} from "../task-manager/task-page";
+import { TaskInfoContext} from "../../App";
 import DateButton from './date-button';
 
 type RenderDateProps = {

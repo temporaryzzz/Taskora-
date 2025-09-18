@@ -1,21 +1,21 @@
 import {useContext, useRef, type RefObject} from "react";
 import '../../styles.scss';
 import Task from './task';
-import type { TaskInfo } from './task-page';
-import { TaskInfoContext } from "./task-page";
+import type { TaskInfo } from '../../App';
+import { TaskInfoContext } from "../../App";
 import CreateTaskForm from "./create-task-form";
 
 const SortedTasks = ({ tasks } : {tasks : Array<TaskInfo> | undefined}) => {
 
     return(
         tasks?.map(task =>
-            <Task id={task.id} 
+            <Task task_id={task.task_id} 
             title={task.title} 
             description={task.description} 
             date={task.date} 
             completed={task.completed}
             priority={task.priority}
-            key={task.id}/>
+            key={task.task_id}/>
         )
     )
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext} from 'react';
 import '../../styles.scss';
-import { TaskInfoContext } from "./task-page";
+import { TaskInfoContext } from "../../App";
 import Calendar from '../calendar/calendar';
 
 function TaskInfoWindow() {

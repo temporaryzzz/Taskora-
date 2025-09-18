@@ -1,6 +1,6 @@
 import '../styles.scss';
 import { useContext, useEffect, useRef } from 'react';
-import { TaskInfoContext } from "./task-manager/task-page";
+import { TaskInfoContext } from "../App";
 import { DeleteTask } from '../scripts/dataTaskManager';
 
 
@@ -32,8 +32,8 @@ function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (prio
 
     const deleteTask = () => {
         if(currentTask && taskManagerContext.tasks) {
-            DeleteTask(currentTask.id)
-            const currentTaskIndex = taskManagerContext.tasks.findIndex(task => task.id === currentTask.id)
+            DeleteTask(currentTask.task_id)
+            const currentTaskIndex = taskManagerContext.tasks.findIndex(task => task.task_id === currentTask.task_id)
             taskManagerContext.tasks.splice(currentTaskIndex, 1)
         }
     }

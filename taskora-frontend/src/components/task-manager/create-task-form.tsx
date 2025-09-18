@@ -1,12 +1,12 @@
 import '../../styles.scss';
 import { useContext, useRef, useState, type FormEvent } from 'react';
-import { TaskInfoContext } from "./task-page";
+import { TaskInfoContext } from "../../App";
 import { AddTask } from '../../scripts/dataTaskManager';
 
 
 function CreateTaskForm() {
 
-    const taskList = useContext(TaskInfoContext)
+    const taskManagerContext = useContext(TaskInfoContext)
     const inputTitleTaskRef = useRef<HTMLInputElement>(null)
     const [taskTitle, setTaskTitile] = useState<string>()
 
@@ -16,12 +16,12 @@ function CreateTaskForm() {
         // /\S/ - любой символ кроме пробела
         if((/\S/.test(taskTitle??''))) {
             
-            if(taskList && taskList.tasks) {
-                const taskId = String(Number(taskList?.tasks[taskList.tasks?.length - 1].id) + 1)
+            if(taskManagerContext && taskManagerContext.tasks && taskManagerContext.list_id) {
                 
-                taskList?.tasks?.push({id: taskId, title: taskTitle??'', description: '', date: '', completed: false, priority: 'default'})
-                AddTask(taskId, taskTitle??'', '', '', 'default')
-                taskList?.updateList()
+                //⁡⁣⁣⁢Получать task_id в ответе на AddTask⁡
+                //taskManagerContext?.tasks?.push({task_id: 0, title: taskTitle??'', description: '', date: '', completed: false, priority: 'default'})
+                AddTask(taskManagerContext.list_id, taskTitle??'')
+                taskManagerContext?.updateList()
                 
                 if(inputTitleTaskRef.current) inputTitleTaskRef.current.value = ''
             }
