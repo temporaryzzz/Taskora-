@@ -34,11 +34,10 @@ const InizializateLists = async (user_id: number) => {
         });
 
         if (!response.ok) {
-        throw new Error(`error! status: ${response.status}`);
+            throw new Error(`error! status: ${response.status}`);
         }
 
         const lists = await response.json();
-        console.log(lists);
         return lists
 
     } 

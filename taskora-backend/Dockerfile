@@ -5,10 +5,10 @@ COPY pom.xml /app
 RUN mvn dependency:go-offline
 
 COPY . /app
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -B
 
 
-FROM openjdk:17-alpine
+FROM openjdk:21-jdk-slim
 
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar

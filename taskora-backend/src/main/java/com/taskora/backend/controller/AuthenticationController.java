@@ -1,6 +1,7 @@
 package com.taskora.backend.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import com.taskora.backend.service.UserService;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class AuthenticationController {
 
     private final UserService userService;
@@ -33,7 +35,7 @@ public class AuthenticationController {
      * @param requestDTO - {@code username}, {@code email}, {@code password}
      * @return 200 если регистрация успешна; 409 с сообщением об ошибке, если {@code email} или {@code username} занят
      */
-    @PostMapping("/signup/")
+    @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody UserRequestDTO requestDTO) {
         if (userService.isUserExistsByEmail(requestDTO))
             return ResponseEntity
@@ -61,15 +63,16 @@ public class AuthenticationController {
      * @param requestDTO - {@code username} или {@code email}, {@code password}
      * @return 200 если пользователь найден и пароль верный; иначе 400
      */
-    @PostMapping("/signin/")
+    @PostMapping("/signin")
     public ResponseEntity<?> signin(@RequestBody UserRequestDTO requestDTO) {
         if (requestDTO.isEmailEmpty() && userService.isUserExistsByUsername(requestDTO)) {
             User user = userService.findUserByUsername(requestDTO.getUsername());
+
             
             if (user.getPassword().equals((requestDTO.getPassword())))
                 return ResponseEntity
                     .ok()
-                    .body(null);
+                    .body(new UserDTO(user.getId(), user.getUsername(), user.getEmail()));
         }
 
         if (userService.isUserExistsByEmail(requestDTO)) {
@@ -78,7 +81,7 @@ public class AuthenticationController {
             if (user.getPassword().equals((requestDTO.getPassword())))
                 return ResponseEntity
                     .ok()
-                    .body(null);
+                    .body(new UserDTO(user.getId(), user.getUsername(), user.getEmail()));
         }
         
         return ResponseEntity

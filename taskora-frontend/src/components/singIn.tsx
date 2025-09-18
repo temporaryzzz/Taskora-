@@ -33,7 +33,7 @@ function SingInForm({setUser} : {setUser: React.Dispatch<SetStateAction<User | u
 
         try {
             if((/@/.test(username))) {
-                fetch("/api/auth/signin", {
+                fetch("http://localhost:8080/api/auth/signin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -44,15 +44,15 @@ function SingInForm({setUser} : {setUser: React.Dispatch<SetStateAction<User | u
                     })})
                     .then((response) => {
                         if (!response.ok) {
-                            throw new Error(`Ошибка! Статус: ${response.status}`)
+                            throw new Error(`Ошибка! Статус: ${response.clone().status}`)
                         }
-                        console.log("data:", response.json(), "код: ", response.status)
+                        console.log("data:", response.clone().json(), "код: ", response.clone().status)
                         return response.json()
                     })
-                    .then((data: User) => {
+                    .then((data) => {
                         setUser({
                             username: data.username,
-                            user_id: data.user_id,
+                            user_id: data.id,
                             email: data.email
                         })
                         navigate('profile', {replace: false})
@@ -62,7 +62,7 @@ function SingInForm({setUser} : {setUser: React.Dispatch<SetStateAction<User | u
                     });
             } 
             else {
-                fetch("/api/auth/signin", {
+                fetch("http://localhost:8080/api/auth/signin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -73,15 +73,15 @@ function SingInForm({setUser} : {setUser: React.Dispatch<SetStateAction<User | u
                     })})
                     .then((response) => {
                         if (!response.ok) {
-                            throw new Error(`Ошибка! Статус: ${response.status}`)
+                            throw new Error(`Ошибка! Статус: ${response.clone().status}`)
                         }
-                        console.log("data:", response.json(), "код: ", response.status)
+                        console.log("data:", response.clone().json(), "код: ", response.clone().status)
                         return response.json()
                     })
-                    .then((data: User) => {
+                    .then((data) => {
                         setUser({
                             username: data.username,
-                            user_id: data.user_id,
+                            user_id: data.id,
                             email: data.email
                         })
                         navigate('profile', {replace: false})

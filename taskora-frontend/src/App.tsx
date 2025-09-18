@@ -1,4 +1,4 @@
-//⁡⁢⁣⁣IMPORTS⁡
+//⁡⁢⁣⁣𝗜𝗠𝗣𝗢𝗥𝗧𝗦⁡
 import { BrowserRouter, Route, Routes } from 'react-router';
 import SingInForm from './components/singIn';
 import SingUpForm from './components/singup';
@@ -17,7 +17,8 @@ export interface User {
 }
 
 interface Lists {
-  list_id: number;
+  id: number;
+  owner_id: number;
   list_name: string;
 }
 
@@ -50,7 +51,8 @@ function App() {
   const [currentTaskInfo, setCurrentTaskInfo] = useState<TaskInfo | undefined>()
 
   const GetTasks = (list_id: number) => {
-    InizializateTasks(list_id).then((data) => {setTasks(data)})
+    //taskDTOs - это хуйня с бэка
+    InizializateTasks(list_id).then((data) => {setTasks(data.taskDTOs)})
     setList_id(list_id)
   }
 
@@ -89,17 +91,19 @@ function App() {
 
   //Запрос на получение списков задач
   useEffect(() => {
-    if(user) {
-      InizializateLists(user.user_id).then((data) => {setLists(data); console.log(data)})
+    console.log("user_id:", user?.user_id)
+    if(user?.user_id) {
+      InizializateLists(user.user_id).then((data) => {setLists(data.taskLists)})
     }
   }, [user])
 
   //Получение последнего открытого списка или дефолтного(единственного)
   useEffect(() => {
-    console.log(lists)
 
     if(lists?.length == 1) {
-      InizializateTasks(lists[0].list_id).then((data) => {setTasks(data)})
+      InizializateTasks(lists[0].id).then((data) => {setTasks(data)})
+      setList_id(lists[0].id)
+      GetTasks(lists[0].id)
     }
 
   }, [lists])

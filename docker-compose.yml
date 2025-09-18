@@ -26,7 +26,8 @@ services:
         SPRING_DATASOURCE_PASSWORD: immabriish
         SPRING_JPA_HIBERNATE_DDL_AUTO: update
       depends_on:
-        - db
+        db:
+          condition: service_healthy
 
   db:
     image: postgres:17
@@ -41,6 +42,11 @@ services:
       - taskora-network
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d taskora-backend"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
