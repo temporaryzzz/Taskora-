@@ -5,15 +5,18 @@ import java.util.Date;
 public class TaskDTO {
     
     Long id;
+    Long taskList_id;
     String title;
     String description;
     Date due_date;
     Priority priority = Priority.MIDDLE;
     Boolean completed;
-   
-    
-    public TaskDTO(Long id, String title, String description, Date due_date, Priority priority, Boolean completed) {
+
+
+    public TaskDTO(Long id, Long taskList_id, String title, String description, Date due_date, Priority priority,
+            Boolean completed) {
         this.id = id;
+        this.taskList_id = taskList_id;
         this.title = title;
         this.description = description;
         this.due_date = due_date;
@@ -21,13 +24,21 @@ public class TaskDTO {
         this.completed = completed;
     }
 
-
+    
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getTaskList_id() {
+        return taskList_id;
+    }
+    
+    public void setTaskList_id(Long taskList_id) {
+        this.taskList_id = taskList_id;
     }
 
     public String getTitle() {

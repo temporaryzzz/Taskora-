@@ -1,5 +1,6 @@
 package com.taskora.backend.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -43,10 +44,10 @@ public class Task {
 
     @CreationTimestamp
     @Column(updatable = false)
-    Date created_at;
+    LocalDateTime created_at;
 
     @CreationTimestamp
-    Date updated_at;
+    LocalDateTime updated_at;
 
     
     public Long getId() {
@@ -105,19 +106,19 @@ public class Task {
         this.completed = completed;
     }
 
-    public Date getCreated_at() {
+    public LocalDateTime getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(Date created_at) {
+    public void setCreated_at(LocalDateTime created_at) {
         this.created_at = created_at;
     }
 
-    public Date getUpdated_at() {
+    public LocalDateTime getUpdated_at() {
         return updated_at;
     }
 
-    public void setUpdated_at(Date updated_at) {
+    public void setUpdated_at(LocalDateTime updated_at) {
         this.updated_at = updated_at;
-    }
+    } 
 }

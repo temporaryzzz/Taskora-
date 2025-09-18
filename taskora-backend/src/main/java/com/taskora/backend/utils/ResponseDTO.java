@@ -37,7 +37,7 @@ public class ResponseDTO {
     }
 
     public TaskDTO fromTaskEntityToDTO(Task task) {
-        return new TaskDTO(task.getId(), task.getTitle(), task.getDescription(), task.getDue_date(), task.getPriority(), task.getCompleted());
+        return new TaskDTO(task.getId(), task.getTaskList().getId(), task.getTitle(), task.getDescription(), task.getDue_date(), task.getPriority(), task.getCompleted());
     }
 
     public List<TaskDTO> fromTaskListToDTOList(List<Task> tasks) {

@@ -1,5 +1,6 @@
 package com.taskora.backend.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -25,12 +26,14 @@ public class TaskService {
      * Создает задачу в БД с дефолтными значениями
      * 
      * @param taskList которой принадлежит задача
+     * @param title создаваемой задачи
      * @return {@link TaskDTO} созданной задачи
      */
-    public TaskDTO createTask(TaskList taskList) {
+    public TaskDTO createTask(TaskList taskList, String title) {
         Task task = new Task();
         task.setTaskList(taskList);
-        task.setTitle("Default task name");
+        if (title == null)  task.setTitle("Default task name");
+        else task.setTitle(title);
         task.setDescription(null);
         task.setDue_date(null);
         task.setPriority(Priority.MIDDLE);
@@ -42,10 +45,30 @@ public class TaskService {
         return responseDTO.fromTaskEntityToDTO(task);
     }
 
+     // [fix] написать доки и добавить проверки
     public List<TaskDTO> findTasksByTaskListId(Long taskList_id) {
         List<Task> tasks = repository.findByTaskListId(taskList_id);
 
         ResponseDTO responseDTO = new ResponseDTO();
         return responseDTO.fromTaskListToDTOList(tasks);
+    }
+
+    public TaskDTO updateTask(TaskDTO new_taskDTO) {
+        Task old_task = repository.findById(new_taskDTO.getId()).get();
+        old_task.setTitle(new_taskDTO.getTitle());
+        old_task.setDescription(new_taskDTO.getDescription());
+        old_task.setDue_date(new_taskDTO.getDue_date());
+        old_task.setPriority(new_taskDTO.getPriority());
+        old_task.setUpdated_at(LocalDateTime.now());
+
+        repository.save(old_task);
+
+        ResponseDTO responseDTO = new ResponseDTO();
+        return responseDTO.fromTaskEntityToDTO(old_task);
+    }
+
+     // [fix] написать доки и добавить проверки
+    public void deleteTaskById(Long id) {
+        repository.deleteById(id);
     }
 }

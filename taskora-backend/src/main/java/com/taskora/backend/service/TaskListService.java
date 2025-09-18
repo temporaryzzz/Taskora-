@@ -38,6 +38,11 @@ public class TaskListService {
     }
 
     // [fix] добавить проверку и документацию
+    public TaskList findTaskListById(Long id) {
+        return repository.findById(id).get();
+    }
+
+    // [fix] добавить проверку и документацию
     public List<TaskListDTO> findAllTaskListsByOwnerId(Long owner_id) {
         List<TaskList> taskLists = repository.findByOwnerId(owner_id);
 
