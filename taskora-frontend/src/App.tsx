@@ -18,19 +18,13 @@ export interface User {
 
 function App() {
   const [user, setUser] = useState<User | undefined>(undefined)
-<<<<<<< HEAD
   const [lists, setLists] = useState(undefined)
-=======
->>>>>>> 543fad9c7cd0a9433b4e69320b93ca4204b3ab80
 
   useEffect(() => {
     if(user) {
       //запросы на получение списков задач и последнего открытого списка
-<<<<<<< HEAD
       InizializateLists(user.user_id).then((data) => {setLists(data); console.log(data)})
       console.log(lists)
-=======
->>>>>>> 543fad9c7cd0a9433b4e69320b93ca4204b3ab80
     }
   }, [user])
 
