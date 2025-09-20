@@ -27,7 +27,6 @@ function SingUpForm () {
                 .then((response) => {
                     if (response.ok) {
                         navigate('../', {replace: false})
-                        console.log("data:", response.json(), "код: ", response.status)
                     }
                     else {
                         throw new Error(`Ошибка! Статус: ${response.status}`)

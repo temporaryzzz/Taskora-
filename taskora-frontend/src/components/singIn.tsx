@@ -46,7 +46,6 @@ function SingInForm({setUser} : {setUser: React.Dispatch<SetStateAction<User | u
                         if (!response.ok) {
                             throw new Error(`Ошибка! Статус: ${response.clone().status}`)
                         }
-                        console.log("data:", response.clone().json(), "код: ", response.clone().status)
                         return response.json()
                     })
                     .then((data) => {
@@ -75,7 +74,6 @@ function SingInForm({setUser} : {setUser: React.Dispatch<SetStateAction<User | u
                         if (!response.ok) {
                             throw new Error(`Ошибка! Статус: ${response.clone().status}`)
                         }
-                        console.log("data:", response.clone().json(), "код: ", response.clone().status)
                         return response.json()
                     })
                     .then((data) => {

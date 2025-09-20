@@ -16,10 +16,10 @@ export interface User {
   email: string;
 }
 
-interface Lists {
+export interface List {
   id: number;
   owner_id: number;
-  list_name: string;
+  title: string;
 }
 
 export interface TaskInfo {
@@ -33,6 +33,7 @@ export interface TaskInfo {
 
 interface TaskManager {
     list_id: number | undefined;
+    lists: Array<List> |undefined;
     tasks: Array<TaskInfo> | undefined;
     currentTaskInfo: TaskInfo | undefined;
     setCurrentTask: (id: number) => void;
@@ -45,7 +46,7 @@ export const TaskInfoContext = createContext<TaskManager | undefined>(undefined)
 
 function App() {
   const [user, setUser] = useState<User | undefined>(undefined)
-  const [lists, setLists] = useState<Array<Lists> | undefined>()
+  const [lists, setLists] = useState<Array<List> | undefined>()
   const [list_id, setList_id] = useState<number | undefined>()
   const [tasks, setTasks] = useState<Array<TaskInfo> | undefined>()
   const [currentTaskInfo, setCurrentTaskInfo] = useState<TaskInfo | undefined>()
@@ -91,7 +92,6 @@ function App() {
 
   //Запрос на получение списков задач
   useEffect(() => {
-    console.log("user_id:", user?.user_id)
     if(user?.user_id) {
       InizializateLists(user.user_id).then((data) => {setLists(data.taskLists)})
     }
@@ -110,6 +110,7 @@ function App() {
 
   const contextValue = {
     list_id,
+    lists,
     tasks, 
     currentTaskInfo,
     setCurrentTask, 

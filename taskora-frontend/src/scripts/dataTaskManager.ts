@@ -14,7 +14,6 @@ const InizializateTasks = async (list_id: number) => {
         }
 
         const tasks = await response.json();
-        console.log(tasks);
         return tasks
 
     } 
