@@ -1,24 +1,35 @@
 package com.taskora.backend.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Size;
+
+@Schema(description = "Пользователь")
 public class UserDTO {
     
-    Long user_id;
+    @Schema(description = "Уникальный id пользователя в БД")
+    Long id;
+
+    @Schema(description = "Никнейм пользователя должен содержать от 3 до 16 символов", example = "user123")
+    @Size(min = 3, max = 16)
     String username;
+
+    @Schema(description = "Почтовый адрес пользователя должен содержать от 6 до 64 символов, также включать @ и домен", example = "email@domain.com")
+    @Size(min = 6, max = 64)
     String email;
     
-    
-    public UserDTO(Long user_id, String username, String email) {
-        this.user_id = user_id;
+
+    public UserDTO(Long id, @Size(min = 3, max = 16) String username, @Size(min = 6, max = 64) String email) {
+        this.id = id;
         this.username = username;
         this.email = email;
     }
 
     
     public Long getId() {
-        return user_id;
+        return id;
     }
-    public void setId(Long user_id) {
-        this.user_id = user_id;
+    public void setId(Long id) {
+        this.id = id;
     }
     public String getUsername() {
         return username;

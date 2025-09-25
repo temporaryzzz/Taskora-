@@ -2,8 +2,12 @@ package com.taskora.backend.dto;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Список с задачами")
 public class TaskResponseDTO {
     
+    @Schema(description = "Список с задачами")
     List<TaskDTO> taskDTOs;
 
 

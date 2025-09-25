@@ -1,7 +1,6 @@
 package com.taskora.backend.entity;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -33,10 +32,10 @@ public class Task {
 
     String description;
 
-    Date due_date;
+    LocalDateTime due_date;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20, nullable = false)
+    @Column(length = 8, nullable = false)
     Priority priority = Priority.MIDDLE;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
@@ -82,13 +81,13 @@ public class Task {
         this.description = description;
     }
 
-    public Date getDue_date() {
+    public LocalDateTime getDue_date() {
         return due_date;
     }
 
-    public void setDue_date(Date due_date) {
+    public void setDue_date(LocalDateTime due_date) {
         this.due_date = due_date;
-    }
+    } 
 
     public Priority getPriority() {
         return priority;
@@ -120,5 +119,5 @@ public class Task {
 
     public void setUpdated_at(LocalDateTime updated_at) {
         this.updated_at = updated_at;
-    } 
+    }
 }
