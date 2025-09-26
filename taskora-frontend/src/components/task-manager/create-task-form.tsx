@@ -23,7 +23,7 @@ function CreateTaskForm() {
                 AddTask(taskManagerContext.list_id, taskTitle??'').then((taskData) => {
                     task_id = Number(taskData.id)
                     console.log(taskData)
-                    taskManagerContext?.tasks?.push({task_id: Number(task_id), title: taskTitle??'', description: '', date: '', completed: false, priority: 'default'})
+                    taskManagerContext?.tasks?.push({id: Number(task_id), taskList_id: Number(taskManagerContext.currentTaskInfo?.taskList_id), title: taskTitle??'', description: '', due_date: '', completed: false, priority: 'DEFAULT'})
                     taskManagerContext?.updateList()
                 })
 

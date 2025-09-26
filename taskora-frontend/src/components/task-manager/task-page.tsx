@@ -1,14 +1,12 @@
-import { useState, useEffect, useContext} from 'react';
+import { useState, useEffect} from 'react';
 import '../../styles.scss';
 import SideBar from './side-bar';
 import TaskInfoWindow from './task-info-window';
 import TaskList from './task-list';
 import ContextMenu from '../contextMenu';
-import { TaskInfoContext } from "../../App";
 
 
 function TaskPage() {
-    const taskManagerContext = useContext(TaskInfoContext)
     const [contextMenuActive, setContextMenuActive] = useState(false)
     const [mouseX, setMouseX] = useState<number>(0)
     const [mouseY, setMouseY] = useState<number>(0)
@@ -38,14 +36,6 @@ function TaskPage() {
         }
     }
 
-    const setPriority = (priority: 'highest' | 'high' | 'middle' | 'default') => {
-        if(taskManagerContext?.currentTaskInfo) {
-            taskManagerContext.changeCurrentTask(taskManagerContext.currentTaskInfo.title, 
-                taskManagerContext.currentTaskInfo.description, taskManagerContext.currentTaskInfo.date, priority)
-        }
-    }
-
-
 
     //С пустым массивом зависимостей выполнится только при монтировании
     useEffect(() => {
@@ -56,7 +46,7 @@ function TaskPage() {
 
     return (
         <div className='task-page' id='task-page' onContextMenu={event => OnContextMenu(event)}>
-            <ContextMenu setColorPriority={setPriority} active={contextMenuActive} x={mouseX} y={mouseY}/> 
+            <ContextMenu active={contextMenuActive} x={mouseX} y={mouseY}/> 
             <SideBar />
             <TaskList />
             <TaskInfoWindow />

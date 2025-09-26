@@ -23,12 +23,13 @@ export interface List {
 }
 
 export interface TaskInfo {
-  task_id: number;
+  id: number;
+  taskList_id: number;
   title: string;
   description: string;
-  date: string;
+  due_date: string;
   completed: boolean;
-  priority: 'highest' | 'high' | 'middle' | 'default';
+  priority: 'HIGHEST' | 'HIGH' | 'MIDDLE' | 'DEFAULT';
 }
 
 interface TaskManager {
@@ -37,7 +38,7 @@ interface TaskManager {
     tasks: Array<TaskInfo> | undefined;
     currentTaskInfo: TaskInfo | undefined;
     setCurrentTask: (id: number) => void;
-    changeCurrentTask: (title: string, description: string, date: string, priority: 'highest' | 'high' | 'middle' | 'default') => void;
+    changeCurrentTask: (title: string, description: string, due_date: string, priority: 'HIGHEST' | 'HIGH' | 'MIDDLE' | 'DEFAULT', completed: boolean) => void;
     updateList: () => void;
     GetTasks: (list_id: number) => void;
 }
@@ -53,14 +54,14 @@ function App() {
 
   const GetTasks = (list_id: number) => {
     //taskDTOs - это хуйня с бэка
-    InizializateTasks(list_id).then((data) => {setTasks(data.taskDTOs)})
+    InizializateTasks(list_id).then((data) => {setTasks(data.taskDTOs); console.log("tasks:", data.taskDTOs)})
     setList_id(list_id)
   }
 
   //Передаем данные о задаче в фокусе
   const setCurrentTask = (id: number) => {
       if(tasks) {
-          const currentTaskIndex = tasks.findIndex(task => task.task_id === id)
+          const currentTaskIndex = tasks.findIndex(task => task.id === id)
           setCurrentTaskInfo(tasks[currentTaskIndex])
       }
   }
@@ -70,18 +71,18 @@ function App() {
           setTasks([...tasks])
   }
 
-  const changeCurrentTask = (title: string, description: string, date: string, priority: 'highest' | 'high' | 'middle' | 'default') => {
+  const changeCurrentTask = (title: string, description: string, due_date: string, priority: 'HIGHEST' | 'HIGH' | 'MIDDLE' | 'DEFAULT', completed: boolean) => {
       if(tasks != undefined) {
-          const currentTaskIndex = tasks.findIndex(task => task.task_id === currentTaskInfo?.task_id)
+          const currentTaskIndex = tasks.findIndex(task => task.id === currentTaskInfo?.id)
           if(currentTaskIndex != undefined && currentTaskInfo != undefined) {
 
               //Изменяем значение tasks[currentTaskIndex], а потом обновляем сам tasks
               //Нужно для того чтобы своевременно обновился contextValue
               tasks[currentTaskIndex].title = title
               tasks[currentTaskIndex].description = description
-              tasks[currentTaskIndex].date = date
+              tasks[currentTaskIndex].due_date = due_date
               tasks[currentTaskIndex].priority = priority
-              ChangeTask(currentTaskInfo.task_id, title, description, date, priority)
+              ChangeTask(currentTaskInfo.id, Number(list_id), title, description, due_date, priority, completed)
               updateList()
               setCurrentTaskInfo(tasks[currentTaskIndex])
           }

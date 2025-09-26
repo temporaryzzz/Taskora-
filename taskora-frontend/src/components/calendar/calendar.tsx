@@ -105,7 +105,7 @@ function Calendar () {
         'Октябрь', 'Ноябрь', 'Декабрь']
 
     const taskInfo = useContext(TaskInfoContext)
-    const taskDate = taskInfo?.currentTaskInfo?.date
+    const taskDate = taskInfo?.currentTaskInfo?.due_date
     
     const [date, setDate] = useState(new Date())//Рендер дат в отсутсвие taskDate, если taskDate есть, то открывает календарь сразу на нужном месте
     const [targetDate, setTargetDate] = useState<Date | undefined>()//Если taskDate есть, то принимает то же значение что и date
@@ -123,7 +123,7 @@ function Calendar () {
     const dropdownMenuContentRef = useRef<HTMLDivElement>(null)
 
     const InizializateDate = () => {
-        if(taskDate != '' && taskDate != undefined && taskDate != 'Invalid Date') {
+        if(taskDate != '' && taskDate != undefined && taskDate != 'Invalid Date' && taskDate !== null) {
             setDateButtonValue(daysState[date.getDay()] + ', ' + date.getDate() + ' ' + monthState[date.getMonth()] + ' ' + date.getFullYear())
             setTargetDate(new Date(date))
             setCurrentMonth(date.getMonth())
@@ -280,13 +280,14 @@ function Calendar () {
     const Cleaner = () => {
         if(taskInfo?.currentTaskInfo) {
             taskInfo.changeCurrentTask(taskInfo.currentTaskInfo.title, taskInfo.currentTaskInfo.description,
-            '', taskInfo.currentTaskInfo.priority)
+            '', taskInfo.currentTaskInfo.priority, taskInfo.currentTaskInfo.completed)
         }
     }
 
     const SendDate = () => {
         if(targetDate && taskInfo?.currentTaskInfo) {
-            taskInfo?.changeCurrentTask(taskInfo.currentTaskInfo?.title, taskInfo.currentTaskInfo?.description, String(targetDate), taskInfo.currentTaskInfo?.priority)
+            taskInfo?.changeCurrentTask(taskInfo.currentTaskInfo?.title, taskInfo.currentTaskInfo?.description, 
+                String(targetDate), taskInfo.currentTaskInfo?.priority, taskInfo.currentTaskInfo.completed)
         }
 
         ChangeColorDeadline()

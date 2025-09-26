@@ -1,5 +1,4 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import { ChangeStateTask } from '../../scripts/dataTaskManager';
 import '../../styles.scss';
 import type { TaskInfo } from '../../App';
 import { TaskInfoContext } from "../../App";
@@ -22,6 +21,7 @@ function Task(task: TaskInfo) {
         'июля', 'авг.', 'сен.', 'окт.', 'ноя.', 'дек.']
 
     const taskManagerContext = useContext(TaskInfoContext)
+    const currentTaskInfo = taskManagerContext?.currentTaskInfo
 
     const taskRef = useRef<HTMLLIElement>(null);
     const taskCheckbox = useRef<HTMLInputElement>(null);
@@ -41,16 +41,16 @@ function Task(task: TaskInfo) {
 
         if (taskCheckbox.current) {
             switch (task.priority){
-                case 'highest' :
+                case 'HIGHEST' :
                     taskCheckbox.current.style.borderColor = stateColors.highest
                     break
-                case 'high' :
+                case 'HIGH' :
                     taskCheckbox.current.style.borderColor = stateColors.high
                     break
-                case 'middle' :
+                case 'MIDDLE' :
                     taskCheckbox.current.style.borderColor = stateColors.middle
                     break
-                case 'default' :
+                case 'DEFAULT' :
                     taskCheckbox.current.style.borderColor = stateColors.default
                     break
             }
@@ -76,13 +76,14 @@ function Task(task: TaskInfo) {
             }
         }
 
-        ChangeStateTask(taskCompletedState, task.task_id)
+        taskManagerContext?.changeCurrentTask(currentTaskInfo?.title??'', currentTaskInfo?.description??'', currentTaskInfo?.due_date??'', currentTaskInfo?.priority??'DEFAULT', !taskCompletedState)
+
 
     }
 
     const setActiveClass = () => {
         if(taskRef.current) {
-            if(taskManagerContext?.currentTaskInfo?.task_id == task.task_id) {
+            if(taskManagerContext?.currentTaskInfo?.id == task.id) {
                 taskRef.current.classList.add(stateClasses.activeClass)
             }
             else {
@@ -92,20 +93,21 @@ function Task(task: TaskInfo) {
     }
 
     const OnMouseUp = () => {
-        taskManagerContext?.setCurrentTask(task.task_id)
+        taskManagerContext?.setCurrentTask(task.id)
     }
 
     useEffect(InizializateTask, [])
     useEffect(setActiveClass, [taskManagerContext?.currentTaskInfo])
     useEffect(() => {
-        if(String(new Date(task.date)) == 'Invalid Date') {
+        if(task.due_date == '' || task.due_date == null) {
             setDateMessage('')
         }
         else {
-            const date = new Date(task.date).getDate()
-            const month = new Date(task.date).getMonth()
-            let hours = new Date(task.date).getHours()
-            let minutes = new Date(task.date).getMinutes()
+            console.log(task.due_date)
+            const date = new Date(task.due_date).getDate()
+            const month = new Date(task.due_date).getMonth()
+            let hours = new Date(task.due_date).getHours()
+            let minutes = new Date(task.due_date).getMinutes()
 
             if(minutes != 59) {
                 setDateMessage(String(date) + ' ' + monthState[month] + '  ' 
@@ -119,19 +121,19 @@ function Task(task: TaskInfo) {
         if(taskCheckbox.current) {
             switch (task.priority) {
 
-                case 'highest':  {
+                case 'HIGHEST':  {
                     taskCheckbox.current.style.borderColor = stateColors.highest;
                     break
                 }
-                case 'high': {
+                case 'HIGH': {
                     taskCheckbox.current.style.borderColor = stateColors.high;
                     break
                 }
-                case 'middle': {
+                case 'MIDDLE': {
                     taskCheckbox.current.style.borderColor = stateColors.middle;
                     break
                 }
-                case 'default': {
+                case 'DEFAULT': {
                     taskCheckbox.current.style.borderColor = stateColors.default;
                     break
                 }
@@ -143,7 +145,7 @@ function Task(task: TaskInfo) {
 
     return (
         <li className='task-list__task' 
-            ref={taskRef} id={`task-${task.task_id}`} 
+            ref={taskRef} id={`task-${task.id}`} 
             onMouseUp={() => OnMouseUp()}> 
             
             <input type='checkbox' id='completed' ref={taskCheckbox} onChange={setStateTask}></input>

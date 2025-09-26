@@ -9,13 +9,14 @@ const SortedTasks = ({ tasks } : {tasks : Array<TaskInfo> | undefined}) => {
 
     return(
         tasks?.map(task =>
-            <Task task_id={task.task_id} 
+            <Task id={task.id} 
+            taskList_id={task.taskList_id}
             title={task.title} 
             description={task.description} 
-            date={task.date} 
+            due_date={task.due_date} 
             completed={task.completed}
             priority={task.priority}
-            key={task.task_id}/>
+            key={task.id}/>
         )
     )
 }

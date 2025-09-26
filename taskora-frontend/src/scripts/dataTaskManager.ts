@@ -54,14 +54,15 @@ const InizializateLists = async (user_id: number) => {
 
 }
 
-const ChangeTask = (task_id: number, title : string, description : string, date: string, priority: 'highest' | 'high' | 'middle' | 'default') => {
+const ChangeTask = (task_id: number, list_id: number, title : string, description : string, date: string, priority: 'HIGHEST' | 'HIGH' | 'MIDDLE' | 'DEFAULT', completed: boolean) => {
     try {
+        console.log(completed)
         fetch(`${SERVER_ADDRES__TASKS}${task_id}`, {
             method: 'PUT',
             headers: {
             'Content-Type': 'application/json'
             },
-            body: JSON.stringify({id: task_id, title: title, description: description, date: date,  priority: priority}),
+            body: JSON.stringify({id: task_id, taskList_id: list_id, title: title, description: description, due_date: date,  priority: priority, completed: completed}),
         })
         .then((response) => {
             if(!response.ok) {
@@ -74,56 +75,6 @@ const ChangeTask = (task_id: number, title : string, description : string, date:
     }
     catch (error) {
         console.error('Ошибка при изменении таска:', error);
-    }
-}
-
-//Смена состояний таска(активен/выполнен)
-const ChangeStateTask = (state: boolean, task_id: number) => {
-
-    if(state === true) {
-        try {
-            fetch(`${SERVER_ADDRES__TASKS}${task_id}`, {
-                method: 'PUT',
-                headers: {
-                'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({completed: false}),
-            })
-            .then((response) => {
-                if(!response.ok) {
-                    throw new Error(`error! status: ${response.status}`)
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-        }
-        catch (error) {
-            console.error('Ошибка при изменении таска:', error);
-        }
-    }
-
-    else {
-        try {
-            fetch(`${SERVER_ADDRES__TASKS}${task_id}`, {
-                method: 'PUT',
-                headers: {
-                'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({completed: true}),
-            })
-            .then((response) => {
-                if(!response.ok) {
-                    throw new Error(`error! status: ${response.status}`)
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-        }
-        catch (error) {
-            console.error('Ошибка при изменении таска:', error);
-        }
     }
 }
 
@@ -172,4 +123,4 @@ const DeleteTask = (task_id: number) => {
 }
 
 export default InizializateTasks
-export {InizializateLists, ChangeStateTask, ChangeTask, AddTask, DeleteTask}
+export {InizializateLists, ChangeTask, AddTask, DeleteTask}

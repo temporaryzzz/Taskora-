@@ -4,7 +4,7 @@ import { TaskInfoContext } from "../App";
 import { DeleteTask } from '../scripts/dataTaskManager';
 
 
-function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (priority: 'highest' | 'high' | 'middle' | 'default') => void, active: boolean, x: number, y: number}) {
+function ContextMenu({active, x, y} : {active: boolean, x: number, y: number}) {
     const stateClasses = {
         hiddenMenu: 'context-menu',
         activeMenu: 'context-menu--active'
@@ -14,6 +14,14 @@ function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (prio
     const currentTask = taskManagerContext?.currentTaskInfo
 
     const contextMenuRef = useRef<HTMLUListElement>(null)
+
+    
+    const setPriority = (priority: 'HIGHEST' | 'HIGH' | 'MIDDLE' | 'DEFAULT') => {
+        if(taskManagerContext?.currentTaskInfo) {
+            taskManagerContext.changeCurrentTask(taskManagerContext.currentTaskInfo.title, 
+                taskManagerContext.currentTaskInfo.description, taskManagerContext.currentTaskInfo.due_date, priority, taskManagerContext.currentTaskInfo.completed)
+        }
+    }
 
     const changeVisibleMenu = (active: boolean) => {
         if(contextMenuRef.current) {
@@ -32,8 +40,8 @@ function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (prio
 
     const deleteTask = () => {
         if(currentTask && taskManagerContext.tasks) {
-            DeleteTask(currentTask.task_id)
-            const currentTaskIndex = taskManagerContext.tasks.findIndex(task => task.task_id === currentTask.task_id)
+            DeleteTask(currentTask.id)
+            const currentTaskIndex = taskManagerContext.tasks.findIndex(task => task.id === currentTask.id)
             taskManagerContext.tasks.splice(currentTaskIndex, 1)
         }
     }
@@ -42,11 +50,11 @@ function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (prio
         if(taskManagerContext && currentTask) {
             const now = new Date()
             const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 23, 59)
-            if(currentTask.date != '') {
-                tomorrow.setHours(new Date(currentTask.date).getHours())
-                tomorrow.setMinutes(new Date(currentTask.date).getMinutes())
+            if(currentTask.due_date != '') {
+                tomorrow.setHours(new Date(currentTask.due_date).getHours())
+                tomorrow.setMinutes(new Date(currentTask.due_date).getMinutes())
             }
-            taskManagerContext.changeCurrentTask(currentTask.title, currentTask.description, String(tomorrow), currentTask.priority)
+            taskManagerContext.changeCurrentTask(currentTask.title, currentTask.description, String(tomorrow), currentTask.priority, currentTask.completed)
         }
     }
 
@@ -58,19 +66,19 @@ function ContextMenu({setColorPriority, active, x, y} : {setColorPriority: (prio
                 <p>Приоритет</p>
             </span>
             <ul className='context-menu__container'>
-                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority('highest')}>
+                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setPriority('HIGHEST')}>
                     <img src='/red-priority-icon.svg' width={'23px'} height={'23px'} style={{margin: '0 auto'}}></img>
                 </li>
 
-                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority('high')}>
+                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setPriority('HIGH')}>
                     <img src='/blue-priority-icon.svg' width={'23px'} height={'23px'} style={{margin: '0 auto'}}></img>
                 </li>
 
-                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority('middle')}>
+                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setPriority('MIDDLE')}>
                     <img src='/green-priority-icon.svg' width={'23px'} height={'23px'} style={{margin: '0 auto'}}></img>
                 </li>
 
-                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setColorPriority('default')}>
+                <li className='context-menu__item context-menu__item--priority' onMouseDown={() => setPriority('DEFAULT')}>
                     <img src='/gray-priority-icon.svg' width={'23px'} height={'23px'} style={{margin: '0 auto'}}></img>
                 </li>
             </ul>
