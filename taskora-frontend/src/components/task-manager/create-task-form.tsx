@@ -17,11 +17,16 @@ function CreateTaskForm() {
         if((/\S/.test(taskTitle??''))) {
             
             if(taskManagerContext && taskManagerContext.tasks && taskManagerContext.list_id) {
-                
-                //⁡⁣⁣⁢Получать task_id в ответе на AddTask⁡
-                //taskManagerContext?.tasks?.push({task_id: 0, title: taskTitle??'', description: '', date: '', completed: false, priority: 'default'})
-                AddTask(taskManagerContext.list_id, taskTitle??'')
-                taskManagerContext?.updateList()
+
+                let task_id
+
+                AddTask(taskManagerContext.list_id, taskTitle??'').then((taskData) => {
+                    task_id = Number(taskData.id)
+                    console.log(taskData)
+                    taskManagerContext?.tasks?.push({task_id: Number(task_id), title: taskTitle??'', description: '', date: '', completed: false, priority: 'default'})
+                    taskManagerContext?.updateList()
+                })
+
                 
                 if(inputTitleTaskRef.current) inputTitleTaskRef.current.value = ''
             }

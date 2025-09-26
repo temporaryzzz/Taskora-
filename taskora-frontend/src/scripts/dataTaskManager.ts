@@ -1,12 +1,15 @@
 export const SERVER_ADDRES = "http://localhost:8080/api"
-const SERVER_ADDRES__TASK = "http://localhost:8080/api/task"
+const SERVER_ADDRES__TASKS = "http://localhost:8080/api/tasks/"
+const SERVER_ADDRES__TASKS_NO_SLASH = "http://localhost:8080/api/tasks"
+const SERVER_ADDRES__LISTS = "http://localhost:8080/api/tasklists/"
+const FRONTEND_ADDRES = "http://localhost:3000"
 
 
 //Инициализация тасков для рендера
 const InizializateTasks = async (list_id: number) => {
     
     try {
-        const response = await fetch(`${SERVER_ADDRES__TASK}/tasks/${list_id}`, {
+        const response = await fetch(`${SERVER_ADDRES__TASKS}${list_id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -29,7 +32,7 @@ const InizializateTasks = async (list_id: number) => {
 const InizializateLists = async (user_id: number) => {
 
     try {
-        const response = await fetch(`${SERVER_ADDRES__TASK}/lists/${user_id}`, {
+        const response = await fetch(`${SERVER_ADDRES__LISTS}${user_id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -53,12 +56,12 @@ const InizializateLists = async (user_id: number) => {
 
 const ChangeTask = (task_id: number, title : string, description : string, date: string, priority: 'highest' | 'high' | 'middle' | 'default') => {
     try {
-        fetch(`${SERVER_ADDRES__TASK}/update/${task_id}`, {
-            method: 'POST',
+        fetch(`${SERVER_ADDRES__TASKS}${task_id}`, {
+            method: 'PUT',
             headers: {
             'Content-Type': 'application/json'
             },
-            body: JSON.stringify({title: title, description: description, date: date,  priority: priority}),
+            body: JSON.stringify({id: task_id, title: title, description: description, date: date,  priority: priority}),
         })
         .then((response) => {
             if(!response.ok) {
@@ -79,8 +82,8 @@ const ChangeStateTask = (state: boolean, task_id: number) => {
 
     if(state === true) {
         try {
-            fetch(`${SERVER_ADDRES__TASK}/update/${task_id}`, {
-                method: 'POST',
+            fetch(`${SERVER_ADDRES__TASKS}${task_id}`, {
+                method: 'PUT',
                 headers: {
                 'Content-Type': 'application/json'
                 },
@@ -102,8 +105,8 @@ const ChangeStateTask = (state: boolean, task_id: number) => {
 
     else {
         try {
-            fetch(`${SERVER_ADDRES__TASK}/update/${task_id}`, {
-                method: 'POST',
+            fetch(`${SERVER_ADDRES__TASKS}${task_id}`, {
+                method: 'PUT',
                 headers: {
                 'Content-Type': 'application/json'
                 },
@@ -124,23 +127,24 @@ const ChangeStateTask = (state: boolean, task_id: number) => {
     }
 }
 
-const AddTask = (list_id: number, title : string) => {
+const AddTask = async (list_id: number, title : string) => {
     try {
-        fetch(`${SERVER_ADDRES__TASK}/create`, { 
+        const response = await fetch(`${SERVER_ADDRES__TASKS_NO_SLASH}`, { 
             method: 'POST', 
             headers: {
+            "Access-Control-Allow-Origin": `${FRONTEND_ADDRES}`,
             'Content-Type': 'application/json'
             },
-            body: JSON.stringify({list_id: list_id, title: title}) 
+            body: JSON.stringify({taskList_id: list_id, title: title}) 
         })
-        .then((response) => {
-            if(!response.ok) {
-                throw new Error(`error! status: ${response.status}`)
-            }
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+
+        if (!response.ok) {
+            throw new Error(`error! status: ${response.status}`);
+        }
+
+        const taskData = await response.json();
+        console.log(taskData)
+        return taskData
     }
     catch (error) {
         console.log('Ошибка при создании таска:', error)
@@ -149,7 +153,7 @@ const AddTask = (list_id: number, title : string) => {
 
 const DeleteTask = (task_id: number) => {
     try {
-        fetch(`${SERVER_ADDRES__TASK}/delete/${task_id}`, {
+        fetch(`${SERVER_ADDRES__TASKS}${task_id}`, {
             method: 'DELETE'
         })
         .then((response) => {
