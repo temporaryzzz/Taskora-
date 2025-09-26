@@ -5,12 +5,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.taskora.backend.dto.TaskDTO;
-import com.taskora.backend.dto.TaskListDTO;
-import com.taskora.backend.dto.TaskListResponseDTO;
 import com.taskora.backend.dto.TaskResponseDTO;
 import com.taskora.backend.entity.TaskList;
 import com.taskora.backend.service.TaskListService;
 import com.taskora.backend.service.TaskService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import java.util.List;
 
@@ -19,11 +22,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
+// [fix] сейчас любой пользователь может просто по url получать задачи других
 @RestController
-@RequestMapping("/api/task")
+@RequestMapping("/api/tasks")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class TaskController {
     
@@ -36,18 +40,17 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    // [fix] написать доки и добавить проверки
-    @GetMapping("/lists/{user_id}")
-    public ResponseEntity<?> getTaskListsForUser(@PathVariable Long user_id) {
-        List<TaskListDTO> taskLists = taskListService.findAllTaskListsByOwnerId(user_id);
-
-        return ResponseEntity
-            .ok()
-            .body(new TaskListResponseDTO(taskLists));
-    }
 
     // [fix] написать доки и добавить проверки
-    @GetMapping("/tasks/{list_id}")
+    @GetMapping("/{list_id}")
+    @Operation(description = "Получение всех задач по id списка")
+    @ApiResponse(
+        responseCode = "200",
+        description = "Задачи найдены",
+        content = @Content(
+            schema = @Schema(implementation = TaskResponseDTO.class) 
+        )
+    )
     public ResponseEntity<?> getTasks(@PathVariable Long list_id) {
         
         List<TaskDTO> taskDTOs = taskService.findTasksByTaskListId(list_id);
@@ -58,18 +61,34 @@ public class TaskController {
     }
 
     // [fix] написать доки и добавить проверки
-    @PostMapping("/create")
+    @PostMapping("")
+    @Operation(description = "Создание задачи")
+    @ApiResponse(
+        responseCode = "201",
+        description = "Задача создана",
+        content = @Content(
+            schema = @Schema(implementation = TaskDTO.class)
+        )
+    )
     public ResponseEntity<?> createTask(@RequestBody TaskDTO requestDTO) {
         TaskList taskList = taskListService.findTaskListById(requestDTO.getTaskList_id());
-        taskService.createTask(taskList, requestDTO.getTitle());
+        TaskDTO taskDTO = taskService.createTask(taskList, requestDTO.getTitle());
         
         return ResponseEntity
-            .ok()
-            .body(null);
+            .status(201)
+            .body(taskDTO);
     }
 
     // [fix] написать доки и добавить проверки
-    @PostMapping("/update/{task_id}")
+    @PutMapping("/{task_id}")
+    @Operation(description = "Обновление задачи")
+    @ApiResponse(
+        responseCode = "200",
+        description = "Задача обновлена",
+        content = @Content(
+            schema = @Schema(implementation = TaskDTO.class)
+        )
+    )
     public ResponseEntity<?> updateTask(@PathVariable Long task_id, @RequestBody TaskDTO requestDTO) {
         requestDTO.setId(task_id);
         TaskDTO updatedTask = taskService.updateTask(requestDTO);
@@ -80,12 +99,13 @@ public class TaskController {
     }
     
     // [fix] написать доки и добавить проверки
-    @DeleteMapping("/delete/{task_id}")
+    @DeleteMapping("/{task_id}")
+    @Operation(description = "Удаление задачи")
     public ResponseEntity<?> deleteTask(@PathVariable Long task_id) {
         taskService.deleteTaskById(task_id);
 
         return ResponseEntity
-            .ok()
+            .status(204)
             .body(null);
     }
 }

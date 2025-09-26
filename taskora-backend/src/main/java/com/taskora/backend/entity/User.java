@@ -26,13 +26,13 @@ public class User {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     List<TaskList> taskLists = new ArrayList<>();
 
-    @Column(nullable = false, length = 25, unique = true)
+    @Column(nullable = false, length = 16, unique = true)
     String username;
 
-    @Column(nullable = false, length = 100, unique = true)
+    @Column(nullable = false, length = 64, unique = true)
     String email;
 
-    @Column(length = 255, nullable = false)
+    @Column(length = 32, nullable = false)
     String password;
 
     @CreationTimestamp

@@ -1,20 +1,42 @@
 package com.taskora.backend.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Size;
+
+@Schema(description = "Задача")
 public class TaskDTO {
     
+    @Schema(description = "Уникальный id задачи в БД")
     Long id;
+
+    @Schema(description = "Id списка в котором лежит задача")
     Long taskList_id;
+
+    @Schema(description = "Название задачи, от 1 до 25 символов", example = "task 1")
+    @Size(min = 1, max = 25)
     String title;
+
+    @Schema(description = "Описание задачи, до 255 символов", example = "Создать task 2.")
+    @Max(255)
     String description;
-    Date due_date;
+
+    @Schema(description = "Дедлайн задачи")
+    LocalDateTime due_date;
+
+    @Schema(description = "Приоритет задачи", example = "MIDDLE")
+    @Enumerated
     Priority priority = Priority.MIDDLE;
+
+    @Schema(description = "Выполнена ли задача", example = "false")
     Boolean completed;
 
 
-    public TaskDTO(Long id, Long taskList_id, String title, String description, Date due_date, Priority priority,
-            Boolean completed) {
+    public TaskDTO(Long id, Long taskList_id, @Size(min = 1, max = 25) String title, @Max(255) String description,
+            LocalDateTime due_date, Priority priority, Boolean completed) {
         this.id = id;
         this.taskList_id = taskList_id;
         this.title = title;
@@ -57,11 +79,11 @@ public class TaskDTO {
         this.description = description;
     }
 
-    public Date getDue_date() {
+    public LocalDateTime getDue_date() {
         return due_date;
     }
 
-    public void setDue_date(Date due_date) {
+    public void setDue_date(LocalDateTime due_date) {
         this.due_date = due_date;
     }
 
