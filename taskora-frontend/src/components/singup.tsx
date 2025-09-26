@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { FormEvent} from 'react';
 import { useNavigate } from 'react-router';
 import '../styles.scss';
+import { SERVER_ADDRES } from '../scripts/dataTaskManager';
 
 
 function SingUpForm () {
@@ -14,7 +15,7 @@ function SingUpForm () {
         event.preventDefault()
 
         try {
-            fetch("http://localhost:8080/api/auth/signup", {
+            fetch(`${SERVER_ADDRES}/auth/signup`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

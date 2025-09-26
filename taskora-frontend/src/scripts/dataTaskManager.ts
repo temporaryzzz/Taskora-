@@ -1,8 +1,12 @@
+export const SERVER_ADDRES = "http://localhost:8080/api"
+const SERVER_ADDRES__TASK = "http://localhost:8080/api/task"
+
+
 //Инициализация тасков для рендера
 const InizializateTasks = async (list_id: number) => {
     
     try {
-        const response = await fetch(`http://localhost:8080/api/task/tasks/${list_id}`, {
+        const response = await fetch(`${SERVER_ADDRES__TASK}/tasks/${list_id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -25,7 +29,7 @@ const InizializateTasks = async (list_id: number) => {
 const InizializateLists = async (user_id: number) => {
 
     try {
-        const response = await fetch(`http://localhost:8080/api/task/lists/${user_id}`, {
+        const response = await fetch(`${SERVER_ADDRES__TASK}/lists/${user_id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -49,7 +53,7 @@ const InizializateLists = async (user_id: number) => {
 
 const ChangeTask = (task_id: number, title : string, description : string, date: string, priority: 'highest' | 'high' | 'middle' | 'default') => {
     try {
-        fetch(`http://localhost:8080/api/task/update/${task_id}`, {
+        fetch(`${SERVER_ADDRES__TASK}/update/${task_id}`, {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json'
@@ -75,7 +79,7 @@ const ChangeStateTask = (state: boolean, task_id: number) => {
 
     if(state === true) {
         try {
-            fetch(`http://localhost:8080/api/task/update/${task_id}`, {
+            fetch(`${SERVER_ADDRES__TASK}/update/${task_id}`, {
                 method: 'POST',
                 headers: {
                 'Content-Type': 'application/json'
@@ -98,7 +102,7 @@ const ChangeStateTask = (state: boolean, task_id: number) => {
 
     else {
         try {
-            fetch(`http://localhost:8080/api/task/update/${task_id}`, {
+            fetch(`${SERVER_ADDRES__TASK}/update/${task_id}`, {
                 method: 'POST',
                 headers: {
                 'Content-Type': 'application/json'
@@ -122,7 +126,7 @@ const ChangeStateTask = (state: boolean, task_id: number) => {
 
 const AddTask = (list_id: number, title : string) => {
     try {
-        fetch(`http://localhost:8080/api/task/create`, { 
+        fetch(`${SERVER_ADDRES__TASK}/create`, { 
             method: 'POST', 
             headers: {
             'Content-Type': 'application/json'
@@ -145,7 +149,7 @@ const AddTask = (list_id: number, title : string) => {
 
 const DeleteTask = (task_id: number) => {
     try {
-        fetch(`http://localhost:8080/api/task/delete/${task_id}`, {
+        fetch(`${SERVER_ADDRES__TASK}/delete/${task_id}`, {
             method: 'DELETE'
         })
         .then((response) => {

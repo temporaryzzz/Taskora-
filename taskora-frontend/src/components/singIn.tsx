@@ -2,6 +2,7 @@
 import { useRef, type FormEvent, type SetStateAction} from 'react';
 import { useNavigate } from 'react-router';
 import type { User } from '../App';
+import { SERVER_ADDRES } from '../scripts/dataTaskManager'
 import '../styles.scss';
 
 
@@ -33,7 +34,7 @@ function SingInForm({setUser} : {setUser: React.Dispatch<SetStateAction<User | u
 
         try {
             if((/@/.test(username))) {
-                fetch("http://localhost:8080/api/auth/signin", {
+                fetch(`${SERVER_ADDRES}/auth/signin`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -61,7 +62,7 @@ function SingInForm({setUser} : {setUser: React.Dispatch<SetStateAction<User | u
                     });
             } 
             else {
-                fetch("http://localhost:8080/api/auth/signin", {
+                fetch(`${SERVER_ADDRES}/auth/signin`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
