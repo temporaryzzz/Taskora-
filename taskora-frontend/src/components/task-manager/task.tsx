@@ -29,16 +29,7 @@ function Task(task: TaskInfo) {
     const [taskCompletedState, setTaskCompletedState] = useState(task.completed)
     const [dateMessage, setDateMessage] = useState('')
 
-    const InizializateTask = () => {
-        if(task.completed === true) {
-
-            if (taskRef.current) taskRef.current.classList.add(stateClasses.completedClass)
-
-            if (taskCheckbox.current) {
-                taskCheckbox.current.checked = true  
-            }
-        }
-
+    const InizializatePriority = () => {
         if (taskCheckbox.current) {
             switch (task.priority){
                 case 'HIGHEST' :
@@ -55,6 +46,19 @@ function Task(task: TaskInfo) {
                     break
             }
         }
+    }
+
+    const InizializateTask = () => {
+        if(task.completed === true) {
+
+            if (taskRef.current) taskRef.current.classList.add(stateClasses.completedClass)
+
+            if (taskCheckbox.current) {
+                taskCheckbox.current.checked = true  
+            }
+        }
+
+        InizializatePriority()
     }
 
     const setStateTask = () => { 
@@ -118,28 +122,7 @@ function Task(task: TaskInfo) {
             }
         }
 
-        if(taskCheckbox.current) {
-            switch (task.priority) {
-
-                case 'HIGHEST':  {
-                    taskCheckbox.current.style.borderColor = stateColors.highest;
-                    break
-                }
-                case 'HIGH': {
-                    taskCheckbox.current.style.borderColor = stateColors.high;
-                    break
-                }
-                case 'MIDDLE': {
-                    taskCheckbox.current.style.borderColor = stateColors.middle;
-                    break
-                }
-                case 'DEFAULT': {
-                    taskCheckbox.current.style.borderColor = stateColors.default;
-                    break
-                }
-
-            }
-        }
+        InizializatePriority()
 
     }, [task])
 
