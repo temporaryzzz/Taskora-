@@ -29,7 +29,7 @@ public class TaskListService {
     public TaskListDTO createTaskList(User user) {
         TaskList taskList = new TaskList();
         taskList.setOwner(user);
-        taskList.setTitle("Default list name");
+        taskList.setTitle("Inbox");
 
         repository.save(taskList);
         ResponseDTO responseDTO = new ResponseDTO();
