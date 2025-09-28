@@ -40,7 +40,6 @@ function TaskPage() {
     //С пустым массивом зависимостей выполнится только при монтировании
     useEffect(() => {
         document.addEventListener('mouseup', () => { setContextMenuActive(false) })
-        //Бля, я тебя умоляю, не забывай удалять слушатели
         return () => document.removeEventListener('mouseup', () => { setContextMenuActive(false) })
     }, [])
 

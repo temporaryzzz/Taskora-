@@ -56,7 +56,6 @@ const InizializateLists = async (user_id: number) => {
 
 const ChangeTask = (task_id: number, list_id: number, title : string, description : string, date: string, priority: 'HIGHEST' | 'HIGH' | 'MIDDLE' | 'DEFAULT', completed: boolean) => {
     try {
-        console.log(completed)
         fetch(`${SERVER_ADDRES__TASKS}${task_id}`, {
             method: 'PUT',
             headers: {

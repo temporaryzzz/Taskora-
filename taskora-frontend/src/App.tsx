@@ -8,8 +8,6 @@ import { useEffect, useState, createContext } from 'react';
 import ProfilePage from './components/profile/profile-page';
 import InizializateTasks, { InizializateLists, ChangeTask } from './scripts/dataTaskManager';
 
-console.log(document.cookie)
-
 export interface User {
   username: string;
   user_id: number;
@@ -54,7 +52,8 @@ function App() {
 
   const GetTasks = (list_id: number) => {
     //taskDTOs - это хуйня с бэка
-    InizializateTasks(list_id).then((data) => {setTasks(data.taskDTOs); console.log("tasks:", data.taskDTOs)})
+    InizializateTasks(list_id).then((data) => {setTasks(data.taskDTOs); console.log("taskDTOs:", typeof(data.taskDTOs))})
+    console.log("tasks:", typeof(tasks))
     setList_id(list_id)
   }
 

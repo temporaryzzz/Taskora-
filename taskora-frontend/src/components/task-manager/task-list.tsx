@@ -38,41 +38,45 @@ function TaskList() {
     }
 
     if(taskManagerContext != undefined) {
-
-        if(!taskManagerContext.tasks) {
-            setTimeout(() => {
-                return (
+        
+        if(taskManagerContext.tasks?.length == 0) {
+            return (
+                <div className='task-list'>
+                    <CreateTaskForm />
                     <div style={{textAlign: 'center', width: '70%'}}>
                         <h2>ПОКА ПУСТО...</h2>
                     </div>
-                )
-            }, 300)
+                </div>
+            )
         }
 
-        return (
-            <div className='task-list'>
-                <CreateTaskForm />
+        else {
+            return (
+                <div className='task-list'>
+                    <CreateTaskForm />
 
-                <ul className='task-list__section' id='inbox-list'>
-                    <SortedTasks tasks={taskManagerContext.tasks?.filter(task => task.completed === false)}/>
-                </ul>
+                    <ul className='task-list__section' id='inbox-list'>
+                        <SortedTasks tasks={taskManagerContext.tasks?.filter(task => task.completed === false)}/>
+                    </ul>
 
-                <span className='task-list__title' onClick={() => changeVisibleList(taskListCompletedRef)}>
-                    <h5 style={{float: 'left', fontWeight: 700}}>Выполнено</h5>
-                </span>
+                    <span className='task-list__title' onClick={() => changeVisibleList(taskListCompletedRef)}>
+                        <h5 style={{float: 'left', fontWeight: 700}}>Выполнено</h5>
+                    </span>
 
-                <ul className='task-list__section task-list__section--completed' ref={taskListCompletedRef} id='completed-list'>
-                    <SortedTasks tasks={taskManagerContext.tasks?.filter(task => task.completed === true)}/>
-                </ul>
-            </div>    
-        )
+                    <ul className='task-list__section task-list__section--completed' ref={taskListCompletedRef} id='completed-list'>
+                        <SortedTasks tasks={taskManagerContext.tasks?.filter(task => task.completed === true)}/>
+                    </ul>
+                </div>    
+            )
+        }
+
     }
 
     else {
         setTimeout(() => {
             return (
                 <div style={{textAlign: 'center', width: '70%'}}>
-                    <h2>ПОКА ПУСТО...</h2>
+                    <h2>ПРОИЗОШЛА КАКАЯ-ТО ОШИБКА</h2>
                 </div>
             )
         }, 300)
