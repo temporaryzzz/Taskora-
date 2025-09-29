@@ -113,7 +113,6 @@ function App() {
         tasks[currentTaskIndex].description = description;
         tasks[currentTaskIndex].due_date = due_date;
         tasks[currentTaskIndex].priority = priority;
-        tasks[currentTaskIndex].completed = completed;
         ChangeTask(
           currentTaskInfo.id,
           Number(list_id),
