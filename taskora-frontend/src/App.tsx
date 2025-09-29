@@ -97,12 +97,23 @@ function App() {
         task => task.id === currentTaskInfo?.id
       );
       if (currentTaskIndex != undefined && currentTaskInfo != undefined) {
+        if (
+          currentTaskInfo.title == title &&
+          currentTaskInfo.description == description &&
+          currentTaskInfo.due_date == due_date &&
+          currentTaskInfo.priority == priority &&
+          currentTaskInfo.completed == completed
+        ) {
+          console.log('no changes');
+          return;
+        }
         //Изменяем значение tasks[currentTaskIndex], а потом обновляем сам tasks
         //Нужно для того чтобы своевременно обновился contextValue
         tasks[currentTaskIndex].title = title;
         tasks[currentTaskIndex].description = description;
         tasks[currentTaskIndex].due_date = due_date;
         tasks[currentTaskIndex].priority = priority;
+        tasks[currentTaskIndex].completed = completed;
         ChangeTask(
           currentTaskInfo.id,
           Number(list_id),
