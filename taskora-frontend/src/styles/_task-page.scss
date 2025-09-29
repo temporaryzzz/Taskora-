@@ -1,6 +1,6 @@
-@use "index";
-@use "vars";
-@use "mixins";
+@use 'index';
+@use 'vars';
+@use 'mixins';
 
 .task-page {
   display: grid;
@@ -10,17 +10,19 @@
 }
 
 .task-list {
-    @include mixins.flex-start(column);
-    @include mixins.overflow-default;
-    border-right: 1px solid vars.$border-default;
-    max-height: 95vh;
-    height: 95vh;
-    position: relative;
-    grid-column: span 5;
-    padding: 7px;  
+  @include mixins.flex-start(column);
+  @include mixins.overflow-default;
+  border-right: 1px solid vars.$border-default;
+  max-height: 95vh;
+  height: 95vh;
+  position: relative;
+  grid-column: span 5;
+  padding: 7px;
 }
 
-.task-list::-webkit-scrollbar { width: 0; }
+.task-list::-webkit-scrollbar {
+  width: 0;
+}
 
 .task-list__section {
   width: 100%;
@@ -68,7 +70,6 @@
   flex-wrap: nowrap;
 }
 
-
 .task-list__task:hover {
   background-color: vars.$hover-element;
   border-radius: vars.$border-radius-default;
@@ -103,7 +104,7 @@
   color: vars.$completed-element;
 }
 
-.task-list__task--completed p{
+.task-list__task--completed p {
   color: vars.$completed-element;
 }
 
@@ -152,7 +153,7 @@
 }
 
 .icon--inbox-list {
-  background-image: url("../../public/inbox-list-icon.svg");
+  background-image: url('../../public/inbox-list-icon.svg');
 }
 
 .task-info-window {
@@ -202,7 +203,6 @@
 
 .task-info-window__date--expired {
   color: vars.$redAccent;
-
 }
 
 .calendar-wrapper {

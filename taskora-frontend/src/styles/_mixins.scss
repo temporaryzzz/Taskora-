@@ -1,4 +1,4 @@
-@use "vars";
+@use 'vars';
 
 @mixin flex-center($d: row) {
   display: flex;
@@ -22,7 +22,7 @@
 
 @mixin overflow-default {
   overflow-x: hidden;
-  overflow-y:scroll;
+  overflow-y: scroll;
 }
 
 @mixin textarea-default {
@@ -30,6 +30,6 @@
   border: none;
   border-radius: 0px;
   padding: 10px;
-  outline:none;
+  outline: none;
   resize: none;
 }

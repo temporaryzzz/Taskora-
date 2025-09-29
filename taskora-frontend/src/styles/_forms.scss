@@ -1,33 +1,32 @@
-@use "index";
-@use "mixins";
-@use "vars";
+@use 'index';
+@use 'mixins';
+@use 'vars';
 
 .main-button {
-    border: 2px solid rgba(0, 0, 0, 0);
-    box-shadow: none;
+  border: 2px solid rgba(0, 0, 0, 0);
+  box-shadow: none;
 }
- 
+
 .main-button--green {
-    background-color: vars.$greenAccent;
-    color: white;
-    font-weight: bold;
+  background-color: vars.$greenAccent;
+  color: white;
+  font-weight: bold;
 }
 
 .main-button--back {
-    background-color: vars.$muted-blueAccent;
-    max-height: 40px;
-    padding: 2%;
+  background-color: vars.$muted-blueAccent;
+  max-height: 40px;
+  padding: 2%;
 }
 
 .field {
   display: flex;
   flex-direction: column;
   margin-block: 0;
- 
-  
+
   .field:has([required]) .field__label::after,
   .radios:has([required]) .radios__legend::after {
-    content: "*";
+    content: '*';
     padding-inline: 0.25em;
     color: red;
   }
@@ -45,7 +44,6 @@
   .field__errors:empty {
     display: none;
   }
-
 }
 
 .create-task-form {
@@ -66,5 +64,3 @@
   height: 35px;
   background-color: vars.$bgColor-current;
 }
-
-
