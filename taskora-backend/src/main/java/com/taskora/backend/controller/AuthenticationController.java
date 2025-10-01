@@ -73,7 +73,7 @@ public class AuthenticationController {
         UserDTO userResponseDTO = userService.createUser(requestDTO);
 
         User newUser = userService.findUserById(userResponseDTO.getId());
-        taskListService.createTaskList(newUser);
+        taskListService.createDefaultTaskList(newUser);
 
         return ResponseEntity
                 .ok()
