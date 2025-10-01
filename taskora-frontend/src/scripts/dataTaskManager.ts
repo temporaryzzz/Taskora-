@@ -2,6 +2,7 @@ export const SERVER_ADDRES = 'http://localhost:8080/api';
 const SERVER_ADDRES__TASKS = 'http://localhost:8080/api/tasks/';
 const SERVER_ADDRES__TASKS_NO_SLASH = 'http://localhost:8080/api/tasks';
 const SERVER_ADDRES__LISTS = 'http://localhost:8080/api/tasklists/';
+const SERVER_ADDRES__LISTS_NO_SLASH = 'http://localhost:8080/api/tasklists';
 const FRONTEND_ADDRES = 'http://localhost:3000';
 
 //Инициализация тасков для рендера
@@ -100,6 +101,31 @@ const AddTask = async (list_id: number, title: string) => {
 	}
 };
 
+//⁡⁣⁣⁢В ответе ожидиается list_id⁡
+const AddList = async (user_id: number, title: string) => {
+	try {
+		const response = await fetch(`${SERVER_ADDRES__LISTS_NO_SLASH}`, {
+			method: 'POST',
+			headers: {
+				'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ user_id: user_id, title: title }),
+		});
+
+		if (!response.ok) {
+			throw new Error(`error! status: ${response.status}`);
+		}
+
+		const listData = await response.json();
+		console.log(listData);
+
+		return listData;
+	} catch (error) {
+		console.log('Ошибка при создании списка:', error);
+	}
+};
+
 const DeleteTask = (task_id: number) => {
 	try {
 		fetch(`${SERVER_ADDRES__TASKS}${task_id}`, { method: 'DELETE' })
@@ -117,4 +143,4 @@ const DeleteTask = (task_id: number) => {
 };
 
 export default InizializateTasks;
-export { InizializateLists, ChangeTask, AddTask, DeleteTask };
+export { InizializateLists, ChangeTask, AddTask, AddList, DeleteTask };

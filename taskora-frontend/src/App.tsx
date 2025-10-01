@@ -34,6 +34,7 @@ export interface TaskInfo {
 }
 
 interface TaskManager {
+	user: User | undefined;
 	list_id: number | undefined;
 	lists: Array<List> | undefined;
 	tasks: Array<TaskInfo> | undefined;
@@ -46,7 +47,8 @@ interface TaskManager {
 		priority: 'HIGHEST' | 'HIGH' | 'MIDDLE' | 'DEFAULT',
 		completed: boolean
 	) => void;
-	updateList: () => void;
+	updateTasks: () => void;
+	updateLists: () => void;
 	GetTasks: (list_id: number) => void;
 }
 
@@ -77,8 +79,12 @@ function App() {
 		}
 	};
 
-	const updateList = () => {
+	const updateTasks = () => {
 		if (tasks) setTasks([...tasks]);
+	};
+
+	const updateLists = () => {
+		if (lists) setLists([...lists]);
 	};
 
 	const changeCurrentTask = (
@@ -116,7 +122,7 @@ function App() {
 					priority,
 					completed
 				);
-				updateList();
+				updateTasks();
 				setCurrentTaskInfo(tasks[currentTaskIndex]);
 			}
 		}
@@ -145,13 +151,15 @@ function App() {
 	}, [lists]);
 
 	const contextValue = {
+		user,
 		list_id,
 		lists,
 		tasks,
 		currentTaskInfo,
 		setCurrentTask,
 		changeCurrentTask,
-		updateList,
+		updateTasks,
+		updateLists,
 		GetTasks,
 	};
 

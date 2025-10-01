@@ -28,7 +28,7 @@ function CreateTaskForm() {
 						completed: false,
 						priority: 'DEFAULT',
 					});
-					taskManagerContext?.updateList();
+					taskManagerContext?.updateTasks();
 				});
 
 				if (inputTitleTaskRef.current) inputTitleTaskRef.current.value = '';

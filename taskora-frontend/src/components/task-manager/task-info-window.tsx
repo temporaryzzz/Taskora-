@@ -29,7 +29,7 @@ function TaskInfoWindow() {
 		) {
 			console.log('change');
 			taskManagerContext.tasks[currentTaskIndex].title = title;
-			taskManagerContext.updateList();
+			taskManagerContext.updateTasks();
 			console.log(taskManagerContext.tasks[currentTaskIndex]);
 			console.log(taskManagerContext.tasks);
 		}

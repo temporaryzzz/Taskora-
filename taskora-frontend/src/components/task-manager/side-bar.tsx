@@ -3,6 +3,7 @@ import '../../styles.scss';
 import SideBarButton from './side-bar-button';
 import { TaskInfoContext } from '../../App';
 import type { List } from '../../App';
+import CreateListForm from './create-list-form';
 
 function SideBar() {
 	const TaskManagerContext = useContext(TaskInfoContext);
@@ -14,6 +15,7 @@ function SideBar() {
 
 	return (
 		<div className="side-bar">
+			<CreateListForm />
 			<ul className="side-bar__items-list">
 				{lists?.map((list) => (
 					<SideBarButton list={list} />
