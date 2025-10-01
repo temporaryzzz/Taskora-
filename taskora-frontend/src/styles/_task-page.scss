@@ -3,337 +3,337 @@
 @use 'mixins';
 
 .task-page {
-  display: grid;
-  grid-template-columns: repeat(10, 10vw);
-  grid-template-rows: repeat(9, 10vh);
-  justify-content: space-evenly;
+	display: grid;
+	grid-template-columns: repeat(10, 10vw);
+	grid-template-rows: repeat(9, 10vh);
+	justify-content: space-evenly;
 }
 
 .task-list {
-  @include mixins.flex-start(column);
-  @include mixins.overflow-default;
-  border-right: 1px solid vars.$border-default;
-  max-height: 95vh;
-  height: 95vh;
-  position: relative;
-  grid-column: span 5;
-  padding: 7px;
+	@include mixins.flex-start(column);
+	@include mixins.overflow-default;
+	border-right: 1px solid vars.$border-default;
+	max-height: 95vh;
+	height: 95vh;
+	position: relative;
+	grid-column: span 5;
+	padding: 7px;
 }
 
 .task-list::-webkit-scrollbar {
-  width: 0;
+	width: 0;
 }
 
 .task-list__section {
-  width: 100%;
-  border: none;
-  padding: 0px;
-  text-align: center;
-  overflow: visible;
-  margin-bottom: 15px;
+	width: 100%;
+	border: none;
+	padding: 0px;
+	text-align: center;
+	overflow: visible;
+	margin-bottom: 15px;
 }
 
 .task-list__section--completed {
-  margin-top: 0px;
+	margin-top: 0px;
 }
 
 .task-list__title {
-  margin-top: 40px;
-  margin-bottom: 5px;
-  height: fit-content;
-  text-align: center;
+	margin-top: 40px;
+	margin-bottom: 5px;
+	height: fit-content;
+	text-align: center;
 }
 
 .task-list__title:hover {
-  cursor: pointer;
+	cursor: pointer;
 }
 
 .task-list__title::after {
-  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23555"/></svg>');
-  position: absolute;
-  transition: 0.2s;
-  right: 10px;
-  rotate: 0deg;
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23555"/></svg>');
+	position: absolute;
+	transition: 0.2s;
+	right: 10px;
+	rotate: 0deg;
 }
 
 .task-list__task {
-  align-items: center;
-  border: 1px solid vars.$border-default;
-  border-radius: vars.$border-radius-default;
-  background: transparent;
-  color: vars.$fgColor-default;
-  display: flex;
-  margin-top: 5px;
-  width: 100%;
-  height: 40px;
-  overflow: hidden;
-  flex-wrap: nowrap;
+	align-items: center;
+	border: 1px solid vars.$border-default;
+	border-radius: vars.$border-radius-default;
+	background: transparent;
+	color: vars.$fgColor-default;
+	display: flex;
+	margin-top: 5px;
+	width: 100%;
+	height: 40px;
+	overflow: hidden;
+	flex-wrap: nowrap;
 }
 
 .task-list__task:hover {
-  background-color: vars.$hover-element;
-  border-radius: vars.$border-radius-default;
-  border: none;
+	background-color: vars.$hover-element;
+	border-radius: vars.$border-radius-default;
+	border: none;
 }
 
 .task-list__task h4 {
-  font-weight: 400;
-  margin: 5px;
-  font-size: 14px;
+	font-weight: 400;
+	margin: 5px;
+	font-size: 14px;
 }
 
 .task-list__task-date {
-  font-weight: 300;
-  position: absolute;
-  right: 5px;
-  color: vars.$muted-element;
-  margin: 5px;
-  font-size: 11px;
+	font-weight: 300;
+	position: absolute;
+	right: 5px;
+	color: vars.$muted-element;
+	margin: 5px;
+	font-size: 11px;
 }
 
 .task-list__task-date:hover {
-  cursor: pointer;
+	cursor: pointer;
 }
 
 .task-list__task--active {
-  background-color: vars.$bgColor-current;
-  border-radius: vars.$border-radius-default;
+	background-color: vars.$bgColor-current;
+	border-radius: vars.$border-radius-default;
 }
 
 .task-list__task--completed {
-  color: vars.$completed-element;
+	color: vars.$completed-element;
 }
 
 .task-list__task--completed p {
-  color: vars.$completed-element;
+	color: vars.$completed-element;
 }
 
 .task-list__task--completed:hover {
-  background-color: vars.$muted-hover-element;
+	background-color: vars.$muted-hover-element;
 }
 
 .side-bar {
-  height: 95vh;
-  grid-column: span 2;
-  border-right: 1px solid vars.$border-default;
-  padding: 5px;
+	height: 95vh;
+	grid-column: span 2;
+	border-right: 1px solid vars.$border-default;
+	padding: 5px;
 }
 
 .side-bar__items-list {
-  padding: 10px;
-  border-bottom: 1px solid vars.$border-default;
+	padding: 10px;
+	border-bottom: 1px solid vars.$border-default;
 }
 
 .side-bar__item {
-  display: flex;
-  background-color: transparent;
-  border-radius: vars.$border-radius-default;
-  color: vars.$fgColor-default;
-  width: 100%;
-  height: 40px;
-  overflow: hidden;
-  align-items: center;
-  padding: 5px;
+	display: flex;
+	background-color: transparent;
+	border-radius: vars.$border-radius-default;
+	color: vars.$fgColor-default;
+	width: 100%;
+	height: 40px;
+	overflow: hidden;
+	align-items: center;
+	padding: 5px;
 }
 
 .side-bar__item:hover {
-  background-color: vars.$hover-element;
-  cursor: pointer;
+	background-color: vars.$hover-element;
+	cursor: pointer;
 }
 
 .side-bar__item--active {
-  background-color: vars.$bgColor-current;
+	background-color: vars.$bgColor-current;
 }
 
 .icon {
-  width: 30px;
-  height: 15px;
-  background-size: contain;
-  background-repeat: no-repeat;
+	width: 30px;
+	height: 15px;
+	background-size: contain;
+	background-repeat: no-repeat;
 }
 
 .icon--inbox-list {
-  background-image: url('../../public/inbox-list-icon.svg');
+	background-image: url('../../public/inbox-list-icon.svg');
 }
 
 .task-info-window {
-  height: 95vh;
-  grid-column: span 3;
-  outline: none;
-  position: relative;
+	height: 95vh;
+	grid-column: span 3;
+	outline: none;
+	position: relative;
 }
 
 .task-info-window__title {
-  @include mixins.textarea-default;
-  width: 100%;
-  border-bottom: 1px solid vars.$border-default;
-  min-height: 50px;
-  font-size: larger;
-  font-weight: 750;
-  background-color: transparent;
+	@include mixins.textarea-default;
+	width: 100%;
+	border-bottom: 1px solid vars.$border-default;
+	min-height: 50px;
+	font-size: larger;
+	font-weight: 750;
+	background-color: transparent;
 }
 
 .task-info-window__description {
-  @include mixins.textarea-default;
-  width: 100%;
-  min-height: 600px;
-  font-size: smaller;
-  margin-top: 10px;
-  background-color: transparent;
+	@include mixins.textarea-default;
+	width: 100%;
+	min-height: 600px;
+	font-size: smaller;
+	margin-top: 10px;
+	background-color: transparent;
 }
 
 .task-info-window__date {
-  background-color: transparent;
-  position: absolute;
-  left: 5px;
-  bottom: 25px;
-  margin-top: 10px;
-  width: fit-content;
-  height: fit-content;
-  color: vars.$bright-blueAccent;
-  font-size: smaller;
-  float: left;
-  border: none;
+	background-color: transparent;
+	position: absolute;
+	left: 5px;
+	bottom: 25px;
+	margin-top: 10px;
+	width: fit-content;
+	height: fit-content;
+	color: vars.$bright-blueAccent;
+	font-size: smaller;
+	float: left;
+	border: none;
 }
 
 .task-info-window__date:hover {
-  background-color: vars.$bgColor-current;
-  cursor: pointer;
+	background-color: vars.$bgColor-current;
+	cursor: pointer;
 }
 
 .task-info-window__date--expired {
-  color: vars.$redAccent;
+	color: vars.$redAccent;
 }
 
 .calendar-wrapper {
-  background-color: vars.$bgColor-lightAccent;
-  bottom: 60px;
-  border: 1px solid vars.$border-default;
-  border-radius: vars.$border-radius-default;
-  position: absolute;
-  padding: 5px;
-  width: 280px;
-  height: 400px;
-  display: flex;
-  flex-direction: column;
+	background-color: vars.$bgColor-lightAccent;
+	bottom: 60px;
+	border: 1px solid vars.$border-default;
+	border-radius: vars.$border-radius-default;
+	position: absolute;
+	padding: 5px;
+	width: 280px;
+	height: 400px;
+	display: flex;
+	flex-direction: column;
 }
 
 .calendar-wrapper__header {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  height: 5%;
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	height: 5%;
 }
 
 .calendar-wrapper__month {
-  width: 35%;
-  color: vars.$bright-blueAccent;
+	width: 35%;
+	color: vars.$bright-blueAccent;
 }
 
 .calendar-wrapper__month p {
-  font-size: smaller;
+	font-size: smaller;
 }
 
 .calendar-wrapper__month-button {
-  background-color: transparent;
-  border: 2px solid vars.$border-default;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
+	background-color: transparent;
+	border: 2px solid vars.$border-default;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
 }
 
 .calendar-wrapper__month-button:hover {
-  background-color: vars.$hover-element;
+	background-color: vars.$hover-element;
 }
 
 .calendar-wrapper__container {
-  display: flex;
-  justify-content: space-around;
-  background-color: transparent;
-  margin-top: 10px;
-  width: 100%;
-  height: 5%;
+	display: flex;
+	justify-content: space-around;
+	background-color: transparent;
+	margin-top: 10px;
+	width: 100%;
+	height: 5%;
 }
 
 .calendar-wrapper__container--weeks {
-  display: table;
-  justify-content: space-around;
-  background-color: transparent;
-  width: 100%;
-  height: 5%;
+	display: table;
+	justify-content: space-around;
+	background-color: transparent;
+	width: 100%;
+	height: 5%;
 }
 
 .calendar-wrapper__day {
-  background-color: transparent;
-  border-radius: vars.$border-radius-default;
-  width: 22px;
-  height: 22px;
-  font-size: 12px;
-  color: vars.$muted-element;
+	background-color: transparent;
+	border-radius: vars.$border-radius-default;
+	width: 22px;
+	height: 22px;
+	font-size: 12px;
+	color: vars.$muted-element;
 }
 
 .calendar-wrapper__date {
-  background-color: transparent;
-  border: 1px solid transparent;
-  color: vars.$fgColor-default;
-  border-radius: 50%;
-  align-content: center;
-  width: 25px;
-  height: 25px;
-  font-size: 14px;
+	background-color: transparent;
+	border: 1px solid transparent;
+	color: vars.$fgColor-default;
+	border-radius: 50%;
+	align-content: center;
+	width: 25px;
+	height: 25px;
+	font-size: 14px;
 }
 
 .calendar-wrapper__date:hover {
-  background-color: vars.$hover-element;
-  cursor: pointer;
+	background-color: vars.$hover-element;
+	cursor: pointer;
 }
 
 .calendar-wrapper__date--target {
-  background-color: vars.$bright-blueAccent;
+	background-color: vars.$bright-blueAccent;
 }
 
 .calendar-wrapper__date--today {
-  color: vars.$muted-blueAccent;
-  border-color: vars.$muted-blueAccent;
+	color: vars.$muted-blueAccent;
+	border-color: vars.$muted-blueAccent;
 }
 
 .calendar-wrapper__date--not-included {
-  color: vars.$muted-element;
+	color: vars.$muted-element;
 }
 
 //Доделать
 .calendar-wrapper__button {
-  margin-top: 10px;
-  width: 100%;
-  height: 30px;
-  font-size: 12px;
+	margin-top: 10px;
+	width: 100%;
+	height: 30px;
+	font-size: 12px;
 }
 
 .calendar-wrapper__btn {
-  background-color: transparent;
-  color: vars.$bright-blueAccent;
-  border: 1px solid vars.$bright-blueAccent;
-  width: 47%;
-  font-size: 14px;
-  position: absolute;
-  bottom: 8px;
+	background-color: transparent;
+	color: vars.$bright-blueAccent;
+	border: 1px solid vars.$bright-blueAccent;
+	width: 47%;
+	font-size: 14px;
+	position: absolute;
+	bottom: 8px;
 }
 
 .calendar-wrapper__btn:hover {
-  background-color: vars.$hover-element;
-  transition: 0.3s;
+	background-color: vars.$hover-element;
+	transition: 0.3s;
 }
 
 .calendar-wrapper__btn--blue {
-  background-color: vars.$bright-blueAccent;
-  color: vars.$fgColor-default;
-  right: 5px;
+	background-color: vars.$bright-blueAccent;
+	color: vars.$fgColor-default;
+	right: 5px;
 }
 
 .calendar-wrapper__btn--blue:hover {
-  background-color: vars.$muted-blueAccent;
-  border: 1px solid vars.$muted-blueAccent;
-  color: vars.$fgColor-default;
-  transition: 0.3s;
+	background-color: vars.$muted-blueAccent;
+	border: 1px solid vars.$muted-blueAccent;
+	color: vars.$fgColor-default;
+	transition: 0.3s;
 }

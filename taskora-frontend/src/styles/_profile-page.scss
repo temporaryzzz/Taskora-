@@ -3,10 +3,10 @@
 @use 'mixins';
 
 main {
-  display: grid;
-  grid-template-columns: 40vw 55vw;
-  grid-template-rows: 30vh 30vh 30vh;
-  justify-content: space-evenly;
+	display: grid;
+	grid-template-columns: 40vw 55vw;
+	grid-template-rows: 30vh 30vh 30vh;
+	justify-content: space-evenly;
 }
 
 main h1,
@@ -14,107 +14,107 @@ h2,
 h3,
 h4,
 h5 {
-  margin: 0px;
+	margin: 0px;
 }
 
 .profile-card {
-  @include mixins.overflow-default;
-  display: flex;
-  background-color: vars.$bgColor-lightAccent;
-  border: 2px solid vars.$bgColor-lightAccent;
-  padding: 20px;
-  flex-wrap: nowrap;
-  border-radius: 12px;
+	@include mixins.overflow-default;
+	display: flex;
+	background-color: vars.$bgColor-lightAccent;
+	border: 2px solid vars.$bgColor-lightAccent;
+	padding: 20px;
+	flex-wrap: nowrap;
+	border-radius: 12px;
 }
 
 .profile-card::-webkit-scrollbar {
-  width: 0;
+	width: 0;
 }
 
 .profile-card--user {
-  margin-top: 15px;
-  width: 40vw;
-  min-width: 450px;
-  grid-row: span 1;
+	margin-top: 15px;
+	width: 40vw;
+	min-width: 450px;
+	grid-row: span 1;
 }
 
 .profile-card--settings {
-  margin-top: 15px;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  width: 55vw;
-  min-width: 450px;
-  grid-row: span 3;
+	margin-top: 15px;
+	flex-wrap: wrap;
+	align-content: flex-start;
+	width: 55vw;
+	min-width: 450px;
+	grid-row: span 3;
 }
 
 .profile-card--stats {
-  margin-top: 15px;
-  width: 40vw;
-  min-width: 450px;
-  grid-row: span 2;
+	margin-top: 15px;
+	width: 40vw;
+	min-width: 450px;
+	grid-row: span 2;
 }
 
 .profile-card__section {
-  border-radius: vars.$border-radius-default;
-  background-color: vars.$bgColor-default;
-  width: 100%;
-  margin-top: 10px;
+	border-radius: vars.$border-radius-default;
+	background-color: vars.$bgColor-default;
+	width: 100%;
+	margin-top: 10px;
 }
 
 .profile-card__paragraph {
-  align-items: center;
-  background: transparent;
-  display: flex;
-  padding: 10px;
-  width: 100%;
-  height: 35px;
-  overflow: hidden;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  font-weight: 300;
-  font-size: 16px;
+	align-items: center;
+	background: transparent;
+	display: flex;
+	padding: 10px;
+	width: 100%;
+	height: 35px;
+	overflow: hidden;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	font-weight: 300;
+	font-size: 16px;
 }
 
 .profile-card__title {
-  width: fit-content;
-  height: min-content;
+	width: fit-content;
+	height: min-content;
 }
 
 .profile-card__sub-title {
-  width: 100%;
-  height: min-content;
-  text-align: start;
-  margin-top: 15px;
+	width: 100%;
+	height: min-content;
+	text-align: start;
+	margin-top: 15px;
 }
 
 .profile-card__sub-title h2 {
-  font-weight: 400;
-  font-size: 20px;
+	font-weight: 400;
+	font-size: 20px;
 }
 
 .profile-card__title h2 {
-  font-weight: 700;
-  font-size: 32px;
+	font-weight: 700;
+	font-size: 32px;
 }
 
 .user-preview {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
 }
 
 .user-preview__image {
-  height: 200px;
-  width: 200px;
-  background-color: vars.$muted-blueAccent;
-  border-radius: 50%;
-  border: 1px solid vars.$border-default;
-  margin-right: 25px;
+	height: 200px;
+	width: 200px;
+	background-color: vars.$muted-blueAccent;
+	border-radius: 50%;
+	border: 1px solid vars.$border-default;
+	margin-right: 25px;
 }
 
 .user-preview__other-info h5 {
-  margin-bottom: 5px;
-  font-weight: 200;
-  width: fit-content;
-  height: min-content;
+	margin-bottom: 5px;
+	font-weight: 200;
+	width: fit-content;
+	height: min-content;
 }
