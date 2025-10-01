@@ -36,7 +36,7 @@ public class TaskService {
         else task.setTitle(title);
         task.setDescription(null);
         task.setDue_date(null);
-        task.setPriority(Priority.MIDDLE);
+        task.setPriority(Priority.DEFAULT);
         task.setCompleted(false);
 
         repository.save(task);
@@ -59,6 +59,7 @@ public class TaskService {
         old_task.setDescription(new_taskDTO.getDescription());
         old_task.setDue_date(new_taskDTO.getDue_date());
         old_task.setPriority(new_taskDTO.getPriority());
+        old_task.setCompleted(new_taskDTO.getCompleted());
         old_task.setUpdated_at(LocalDateTime.now());
 
         repository.save(old_task);

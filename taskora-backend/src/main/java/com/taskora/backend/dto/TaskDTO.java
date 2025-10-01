@@ -27,9 +27,9 @@ public class TaskDTO {
     @Schema(description = "Дедлайн задачи")
     LocalDateTime due_date;
 
-    @Schema(description = "Приоритет задачи", example = "MIDDLE")
+    @Schema(description = "Приоритет задачи", example = "DEFAULT")
     @Enumerated
-    Priority priority = Priority.MIDDLE;
+    Priority priority = Priority.DEFAULT;
 
     @Schema(description = "Выполнена ли задача", example = "false")
     Boolean completed;
