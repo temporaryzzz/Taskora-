@@ -53,9 +53,9 @@ public class TaskController {
             schema = @Schema(implementation = TaskResponseDTO.class) 
         )
     )
-    public ResponseEntity<?> getTasks(@PathVariable Long list_id) {
+    public ResponseEntity<?> getTasks(@PathVariable Long taskList_id) {
         
-        List<TaskDTO> taskDTOs = taskService.findTasksByTaskListId(list_id);
+        List<TaskDTO> taskDTOs = taskService.findTasksByTaskListId(taskList_id);
 
         return ResponseEntity
             .ok()

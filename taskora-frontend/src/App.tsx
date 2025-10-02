@@ -101,16 +101,6 @@ function App() {
 		if (tasks != undefined) {
 			const currentTaskIndex = tasks.findIndex((task) => task.id === currentTaskInfo?.id);
 			if (currentTaskIndex != undefined && currentTaskInfo != undefined) {
-				if (
-					currentTaskInfo.title == title &&
-					currentTaskInfo.description == description &&
-					currentTaskInfo.due_date == due_date &&
-					currentTaskInfo.priority == priority &&
-					currentTaskInfo.completed == completed
-				) {
-					console.log('no changes');
-					return;
-				}
 				//Изменяем значение tasks[currentTaskIndex], а потом обновляем сам tasks
 				//Нужно для того чтобы своевременно обновился contextValue
 				tasks[currentTaskIndex].title = title;

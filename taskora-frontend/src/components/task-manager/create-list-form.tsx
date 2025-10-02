@@ -18,19 +18,19 @@ function CreateListForm() {
 				taskManagerContext.user &&
 				taskManagerContext.lists != undefined
 			) {
-				let list_id;
+				let id;
 
 				AddList(taskManagerContext.user?.user_id, listTitle ?? '').then((listData) => {
-					list_id = Number(listData.taskList_id);
+					id = Number(listData.id);
 					console.log(listData);
 					if (taskManagerContext.user?.user_id) {
 						taskManagerContext.lists?.push({
-							id: list_id,
+							id: id,
 							owner_id: taskManagerContext.user?.user_id,
 							title: listTitle,
 						});
 						taskManagerContext.updateLists();
-						taskManagerContext.GetTasks(list_id);
+						taskManagerContext.GetTasks(id);
 					}
 				});
 
