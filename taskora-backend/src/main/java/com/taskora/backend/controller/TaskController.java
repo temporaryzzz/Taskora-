@@ -4,8 +4,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import com.taskora.backend.dto.TaskCreateRequestDTO;
 import com.taskora.backend.dto.TaskDTO;
 import com.taskora.backend.dto.TaskResponseDTO;
+import com.taskora.backend.dto.TaskUpdateRequestDTO;
 import com.taskora.backend.entity.TaskList;
 import com.taskora.backend.service.TaskListService;
 import com.taskora.backend.service.TaskService;
@@ -42,7 +44,7 @@ public class TaskController {
 
 
     // [fix] написать доки и добавить проверки
-    @GetMapping("/{list_id}")
+    @GetMapping("/{taskList_id}")
     @Operation(description = "Получение всех задач по id списка")
     @ApiResponse(
         responseCode = "200",
@@ -70,7 +72,7 @@ public class TaskController {
             schema = @Schema(implementation = TaskDTO.class)
         )
     )
-    public ResponseEntity<?> createTask(@RequestBody TaskDTO requestDTO) {
+    public ResponseEntity<?> createTask(@RequestBody TaskCreateRequestDTO requestDTO) {
         TaskList taskList = taskListService.findTaskListById(requestDTO.getTaskList_id());
         TaskDTO taskDTO = taskService.createTask(taskList, requestDTO.getTitle());
         
@@ -89,9 +91,8 @@ public class TaskController {
             schema = @Schema(implementation = TaskDTO.class)
         )
     )
-    public ResponseEntity<?> updateTask(@PathVariable Long task_id, @RequestBody TaskDTO requestDTO) {
-        requestDTO.setId(task_id);
-        TaskDTO updatedTask = taskService.updateTask(requestDTO);
+    public ResponseEntity<?> updateTask(@PathVariable Long task_id, @RequestBody TaskUpdateRequestDTO requestDTO) {
+        TaskDTO updatedTask = taskService.updateTask(task_id, requestDTO);
 
         return ResponseEntity
             .ok()

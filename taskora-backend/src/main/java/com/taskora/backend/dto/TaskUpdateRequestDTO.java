@@ -7,15 +7,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Size;
 
-@Schema(description = "Задача")
-public class TaskDTO {
+@Schema(description = "Запрос на обновление задачи")
+public class TaskUpdateRequestDTO {
     
-    @Schema(description = "Уникальный id задачи в БД")
-    Long id;
-
-    @Schema(description = "Id списка в котором лежит задача")
-    Long taskList_id;
-
     @Schema(description = "Название задачи, от 1 до 25 символов", example = "task 1")
     @Size(min = 1, max = 25)
     String title;
@@ -35,10 +29,8 @@ public class TaskDTO {
     Boolean completed;
 
 
-    public TaskDTO(Long id, Long taskList_id, @Size(min = 1, max = 25) String title, @Max(255) String description,
+    public TaskUpdateRequestDTO(@Size(min = 1, max = 25) String title, @Max(255) String description,
             LocalDateTime due_date, Priority priority, Boolean completed) {
-        this.id = id;
-        this.taskList_id = taskList_id;
         this.title = title;
         this.description = description;
         this.due_date = due_date;
@@ -46,22 +38,6 @@ public class TaskDTO {
         this.completed = completed;
     }
 
-    
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getTaskList_id() {
-        return taskList_id;
-    }
-    
-    public void setTaskList_id(Long taskList_id) {
-        this.taskList_id = taskList_id;
-    }
 
     public String getTitle() {
         return title;

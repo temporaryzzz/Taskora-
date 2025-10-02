@@ -36,7 +36,7 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 8, nullable = false)
-    Priority priority = Priority.MIDDLE;
+    Priority priority = Priority.DEFAULT;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     Boolean completed;
