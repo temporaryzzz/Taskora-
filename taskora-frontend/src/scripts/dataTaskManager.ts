@@ -51,6 +51,7 @@ const ChangeTask = (
 	priority: 'HIGHEST' | 'HIGH' | 'MIDDLE' | 'DEFAULT',
 	completed: boolean
 ) => {
+	console.log('fetch to server');
 	try {
 		fetch(`${SERVER_ADDRES__TASKS}${task_id}`, {
 			method: 'PUT',
@@ -94,7 +95,6 @@ const AddTask = async (list_id: number, title: string) => {
 		}
 
 		const taskData = await response.json();
-		console.log(taskData);
 		return taskData;
 	} catch (error) {
 		console.log('Ошибка при создании таска:', error);
@@ -110,7 +110,7 @@ const AddList = async (user_id: number, title: string) => {
 				'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ user_id: user_id, title: title }),
+			body: JSON.stringify({ owner_id: user_id, title: title }),
 		});
 
 		if (!response.ok) {

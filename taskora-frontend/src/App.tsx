@@ -35,7 +35,7 @@ export interface TaskInfo {
 
 interface TaskManager {
 	user: User | undefined;
-	list_id: number | undefined;
+	currentList_id: number | undefined;
 	lists: Array<List> | undefined;
 	tasks: Array<TaskInfo> | undefined;
 	currentTaskInfo: TaskInfo | undefined;
@@ -49,6 +49,7 @@ interface TaskManager {
 	) => void;
 	updateTasks: () => void;
 	updateLists: () => void;
+	switchList: (list_id: number) => void;
 	GetTasks: (list_id: number) => void;
 }
 
@@ -56,19 +57,18 @@ export const TaskInfoContext = createContext<TaskManager | undefined>(undefined)
 
 function App() {
 	const [user, setUser] = useState<User | undefined>(undefined);
-	const [lists, setLists] = useState<Array<List> | undefined>();
-	const [list_id, setList_id] = useState<number | undefined>();
-	const [tasks, setTasks] = useState<Array<TaskInfo> | undefined>();
+	const [lists, setLists] = useState<Array<List> | undefined>([]);
+	const [currentList_id, setCurrentList_id] = useState<number | undefined>();
+	const [tasks, setTasks] = useState<Array<TaskInfo> | undefined>([]);
 	const [currentTaskInfo, setCurrentTaskInfo] = useState<TaskInfo | undefined>();
 
 	const GetTasks = (list_id: number) => {
 		//taskDTOs - это хуйня с бэка
 		InizializateTasks(list_id).then((data) => {
 			setTasks(data.taskDTOs);
-			console.log('taskDTOs:', typeof data.taskDTOs);
+			console.log('taskDTOs:', typeof data.taskDTO, data.taskDTOs);
 		});
-		console.log('tasks:', typeof tasks);
-		setList_id(list_id);
+		setCurrentList_id(list_id);
 	};
 
 	//Передаем данные о задаче в фокусе
@@ -87,6 +87,10 @@ function App() {
 		if (lists) setLists([...lists]);
 	};
 
+	const switchList = (list_id: number) => {
+		GetTasks(list_id);
+	};
+
 	const changeCurrentTask = (
 		title: string,
 		description: string,
@@ -97,16 +101,6 @@ function App() {
 		if (tasks != undefined) {
 			const currentTaskIndex = tasks.findIndex((task) => task.id === currentTaskInfo?.id);
 			if (currentTaskIndex != undefined && currentTaskInfo != undefined) {
-				if (
-					currentTaskInfo.title == title &&
-					currentTaskInfo.description == description &&
-					currentTaskInfo.due_date == due_date &&
-					currentTaskInfo.priority == priority &&
-					currentTaskInfo.completed == completed
-				) {
-					console.log('no changes');
-					return;
-				}
 				//Изменяем значение tasks[currentTaskIndex], а потом обновляем сам tasks
 				//Нужно для того чтобы своевременно обновился contextValue
 				tasks[currentTaskIndex].title = title;
@@ -115,7 +109,7 @@ function App() {
 				tasks[currentTaskIndex].priority = priority;
 				ChangeTask(
 					currentTaskInfo.id,
-					Number(list_id),
+					Number(currentList_id),
 					title,
 					description,
 					due_date,
@@ -128,31 +122,28 @@ function App() {
 		}
 	};
 
-	//Запрос на получение списков задач
+	//Запрос на получение списков задач и последнего открытого списка
 	useEffect(() => {
 		if (user?.user_id) {
 			InizializateLists(user.user_id).then((data) => {
 				setLists(data.taskLists);
+				//Получение последнего открытого списка или дефолтного(единственного)
+				//⁡⁣⁣⁢Пока что получаем только дефолтный список⁡
+				//⁡⁣⁣⁢Позже добавить else где будет открываться списаок сохраненный в cookies⁡
+				if (data.taskLists) {
+					InizializateTasks(data.taskLists[0].id).then((data) => {
+						setTasks(data);
+					});
+					setCurrentList_id(data.taskLists[0].id);
+					GetTasks(data.taskLists[0].id);
+				}
 			});
 		}
 	}, [user]);
 
-	//Получение последнего открытого списка или дефолтного(единственного)
-	useEffect(() => {
-		//⁡⁣⁣⁢Пока что получаем только дефолтный список⁡
-		//⁡⁣⁣⁢Позже добавить else где будет открываться списаок сохраненный в cookies⁡
-		if (lists) {
-			InizializateTasks(lists[0].id).then((data) => {
-				setTasks(data);
-			});
-			setList_id(lists[0].id);
-			GetTasks(lists[0].id);
-		}
-	}, [lists]);
-
 	const contextValue = {
 		user,
-		list_id,
+		currentList_id,
 		lists,
 		tasks,
 		currentTaskInfo,
@@ -160,6 +151,7 @@ function App() {
 		changeCurrentTask,
 		updateTasks,
 		updateLists,
+		switchList,
 		GetTasks,
 	};
 

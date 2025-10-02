@@ -13,10 +13,14 @@ function CreateTaskForm() {
 
 		// /\S/ - любой символ кроме пробела
 		if (/\S/.test(taskTitle ?? '')) {
-			if (taskManagerContext && taskManagerContext.tasks && taskManagerContext.list_id) {
+			if (
+				taskManagerContext &&
+				taskManagerContext.tasks &&
+				taskManagerContext.currentList_id
+			) {
 				let task_id;
 
-				AddTask(taskManagerContext.list_id, taskTitle ?? '').then((taskData) => {
+				AddTask(taskManagerContext.currentList_id, taskTitle ?? '').then((taskData) => {
 					task_id = Number(taskData.id);
 					console.log(taskData);
 					taskManagerContext?.tasks?.push({

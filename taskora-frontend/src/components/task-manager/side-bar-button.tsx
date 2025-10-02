@@ -17,15 +17,20 @@ function SideBarButton(props: SideBarButton) {
 	};
 
 	useEffect(() => {
-		if (TaskManagerConext?.list_id == props.list.id) {
+		if (TaskManagerConext?.currentList_id == props.list.id) {
 			setActiveButton(true);
 		} else {
 			setActiveButton(false);
 		}
-	}, [TaskManagerConext?.list_id]);
+	}, [TaskManagerConext?.currentList_id]);
 
 	return (
-		<li className="side-bar__item" ref={activeRef}>
+		<li
+			className="side-bar__item"
+			ref={activeRef}
+			onClick={() => {
+				TaskManagerConext?.switchList(props.list.id);
+			}}>
 			<div className="icon icon--inbox-list"></div>
 			<h5>{props.list.title}</h5>
 		</li>
