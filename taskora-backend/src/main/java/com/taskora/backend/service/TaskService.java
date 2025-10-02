@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.taskora.backend.dto.Priority;
 import com.taskora.backend.dto.TaskDTO;
+import com.taskora.backend.dto.TaskUpdateRequestDTO;
 import com.taskora.backend.entity.Task;
 import com.taskora.backend.entity.TaskList;
 import com.taskora.backend.repository.TaskRepository;
@@ -53,8 +54,8 @@ public class TaskService {
         return responseDTO.fromTaskListToDTOList(tasks);
     }
 
-    public TaskDTO updateTask(TaskDTO new_taskDTO) {
-        Task old_task = repository.findById(new_taskDTO.getId()).get();
+    public TaskDTO updateTask(Long task_id, TaskUpdateRequestDTO new_taskDTO) {
+        Task old_task = repository.findById(task_id).get();
         old_task.setTitle(new_taskDTO.getTitle());
         old_task.setDescription(new_taskDTO.getDescription());
         old_task.setDue_date(new_taskDTO.getDue_date());

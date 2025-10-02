@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.taskora.backend.dto.TaskListCreateRequestDTO;
 import com.taskora.backend.dto.TaskListDTO;
 import com.taskora.backend.dto.TaskListResponseDTO;
+import com.taskora.backend.dto.TaskListUpdateRequest;
 import com.taskora.backend.entity.User;
 import com.taskora.backend.service.TaskListService;
 import com.taskora.backend.service.UserService;
@@ -70,7 +72,7 @@ public class TaskListController {
             schema = @Schema(implementation = TaskListDTO.class)
         )
     )
-    public ResponseEntity<?> createTaskLists(@RequestBody TaskListDTO requestDTO) {
+    public ResponseEntity<?> createTaskLists(@RequestBody TaskListCreateRequestDTO requestDTO) {
         User owner = userService.findUserById(requestDTO.getOwner_id());
         TaskListDTO taskListDTO = taskListService.createTaskList(owner, requestDTO.getTitle());
         
@@ -89,9 +91,8 @@ public class TaskListController {
             schema = @Schema(implementation = TaskListDTO.class)
         )
     )
-    public ResponseEntity<?> updateTaskList(@PathVariable Long taskList_id, @RequestBody TaskListDTO requestDTO) {
-        requestDTO.setId(taskList_id);
-        TaskListDTO updatedTaskList = taskListService.updateTaskList(requestDTO);
+    public ResponseEntity<?> updateTaskList(@PathVariable Long taskList_id, @RequestBody TaskListUpdateRequest requestDTO) {
+        TaskListDTO updatedTaskList = taskListService.updateTaskList(taskList_id, requestDTO);
 
         return ResponseEntity
             .ok()

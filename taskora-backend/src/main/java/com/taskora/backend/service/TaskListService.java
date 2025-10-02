@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.taskora.backend.dto.TaskListDTO;
+import com.taskora.backend.dto.TaskListUpdateRequest;
 import com.taskora.backend.entity.TaskList;
 import com.taskora.backend.entity.User;
 import com.taskora.backend.repository.TaskListRepository;
@@ -63,8 +64,8 @@ public class TaskListService {
     }
 
     // [fix] добавить проверку и документацию
-    public TaskListDTO updateTaskList(TaskListDTO new_taskList) {
-        TaskList old_taskList = repository.findById(new_taskList.getId()).get();
+    public TaskListDTO updateTaskList(Long taskList_id, TaskListUpdateRequest new_taskList) {
+        TaskList old_taskList = repository.findById(taskList_id).get();
         old_taskList.setTitle(new_taskList.getTitle());
 
         repository.save(old_taskList);
