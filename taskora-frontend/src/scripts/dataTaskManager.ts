@@ -94,7 +94,6 @@ const AddTask = async (list_id: number, title: string) => {
 		}
 
 		const taskData = await response.json();
-		console.log(taskData);
 		return taskData;
 	} catch (error) {
 		console.log('Ошибка при создании таска:', error);
