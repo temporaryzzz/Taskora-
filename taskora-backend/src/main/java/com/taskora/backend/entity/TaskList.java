@@ -30,7 +30,7 @@ public class TaskList {
     @OneToMany(mappedBy = "taskList", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Task> tasks = new ArrayList<>();
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 25)
     String title;
 
     @CreationTimestamp

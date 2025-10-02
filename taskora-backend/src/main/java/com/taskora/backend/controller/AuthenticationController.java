@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.taskora.backend.dto.ErrorMessageDTO;
+import com.taskora.backend.dto.SignRequestDTO;
 import com.taskora.backend.dto.UserDTO;
-import com.taskora.backend.dto.UserRequestDTO;
 import com.taskora.backend.entity.User;
 import com.taskora.backend.service.TaskListService;
 import com.taskora.backend.service.UserService;
@@ -59,21 +59,21 @@ public class AuthenticationController {
             )
         )
     })
-    public ResponseEntity<?> signUp(@RequestBody UserRequestDTO requestDTO) {
-        if (userService.isUserExistsByEmail(requestDTO))
+    public ResponseEntity<?> signUp(@RequestBody SignRequestDTO requestDTO) {
+        if (userService.isUserExistsByEmail(requestDTO.getEmail()))
             return ResponseEntity
                     .status(409)
                     .body(new ErrorMessageDTO("Пользователь с данным email уже существует"));
         
-        if (userService.isUserExistsByUsername(requestDTO))
+        if (userService.isUserExistsByUsername(requestDTO.getUsername()))
             return ResponseEntity
                     .status(409)
                     .body(new ErrorMessageDTO("Пользователь с данным username уже существует"));
 
         UserDTO userResponseDTO = userService.createUser(requestDTO);
 
-        User newUser = userService.findUserById(userResponseDTO.getId());
-        taskListService.createTaskList(newUser);
+        User new_user = userService.findUserById(userResponseDTO.getId());
+        taskListService.createDefaultTaskList(new_user);
 
         return ResponseEntity
                 .ok()
@@ -104,9 +104,9 @@ public class AuthenticationController {
             )
         )
     })
-    public ResponseEntity<?> signin(@RequestBody UserRequestDTO requestDTO) {
+    public ResponseEntity<?> signin(@RequestBody SignRequestDTO requestDTO) {
         // Если username найден
-        if (requestDTO.isEmailEmpty() && userService.isUserExistsByUsername(requestDTO)) {
+        if (requestDTO.isEmailEmpty() && userService.isUserExistsByUsername(requestDTO.getUsername())) {
             User user = userService.findUserByUsername(requestDTO.getUsername());
 
             if (user.getPassword().equals((requestDTO.getPassword())))
@@ -116,7 +116,7 @@ public class AuthenticationController {
         }
         
         // Если email найден
-        if (userService.isUserExistsByEmail(requestDTO)) {
+        if (userService.isUserExistsByEmail(requestDTO.getEmail())) {
             User user = userService.findUserByEmail(requestDTO.getEmail());
 
             if (user.getPassword().equals((requestDTO.getPassword())))
