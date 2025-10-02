@@ -10,8 +10,8 @@ import jakarta.validation.constraints.Size;
 @Schema(description = "Запрос на обновление задачи")
 public class TaskUpdateRequestDTO {
     
-    @Schema(description = "Название задачи, от 1 до 25 символов", example = "task 1")
-    @Size(min = 1, max = 25)
+    @Schema(description = "Название задачи, от 1 до 50 символов", example = "task 1")
+    @Size(min = 1, max = 50)
     String title;
 
     @Schema(description = "Описание задачи, до 255 символов", example = "Создать task 2.")
@@ -29,7 +29,7 @@ public class TaskUpdateRequestDTO {
     Boolean completed;
 
 
-    public TaskUpdateRequestDTO(@Size(min = 1, max = 25) String title, @Max(255) String description,
+    public TaskUpdateRequestDTO(@Size(min = 1, max = 50) String title, @Max(255) String description,
             LocalDateTime due_date, Priority priority, Boolean completed) {
         this.title = title;
         this.description = description;

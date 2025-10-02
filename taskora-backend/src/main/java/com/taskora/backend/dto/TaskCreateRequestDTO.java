@@ -9,12 +9,12 @@ public class TaskCreateRequestDTO {
     @Schema(description = "Id списка в котором лежит задача")
     Long taskList_id;
 
-    @Schema(description = "Название задачи, от 1 до 25 символов", example = "task 1")
-    @Size(min = 1, max = 25)
+    @Schema(description = "Название задачи, от 1 до 50 символов", example = "task 1")
+    @Size(min = 1, max = 50)
     String title;
 
     
-    public TaskCreateRequestDTO(Long taskList_id, @Size(min = 1, max = 25) String title) {
+    public TaskCreateRequestDTO(Long taskList_id, @Size(min = 1, max = 50) String title) {
         this.taskList_id = taskList_id;
         this.title = title;
     }

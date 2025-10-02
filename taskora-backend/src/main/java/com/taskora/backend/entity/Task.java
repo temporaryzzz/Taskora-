@@ -27,7 +27,7 @@ public class Task {
     @JoinColumn(name = "list_id", nullable = false)
     TaskList taskList;
 
-    @Column(nullable = false, length = 25)
+    @Column(nullable = false, length = 50)
     String title;
 
     String description;

@@ -16,8 +16,8 @@ public class TaskDTO {
     @Schema(description = "Id списка в котором лежит задача")
     Long taskList_id;
 
-    @Schema(description = "Название задачи, от 1 до 25 символов", example = "task 1")
-    @Size(min = 1, max = 25)
+    @Schema(description = "Название задачи, от 1 до 50 символов", example = "task 1")
+    @Size(min = 1, max = 50)
     String title;
 
     @Schema(description = "Описание задачи, до 255 символов", example = "Создать task 2.")
@@ -35,7 +35,7 @@ public class TaskDTO {
     Boolean completed;
 
 
-    public TaskDTO(Long id, Long taskList_id, @Size(min = 1, max = 25) String title, @Max(255) String description,
+    public TaskDTO(Long id, Long taskList_id, @Size(min = 1, max = 50) String title, @Max(255) String description,
             LocalDateTime due_date, Priority priority, Boolean completed) {
         this.id = id;
         this.taskList_id = taskList_id;
