@@ -22,14 +22,18 @@ function CreateListForm() {
 
 				AddList(taskManagerContext.user?.user_id, listTitle ?? '').then((listData) => {
 					id = Number(listData.id);
-					console.log(listData);
+					if (!taskManagerContext.lists) {
+						return;
+					}
+					const updatedLists = taskManagerContext.lists;
+
 					if (taskManagerContext.user?.user_id) {
 						taskManagerContext.lists?.push({
 							id: id,
 							owner_id: taskManagerContext.user?.user_id,
 							title: listTitle,
 						});
-						taskManagerContext.updateLists();
+						taskManagerContext.updateLists(updatedLists);
 						taskManagerContext.LoadTasks(id);
 					}
 				});

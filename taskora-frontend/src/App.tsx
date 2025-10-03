@@ -45,7 +45,7 @@ interface TaskManager {
 		completed: boolean
 	) => void;
 	updateTasks: (tasks: Array<TaskInfo>) => void;
-	updateLists: () => void;
+	updateLists: (lists: Array<List>) => void;
 	switchList: (list_id: number) => void;
 	LoadTasks: (list_id: number) => void;
 }
@@ -80,8 +80,8 @@ function App() {
 		setTasks([...tasks]);
 	};
 
-	const updateLists = () => {
-		if (lists) setLists([...lists]);
+	const updateLists = (lists: Array<List>) => {
+		setLists([...lists]);
 	};
 
 	const switchList = (list_id: number) => {
