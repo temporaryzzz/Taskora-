@@ -4,12 +4,9 @@ import SingInForm from './components/singIn';
 import SingUpForm from './components/singup';
 import Header from './components/header';
 import TaskPage from './components/task-manager/task-page';
-import { useEffect, useState, createContext } from 'react';
+import { useEffect, useState, createContext, useMemo } from 'react';
 import ProfilePage from './components/profile/profile-page';
-import InizializateTasks, {
-	InizializateLists,
-	ChangeTask,
-} from './scripts/dataTaskManager';
+import InitializeTasks, { InitializeLists, ChangeTask } from './scripts/dataTaskManager';
 
 export interface User {
 	username: string;
@@ -47,10 +44,10 @@ interface TaskManager {
 		priority: 'HIGHEST' | 'HIGH' | 'MIDDLE' | 'DEFAULT',
 		completed: boolean
 	) => void;
-	updateTasks: () => void;
+	updateTasks: (tasks: Array<TaskInfo>) => void;
 	updateLists: () => void;
 	switchList: (list_id: number) => void;
-	GetTasks: (list_id: number) => void;
+	LoadTasks: (list_id: number) => void;
 }
 
 export const TaskInfoContext = createContext<TaskManager | undefined>(undefined);
@@ -62,9 +59,9 @@ function App() {
 	const [tasks, setTasks] = useState<Array<TaskInfo> | undefined>([]);
 	const [currentTaskInfo, setCurrentTaskInfo] = useState<TaskInfo | undefined>();
 
-	const GetTasks = (list_id: number) => {
+	const LoadTasks = (list_id: number) => {
 		//taskDTOs - это хуйня с бэка
-		InizializateTasks(list_id).then((data) => {
+		InitializeTasks(list_id).then((data) => {
 			setTasks(data.taskDTOs);
 			console.log('taskDTOs:', typeof data.taskDTO, data.taskDTOs);
 		});
@@ -79,8 +76,8 @@ function App() {
 		}
 	};
 
-	const updateTasks = () => {
-		if (tasks) setTasks([...tasks]);
+	const updateTasks = (tasks: Array<TaskInfo>) => {
+		setTasks([...tasks]);
 	};
 
 	const updateLists = () => {
@@ -88,7 +85,7 @@ function App() {
 	};
 
 	const switchList = (list_id: number) => {
-		GetTasks(list_id);
+		LoadTasks(list_id);
 	};
 
 	const changeCurrentTask = (
@@ -98,62 +95,66 @@ function App() {
 		priority: 'HIGHEST' | 'HIGH' | 'MIDDLE' | 'DEFAULT',
 		completed: boolean
 	) => {
-		if (tasks != undefined) {
-			const currentTaskIndex = tasks.findIndex((task) => task.id === currentTaskInfo?.id);
-			if (currentTaskIndex != undefined && currentTaskInfo != undefined) {
-				//Изменяем значение tasks[currentTaskIndex], а потом обновляем сам tasks
-				//Нужно для того чтобы своевременно обновился contextValue
-				tasks[currentTaskIndex].title = title;
-				tasks[currentTaskIndex].description = description;
-				tasks[currentTaskIndex].due_date = due_date;
-				tasks[currentTaskIndex].priority = priority;
-				ChangeTask(
-					currentTaskInfo.id,
-					Number(currentList_id),
-					title,
-					description,
-					due_date,
-					priority,
-					completed
-				);
-				updateTasks();
-				setCurrentTaskInfo(tasks[currentTaskIndex]);
-			}
+		if (!tasks || !currentTaskInfo) {
+			return;
 		}
+
+		const updatedTasks = tasks.map((task) =>
+			task.id === currentTaskInfo.id
+				? { ...task, title, description, due_date, priority, completed }
+				: task
+		);
+
+		setTasks(updatedTasks);
+		const updatedCurrentTask = updatedTasks.find(
+			(task) => task.id === currentTaskInfo.id
+		);
+
+		if (updatedCurrentTask) {
+			setCurrentTaskInfo(updatedCurrentTask);
+		}
+		ChangeTask(
+			currentTaskInfo.id,
+			Number(currentList_id),
+			title,
+			description,
+			due_date,
+			priority,
+			completed
+		);
 	};
 
 	//Запрос на получение списков задач и последнего открытого списка
 	useEffect(() => {
 		if (user?.user_id) {
-			InizializateLists(user.user_id).then((data) => {
+			InitializeLists(user.user_id).then((data) => {
 				setLists(data.taskLists);
 				//Получение последнего открытого списка или дефолтного(единственного)
 				//⁡⁣⁣⁢Пока что получаем только дефолтный список⁡
 				//⁡⁣⁣⁢Позже добавить else где будет открываться списаок сохраненный в cookies⁡
 				if (data.taskLists) {
-					InizializateTasks(data.taskLists[0].id).then((data) => {
-						setTasks(data);
-					});
-					setCurrentList_id(data.taskLists[0].id);
-					GetTasks(data.taskLists[0].id);
+					LoadTasks(data.taskLists[0].id);
 				}
 			});
 		}
 	}, [user]);
 
-	const contextValue = {
-		user,
-		currentList_id,
-		lists,
-		tasks,
-		currentTaskInfo,
-		setCurrentTask,
-		changeCurrentTask,
-		updateTasks,
-		updateLists,
-		switchList,
-		GetTasks,
-	};
+	const contextValue = useMemo(
+		() => ({
+			user,
+			currentList_id,
+			lists,
+			tasks,
+			currentTaskInfo,
+			setCurrentTask,
+			changeCurrentTask,
+			updateTasks,
+			updateLists,
+			switchList,
+			LoadTasks,
+		}),
+		[user, currentList_id, lists, tasks, currentTaskInfo]
+	);
 
 	return (
 		<BrowserRouter>

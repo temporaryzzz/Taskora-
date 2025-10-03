@@ -30,7 +30,7 @@ function CreateListForm() {
 							title: listTitle,
 						});
 						taskManagerContext.updateLists();
-						taskManagerContext.GetTasks(id);
+						taskManagerContext.LoadTasks(id);
 					}
 				});
 

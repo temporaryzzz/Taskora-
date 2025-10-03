@@ -27,9 +27,10 @@ function TaskInfoWindow() {
 			taskManagerContext.tasks != undefined &&
 			currentTaskInfo?.id != undefined
 		) {
-			console.log('change');
-			taskManagerContext.tasks[currentTaskIndex].title = title;
-			taskManagerContext.updateTasks();
+			const updatedTasks = taskManagerContext.tasks.map((task) =>
+				task.id === currentTaskInfo.id ? { ...task, title } : task
+			);
+			taskManagerContext.updateTasks(updatedTasks);
 		}
 	};
 

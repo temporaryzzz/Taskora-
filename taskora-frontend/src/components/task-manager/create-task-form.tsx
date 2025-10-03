@@ -1,6 +1,7 @@
 import '../../styles.scss';
 import { useContext, useRef, useState, type FormEvent } from 'react';
 import { TaskInfoContext } from '../../App';
+import type { TaskInfo } from '../../App';
 import { AddTask } from '../../scripts/dataTaskManager';
 
 function CreateTaskForm() {
@@ -22,17 +23,20 @@ function CreateTaskForm() {
 
 				AddTask(taskManagerContext.currentList_id, taskTitle ?? '').then((taskData) => {
 					task_id = Number(taskData.id);
-					console.log(taskData);
-					taskManagerContext?.tasks?.push({
-						id: Number(task_id),
-						taskList_id: Number(taskManagerContext.currentTaskInfo?.taskList_id),
-						title: taskTitle ?? '',
-						description: '',
-						due_date: '',
-						completed: false,
-						priority: 'DEFAULT',
-					});
-					taskManagerContext?.updateTasks();
+					if (taskManagerContext.tasks) {
+						const updatedTasks: Array<TaskInfo> = taskManagerContext.tasks;
+
+						updatedTasks.push({
+							id: Number(task_id),
+							taskList_id: Number(taskManagerContext.currentTaskInfo?.taskList_id),
+							title: taskTitle ?? '',
+							description: '',
+							due_date: '',
+							completed: false,
+							priority: 'DEFAULT',
+						});
+						taskManagerContext?.updateTasks(updatedTasks);
+					}
 				});
 
 				if (inputTitleTaskRef.current) inputTitleTaskRef.current.value = '';

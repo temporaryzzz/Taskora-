@@ -6,7 +6,7 @@ const SERVER_ADDRES__LISTS_NO_SLASH = 'http://localhost:8080/api/tasklists';
 const FRONTEND_ADDRES = 'http://localhost:3000';
 
 //Инициализация тасков для рендера
-const InizializateTasks = async (list_id: number) => {
+const InitializeTasks = async (list_id: number) => {
 	try {
 		const response = await fetch(`${SERVER_ADDRES__TASKS}${list_id}`, {
 			method: 'GET',
@@ -24,7 +24,7 @@ const InizializateTasks = async (list_id: number) => {
 	}
 };
 
-const InizializateLists = async (user_id: number) => {
+const InitializeLists = async (user_id: number) => {
 	try {
 		const response = await fetch(`${SERVER_ADDRES__LISTS}${user_id}`, {
 			method: 'GET',
@@ -65,15 +65,11 @@ const ChangeTask = (
 				priority: priority,
 				completed: completed,
 			}),
-		})
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error(`error! status: ${response.status}`);
-				}
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+		}).then((response) => {
+			if (!response.ok) {
+				throw new Error(`error! status: ${response.status}`);
+			}
+		});
 	} catch (error) {
 		console.error('Ошибка при изменении таска:', error);
 	}
@@ -142,5 +138,5 @@ const DeleteTask = (task_id: number) => {
 	}
 };
 
-export default InizializateTasks;
-export { InizializateLists, ChangeTask, AddTask, AddList, DeleteTask };
+export default InitializeTasks;
+export { InitializeLists, ChangeTask, AddTask, AddList, DeleteTask };

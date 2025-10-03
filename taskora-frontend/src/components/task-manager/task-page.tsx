@@ -11,7 +11,6 @@ function TaskPage() {
 	const [mouseY, setMouseY] = useState<number>(0);
 
 	const OnContextMenu = (event: React.MouseEvent) => {
-		//(event.target as Element) - ну это ахуй))))))))))))
 		if (
 			(event.target as Element).classList.contains('task-list__task') ||
 			(event.target as Element).id == 'task'

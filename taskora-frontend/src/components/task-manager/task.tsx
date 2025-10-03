@@ -81,10 +81,8 @@ function Task(task: TaskInfo) {
 			if (taskRef.current) {
 				if (taskCheckbox.current.checked == false) {
 					taskRef.current.classList.remove(stateClasses.completedClass);
-					document.getElementById('inbox-list')?.appendChild(taskRef.current);
 				} else {
 					taskRef.current.classList.add(stateClasses.completedClass);
-					document.getElementById('completed-list')?.appendChild(taskRef.current);
 				}
 			}
 		}
