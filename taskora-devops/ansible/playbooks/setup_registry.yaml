@@ -1,6 +1,7 @@
 - name: Установка локального Docker registry
   hosts: arch_server
   become: yes
+
   vars: 
     registry_port: 32000
     registry_container_name: "local-registry"
@@ -25,21 +26,21 @@
         append: yes
         groups: docker
 
-    - name: Создать папку для registry данных 
+    - name: Создать папку для данных registry 
       file: 
         path: "{{ registry_data_path }}"
         state: directory
-        owner: "{{ ddocker_user }}"
+        owner: "{{ docker_user }}"
         group: docker
         mode: '0755'
 
-    - name: Запустить registry контайнер 
-      comunity.docker.docker-container: 
-        name: "{{ rregistry_container_name }}"
+    - name: Запустить контейнер Docker Registry
+      community.docker.docker_container:
+        name: "{{ registry_container_name }}"
         image: registry:2
         state: started
         restart_policy: always
-        ports: 
-          - "{{ regisrty_port }}"
+        published_ports: 
+          - "{{ registry_port }}:5000"
         volumes: 
-          - "{{ registry_data_patch }}:/var/lib/registry"
+          - "{{ registry_data_path }}:/var/lib/registry"

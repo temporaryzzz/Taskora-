@@ -1,19 +1,29 @@
 - name: Установка Jenkins
   hosts: arch_server
   become: yes
+
   tasks:
-    - name: Установаить Java
+    - name: Установить Java (OpenJDK)
       pacman:
         name: jdk-openjdk
         state: present
 
     - name: Установить Jenkins
       pacman:
-        name: Jenkins
+        name: jenkins
         state: present
 
     - name: Включить и запустить Jenkins
       systemd:
-        name: Jenkins
+        name: jenkins
         enabled: yes
         state: started
+
+    - name: Проверить статус Jenkins
+      systemd:
+        name: jenkins
+      register: jenkins_status
+
+    - name: Вывести статус Jenkins
+      debug:
+        var: jenkins_status.status.ActiveState
