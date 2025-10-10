@@ -1,0 +1,51 @@
+- name: Установка microk8s
+  hosts: arch_server
+  become: yes
+  vars: 
+    microk8s_channel: ""
+    microk8s_user: "" 
+
+  tasks:
+    - name: Уствновить snapd
+      pacman:
+        name: snapd
+        state: present 
+
+    - name: Включить и запустить snapd
+      systemd: 
+        name: snapd
+        enabled: yes
+        state: started
+
+    - name: Убедиться в корректной работе snapd
+      shell: "snap version"
+      register: snap_version
+
+    - name: Установить microk8s
+      shell: "snap install microk8s -- classic --chanel={{ microk8s_channel }}"
+      args:
+        creates: /snap/bin/microk8s
+
+    - name: Добавить пользователя в microk8s
+      user:
+        name: "{{ microK8s_user }}"
+        groups: microk8s
+        append: yes
+
+    - name: Настроить права для kubectl
+      shell: "newgrp microk8s"
+      become: yes
+      become_user: "{{ mmicrok8s_user }}"
+
+    - name: Включить базовые аддоны microk8s
+      shell: "microk8s enable dns storage ingress helm3"
+      become_user: "{{ microk8s_user }}"
+      environment: 
+        PATCH: "/snap/bin:{{ ansible_env.PATCH }}"
+      
+    - name: Проверить статус microk8s
+      shell: "microk8s status --wait--ready"
+      become_user: "{{ mmicrok8s_user }}"
+      environment:
+        PATCH: "/snap/bin:{{ ansible_env.PATCH }}"
+        

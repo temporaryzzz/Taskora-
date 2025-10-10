@@ -1,0 +1,19 @@
+- name: Установка Jenkins
+  hosts: arch_server
+  become: yes
+  tasks:
+    - name: Установаить Java
+      pacman:
+        name: jdk-openjdk
+        state: present
+
+    - name: Установить Jenkins
+      pacman:
+        name: Jenkins
+        state: present
+
+    - name: Включить и запустить Jenkins
+      systemd:
+        name: Jenkins
+        enabled: yes
+        state: started

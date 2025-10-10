@@ -1,0 +1,22 @@
+- name: Prepare Kubernetes cluster
+  hosts: arch_server
+  become: yes
+
+  vars:
+    kube_context: microk8s
+    helm_charts: 
+      - namespace: Taskora
+      - namespace: monitoring
+
+  tasks:
+    - name: Install Helm
+      pacman:
+        name: helm
+        state: present
+
+    - name: Ensure namespaces exist
+      community.kubernetes.k8s:
+        api_version: v1
+        kind: Namespace
+        name: "{{ item.namespace }}"
+      loop: "{{ helm_charts }}"
