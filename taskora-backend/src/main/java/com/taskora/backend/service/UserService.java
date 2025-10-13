@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.taskora.backend.dto.SignRequestDTO;
@@ -15,6 +17,10 @@ import com.taskora.backend.utils.ResponseDTO;
 
 @Service
 public class UserService {
+
+    // [fix] почему то при шифровании пароля нужно явно указывать, что он {bcrypt}
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private final UserRepository repository;
 
@@ -33,7 +39,7 @@ public class UserService {
         User user = new User();
         user.setUsername(requestDTO.getUsername());
         user.setEmail(requestDTO.getEmail());
-        user.setPassword(requestDTO.getPassword());
+        user.setPassword("{bcrypt}" + passwordEncoder.encode(requestDTO.getPassword()));
 
         repository.save(user);
         ResponseDTO responseDTO = new ResponseDTO();
@@ -107,7 +113,7 @@ public class UserService {
 
         user.setUsername(requestDTO.getUsername());
         user.setEmail(requestDTO.getEmail());
-        user.setPassword(requestDTO.getPassword());
+        user.setPassword("{bcrypt}" + passwordEncoder.encode(requestDTO.getPassword()));
         user.setUpdated_at(LocalDateTime.now());
 
         repository.save(user);

@@ -1,6 +1,11 @@
 package com.taskora.backend.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +16,7 @@ import com.taskora.backend.dto.ErrorMessageDTO;
 import com.taskora.backend.dto.SignRequestDTO;
 import com.taskora.backend.dto.UserDTO;
 import com.taskora.backend.entity.User;
+import com.taskora.backend.security.JwtUtil;
 import com.taskora.backend.service.TaskListService;
 import com.taskora.backend.service.UserService;
 
@@ -24,6 +30,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class AuthenticationController {
+
+    @Autowired
+    private AuthenticationManager authManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     private final UserService userService;
     private final TaskListService taskListService;
@@ -104,25 +116,21 @@ public class AuthenticationController {
             )
         )
     })
-    public ResponseEntity<?> signin(@RequestBody SignRequestDTO requestDTO) {
-        // Если username найден
-        if (requestDTO.isEmailEmpty() && userService.isUserExistsByUsername(requestDTO.getUsername())) {
-            User user = userService.findUserByUsername(requestDTO.getUsername());
-
-            if (user.getPassword().equals((requestDTO.getPassword())))
-                return ResponseEntity
-                    .ok()
-                    .body(new UserDTO(user.getId(), user.getUsername(), user.getEmail()));
-        }
-        
-        // Если email найден
-        if (userService.isUserExistsByEmail(requestDTO.getEmail())) {
-            User user = userService.findUserByEmail(requestDTO.getEmail());
-
-            if (user.getPassword().equals((requestDTO.getPassword())))
-                return ResponseEntity
-                    .ok()
-                    .body(new UserDTO(user.getId(), user.getUsername(), user.getEmail()));
+    public ResponseEntity<?> signin(@RequestBody SignRequestDTO requestDTO) {        
+        try {
+            // [fix] Сейчас аутентификация происходит только по username
+            Authentication authentication = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    requestDTO.getUsername(), 
+                    requestDTO.getPassword())
+            );
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            
+            return ResponseEntity
+                .ok()
+                .body(jwtUtil.generateToken(userDetails.getUsername()));
+        } catch (Exception e) {
+            System.err.println("Ошибка при попытке авторизации: " + e);
         }
         
         // Если логин или пароль неверны
