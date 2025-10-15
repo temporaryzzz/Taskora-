@@ -2,6 +2,7 @@ package com.taskora.backend.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.taskora.backend.dto.TaskListDTO;
@@ -14,12 +15,9 @@ import com.taskora.backend.utils.ResponseDTO;
 @Service
 public class TaskListService {
     
-    private final TaskListRepository repository;
-
-
-    public TaskListService(TaskListRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private TaskListRepository repository;
+    
 
     /**
      * Создает список задач с дефолтными значениями

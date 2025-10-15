@@ -3,6 +3,7 @@ package com.taskora.backend.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.taskora.backend.dto.Priority;
@@ -16,12 +17,9 @@ import com.taskora.backend.utils.ResponseDTO;
 @Service
 public class TaskService {
     
-    TaskRepository repository;
+    @Autowired
+    private TaskRepository repository;
 
-
-    public TaskService(TaskRepository repository) {
-        this.repository = repository;
-    }
 
     /**
      * Создает задачу в БД с дефолтными значениями

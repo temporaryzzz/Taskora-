@@ -37,14 +37,11 @@ public class AuthenticationController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    private final UserService userService;
-    private final TaskListService taskListService;
-    
-    
-    public AuthenticationController(UserService userService, TaskListService taskListService) {
-        this.userService = userService;
-        this.taskListService = taskListService;
-    }
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private TaskListService taskListService;
 
 
     /**

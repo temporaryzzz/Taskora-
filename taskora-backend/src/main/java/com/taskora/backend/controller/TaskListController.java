@@ -2,6 +2,7 @@ package com.taskora.backend.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,14 +35,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class TaskListController {
     
-    TaskListService taskListService;
-    UserService userService;
-    
+    @Autowired
+    private TaskListService taskListService;
 
-    public TaskListController(TaskListService taskListService, UserService userService) {
-        this.taskListService = taskListService;
-        this.userService = userService;
-    }
+    @Autowired
+    private UserService userService;
 
 
     // [fix] написать доки и добавить проверки

@@ -22,12 +22,9 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private final UserRepository repository;
+    @Autowired
+    private UserRepository repository;
 
-
-    public UserService(UserRepository repository) {
-        this.repository = repository;
-    }
 
     /**
      * Создает пользователя в БД

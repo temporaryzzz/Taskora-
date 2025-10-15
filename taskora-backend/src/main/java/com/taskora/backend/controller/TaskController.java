@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,14 +34,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class TaskController {
     
-    TaskListService taskListService;
-    TaskService taskService;
+    @Autowired
+    private TaskListService taskListService;
     
-    
-    public TaskController(TaskListService taskListService, TaskService taskService) {
-        this.taskListService = taskListService;
-        this.taskService = taskService;
-    }
+    @Autowired
+    private TaskService taskService;
 
 
     // [fix] написать доки и добавить проверки
