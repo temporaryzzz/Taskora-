@@ -27,7 +27,7 @@ public class UserService {
 
 
     /**
-     * Создает пользователя в БД
+     * Создает пользователя
      * 
      * @param requestDTO - {@code username}, {@code email}, {@code password}
      * @return {@link UserDTO} созданного пользователя

@@ -1,6 +1,7 @@
 package com.taskora.backend.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class TaskService {
 
 
     /**
-     * Создает задачу в БД с дефолтными значениями
+     * Создает задачу с дефолтными значениями
      * 
      * @param taskList которой принадлежит задача
      * @param title создаваемой задачи
@@ -44,16 +45,32 @@ public class TaskService {
         return responseDTO.fromTaskEntityToDTO(task);
     }
 
-     // [fix] написать доки и добавить проверки
-    public List<TaskDTO> findTasksByTaskListId(Long taskList_id) {
-        List<Task> tasks = repository.findByTaskListId(taskList_id);
+    /**
+     * Находит задачи по {@code id} списка задач
+     * 
+     * @param id списка задач
+     * @return список найденных задач; пустой список, если задачи не найдены
+     */
+    public List<TaskDTO> findTasksByTaskListId(Long id) {
+        List<Task> tasks = new ArrayList<>();
+
+        tasks = repository.findByTaskListId(id);
 
         ResponseDTO responseDTO = new ResponseDTO();
         return responseDTO.fromTaskListToDTOList(tasks);
     }
 
-    public TaskDTO updateTask(Long task_id, TaskUpdateRequestDTO new_taskDTO) {
-        Task old_task = repository.findById(task_id).get();
+    /**
+     * Обновляет задачу 
+     * 
+     * @param id обновляемой задачи
+     * @param new_taskDTO - задача с новыми занными
+     * @return {@link TaskDTO} обновленной задачи; {@code null}, если задача не найдена
+     */
+    public TaskDTO updateTask(Long id, TaskUpdateRequestDTO new_taskDTO) {
+        Task old_task = repository.findById(id)
+            .orElse(null);
+
         old_task.setTitle(new_taskDTO.getTitle());
         old_task.setDescription(new_taskDTO.getDescription());
         old_task.setDue_date(new_taskDTO.getDue_date());
@@ -67,7 +84,11 @@ public class TaskService {
         return responseDTO.fromTaskEntityToDTO(old_task);
     }
 
-     // [fix] написать доки и добавить проверки
+    /**
+     * Удаляет задачу
+     * 
+     * @param id удаляемой задачи
+     */
     public void deleteTaskById(Long id) {
         repository.deleteById(id);
     }

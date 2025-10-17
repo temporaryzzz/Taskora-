@@ -1,5 +1,6 @@
 package com.taskora.backend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +37,16 @@ public class TaskListService {
         return responseDTO.fromTaskListEntityToDTO(taskList);
     }
 
-    // [fix] добавить проверку и документацию
-    public TaskListDTO createTaskList(User owner, String title) {
+    /**
+     * Создает список задач
+     * 
+     * @param user кому принадлежит список
+     * @param title - название создаваемого списка задач
+     * @return {@link TaskListDTO} созданного списка
+     */
+    public TaskListDTO createTaskList(User user, String title) {
         TaskList taskList = new TaskList();
-        taskList.setOwner(owner);
+        taskList.setOwner(user);
         taskList.setTitle(title);
 
         repository.save(taskList);
@@ -48,31 +55,55 @@ public class TaskListService {
         return responseDTO.fromTaskListEntityToDTO(taskList);
     }
 
-    // [fix] добавить проверку и документацию
+    /**
+     * Находит список задач по {@code id}
+     * 
+     * @param id списка задач
+     * @return найденный {@link TaskList}; {@code null}, если список не найден
+     */
     public TaskList findTaskListById(Long id) {
-        return repository.findById(id).get();
+        return repository.findById(id).orElse(null);
     }
 
-    // [fix] добавить проверку и документацию
-    public List<TaskListDTO> findAllTaskListsByOwnerId(Long owner_id) {
-        List<TaskList> taskLists = repository.findByOwnerId(owner_id);
+    /**
+     * Находит все списки задач по {@code id} пользователя
+     * 
+     * @param user_id - {@code id} пользователя
+     * @return найденные списки задач; пустой список, если списки не найдены
+     */
+    public List<TaskListDTO> findAllTaskListsByOwnerId(Long user_id) {
+        List<TaskList> taskLists = new ArrayList<>();
+        
+        taskLists = repository.findByOwnerId(user_id);
 
         ResponseDTO responseDTO = new ResponseDTO();
         return responseDTO.fromTaskListsToDTOList(taskLists);
     }
 
-    // [fix] добавить проверку и документацию
-    public TaskListDTO updateTaskList(Long taskList_id, TaskListUpdateRequest new_taskList) {
-        TaskList old_taskList = repository.findById(taskList_id).get();
-        old_taskList.setTitle(new_taskList.getTitle());
+    /**
+     * Обновляет список задач
+     * 
+     * @param id изменяемого списка
+     * @param new_taskList - {@code DTO} с новыми данными
+     * @return {@link TaskListDTO} обновленной задачи; {@code null}, если список не найден
+     */
+    public TaskListDTO updateTaskList(Long id, TaskListUpdateRequest new_taskList) {
+        TaskList taskList = repository.findById(id)
+            .orElse(null);
+        
+        taskList.setTitle(new_taskList.getTitle());
 
-        repository.save(old_taskList);
+        repository.save(taskList);
 
         ResponseDTO responseDTO = new ResponseDTO();
-        return responseDTO.fromTaskListEntityToDTO(old_taskList);
+        return responseDTO.fromTaskListEntityToDTO(taskList);
     }
 
-    // [fix] добавить проверку и документацию
+    /**
+     * Удаляет список задач
+     * 
+     * @param id удаляемого списка
+     */
     public void deleteTaskListById(Long id) {
         repository.deleteById(id);
     }

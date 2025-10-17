@@ -44,14 +44,8 @@ public class AuthenticationController {
     private TaskListService taskListService;
 
 
-    /**
-     * Регистрация пользователя в БД, с проверкой на занятость логина
-     * 
-     * @param requestDTO - {@code username}, {@code email}, {@code password}
-     * @return 200 если регистрация успешна; 409 с сообщением об ошибке, если {@code email} или {@code username} занят
-     */
     @PostMapping("/signup")
-    @Operation(description = "Регистрация пользователя")
+    @Operation(description = "Регистрация пользователя в БД, с проверкой на занятость логина")
     @ApiResponses( value = {
         @ApiResponse(
             responseCode = "200",
@@ -89,14 +83,9 @@ public class AuthenticationController {
                 .body(userResponseDTO);
     }
     
-    /**
-     * Авторизация пользователя в систему.
-     * 
-     * @param requestDTO - {@code username} или {@code email}, {@code password}
-     * @return 200 если пользователь найден и пароль верный; иначе 400
-     */
+    
     @PostMapping("/signin")
-    @Operation(description = "Вход пользователся в систему")
+    @Operation(description = "Авторизация пользователя в систему")
     @ApiResponses( value = {
         @ApiResponse(
             responseCode = "200",

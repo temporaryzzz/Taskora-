@@ -18,6 +18,9 @@ import com.taskora.backend.security.AuthEntryPointJwt;
 import com.taskora.backend.security.AuthTokenFilter;
 import com.taskora.backend.service.CustomUserDetailsService;
 
+/**
+ * Класс, отвечающий за цепочку фильтров проверки авторизации
+ */
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {

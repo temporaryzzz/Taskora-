@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.util.List;
 
@@ -41,37 +42,57 @@ public class TaskController {
     private TaskService taskService;
 
 
-    // [fix] написать доки и добавить проверки
     @GetMapping("/{taskList_id}")
     @Operation(description = "Получение всех задач по id списка")
-    @ApiResponse(
-        responseCode = "200",
-        description = "Задачи найдены",
-        content = @Content(
-            schema = @Schema(implementation = TaskResponseDTO.class) 
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Задачи найдены",
+            content = @Content(
+                schema = @Schema(implementation = TaskResponseDTO.class) 
+            )
+        ),
+        @ApiResponse(
+            responseCode = "204",
+            description = "Задачи не найдены",
+            content = {}
         )
-    )
+    })
     public ResponseEntity<?> getTasks(@PathVariable Long list_id) {
-        
         List<TaskDTO> taskDTOs = taskService.findTasksByTaskListId(list_id);
+        if (taskDTOs.isEmpty())
+            return ResponseEntity
+                .noContent()
+                .build();
 
         return ResponseEntity
             .ok()
             .body(new TaskResponseDTO(taskDTOs));
     }
 
-    // [fix] написать доки и добавить проверки
     @PostMapping("")
     @Operation(description = "Создание задачи")
-    @ApiResponse(
-        responseCode = "201",
-        description = "Задача создана",
-        content = @Content(
-            schema = @Schema(implementation = TaskDTO.class)
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "201",
+            description = "Задача создана",
+            content = @Content(
+                schema = @Schema(implementation = TaskDTO.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Список задач не найден",
+            content = {}
         )
-    )
+    })
     public ResponseEntity<?> createTask(@RequestBody TaskCreateRequestDTO requestDTO) {
         TaskList taskList = taskListService.findTaskListById(requestDTO.getTaskList_id());
+        if (taskList == null)
+            return ResponseEntity
+                .notFound()
+                .build();
+
         TaskDTO taskDTO = taskService.createTask(taskList, requestDTO.getTitle());
         
         return ResponseEntity
@@ -79,25 +100,34 @@ public class TaskController {
             .body(taskDTO);
     }
 
-    // [fix] написать доки и добавить проверки
     @PutMapping("/{task_id}")
     @Operation(description = "Обновление задачи")
-    @ApiResponse(
-        responseCode = "200",
-        description = "Задача обновлена",
-        content = @Content(
-            schema = @Schema(implementation = TaskDTO.class)
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Задача обновлена",
+            content = @Content(
+                schema = @Schema(implementation = TaskDTO.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Задача не найдена",
+            content = {}
         )
-    )
+    })
     public ResponseEntity<?> updateTask(@PathVariable Long task_id, @RequestBody TaskUpdateRequestDTO requestDTO) {
         TaskDTO updatedTask = taskService.updateTask(task_id, requestDTO);
+        if (updatedTask == null)
+            return ResponseEntity
+                .notFound()
+                .build();
 
         return ResponseEntity
             .ok()
             .body(updatedTask);
     }
     
-    // [fix] написать доки и добавить проверки
     @DeleteMapping("/{task_id}")
     @Operation(description = "Удаление задачи")
     public ResponseEntity<?> deleteTask(@PathVariable Long task_id) {
