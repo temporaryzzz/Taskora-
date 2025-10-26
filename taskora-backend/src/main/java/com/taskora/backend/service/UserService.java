@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.taskora.backend.dto.SignRequestDTO;
+import com.taskora.backend.dto.SignUpRequestDTO;
 import com.taskora.backend.dto.UserDTO;
 import com.taskora.backend.entity.User;
 import com.taskora.backend.repository.UserRepository;
@@ -32,7 +32,7 @@ public class UserService {
      * @param requestDTO - {@code username}, {@code email}, {@code password}
      * @return {@link UserDTO} созданного пользователя
      */
-    public UserDTO createUser(SignRequestDTO requestDTO) {
+    public UserDTO createUser(SignUpRequestDTO requestDTO) {
         User user = new User();
         user.setUsername(requestDTO.getUsername());
         user.setEmail(requestDTO.getEmail());
@@ -104,7 +104,7 @@ public class UserService {
      * @param requestDTO - DTO с данными для замены
      * @return {@link UserDTO} обновленного пользователя; {@code null}, если пользователь не найден
      */
-    public UserDTO updateUser(Long id, SignRequestDTO requestDTO) {
+    public UserDTO updateUser(Long id, SignUpRequestDTO requestDTO) {
         User user = repository.findById(id)
             .orElse(null);
 

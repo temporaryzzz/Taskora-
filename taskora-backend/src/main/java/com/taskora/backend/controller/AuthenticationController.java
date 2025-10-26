@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.taskora.backend.dto.ErrorMessageDTO;
-import com.taskora.backend.dto.SignRequestDTO;
+import com.taskora.backend.dto.SignInRequestDTO;
+import com.taskora.backend.dto.SignUpRequestDTO;
 import com.taskora.backend.dto.UserDTO;
 import com.taskora.backend.entity.User;
 import com.taskora.backend.security.JwtUtil;
@@ -62,7 +63,7 @@ public class AuthenticationController {
             )
         )
     })
-    public ResponseEntity<?> signUp(@RequestBody SignRequestDTO requestDTO) {
+    public ResponseEntity<?> signUp(@RequestBody SignUpRequestDTO requestDTO) {
         if (userService.isUserExistsByEmail(requestDTO.getEmail()))
             return ResponseEntity
                     .status(409)
@@ -102,12 +103,11 @@ public class AuthenticationController {
             )
         )
     })
-    public ResponseEntity<?> signin(@RequestBody SignRequestDTO requestDTO) {        
+    public ResponseEntity<?> signIn(@RequestBody SignInRequestDTO requestDTO) {        
         try {
-            // [fix] Сейчас аутентификация происходит только по username
             Authentication authentication = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    requestDTO.getUsername(), 
+                    requestDTO.getLogin(),
                     requestDTO.getPassword())
             );
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
