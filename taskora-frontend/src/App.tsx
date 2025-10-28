@@ -1,8 +1,176 @@
+//⁡⁢⁣⁣𝗜𝗠𝗣𝗢𝗥𝗧𝗦⁡
+import { BrowserRouter, Route, Routes } from 'react-router';
+import { createContext, useState, useMemo } from 'react';
+import type { AppState, AppActions, User, List, Task, CreateListDTO, 
+              CreateTaskDTO, UpdateTaskDTO, UpdateListDTO} from './interfaces';
+import SignIn from './components/sign-in';
+import SignUp from './components/sign-up';
+import { fetchTasks, fetchLists, updateTaskOnServer, createListOnServer, createTaskOnServer, deleteListOnServer, deleteTaskOnServer } from './api';
+
+export const TaskManagerContext = createContext<{state: AppState; actions: AppActions} | undefined>(undefined);
+
 function App() {
+  const [user, setUser] = useState<User | undefined>()
+  const [lists, setLists] = useState<Array<List>>([])
+  const [tasks, setTasks] = useState<Array<Task>>([])
+  const [currentListId, setCurrentListId] = useState<number | null>(null)
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
+  const [error, setError] = useState<boolean>(false)
+
+  const setSelectedTask = (taskId: number) => {
+    setSelectedTaskId(taskId)
+  }
+
+  const updateTask = (updates: UpdateTaskDTO) => {
+    const updatedTasks = tasks?.map(task =>
+      task.id === selectedTaskId ? { ...task, ...updates } : task
+    );
+
+    setTasks(updatedTasks);
+
+    try {
+      if(selectedTaskId)
+        updateTaskOnServer(selectedTaskId, updates)
+    }catch(error) {
+      console.log(error)
+      setError(true)
+    }
+  }
+
+  const updateList = (listId: number, updates: UpdateListDTO) => {
+    const updatedLists = lists?.map(list =>
+      list.id === listId ? { ...list, ...updates } : list
+    );
+
+    setLists(updatedLists);
+
+    try {
+      updateTaskOnServer(listId, updates)
+    }catch(error) {
+      console.log(error)
+      setError(true)
+    }
+  }
+
+  const switchList = async (listId: number) => {
+    setCurrentListId(listId)
+    setSelectedTaskId(null);
+    
+    try {
+      const loadedTasks = await fetchTasks(listId)
+      setTasks(loadedTasks)
+    }catch(error) {
+      console.log(error)
+      setError(true)
+    }
+  }
+
+  const loadLists = async () => {
+    try {
+      if(user) {
+        const loadedLists = await fetchLists(user.id)
+        setLists(loadedLists)
+      }
+    }catch(error) {
+      console.log(error)
+      setError(true)
+    }
+  }
+
+  const createList = async (list: CreateListDTO) => {
+    try {
+      if(user) {
+        const newList = await createListOnServer(user.id, list)
+        setLists(lists => [...lists, newList]);
+      }
+    }catch(error) {
+      console.log(error)
+      setError(true)
+    }
+  }
+
+  const createTask = async (task: CreateTaskDTO) => {
+    try {
+      if(currentListId) {
+        const newTask = await createTaskOnServer(currentListId, task)
+        setTasks(tasks => [...tasks, newTask]);
+      }
+    }catch(error) {
+      console.log(error)
+      setError(true)
+    }
+  }
+
+  const deleteList = async (listId: number) => {
+    try{ 
+      deleteListOnServer(listId)
+      setLists(lists => lists.filter(list => list.id !== listId))
+
+      if (currentListId === listId) {
+        const remainingList = lists.find(list => list.id !== listId)
+
+        if (remainingList) {
+          switchList(remainingList.id)
+        } 
+        else {
+          setTasks([])
+          setCurrentListId(null)
+          setSelectedTaskId(null)
+        }
+      }
+    }catch(error){
+      console.log('Ошибка при удалении списка:', error)
+      setError(true)
+    }
+  }
+
+  const deleteTask = async (taskId: number) => {
+    try{ 
+      deleteTaskOnServer(taskId)
+      setTasks(tasks => tasks.filter(task => task.id !== taskId))
+
+      setSelectedTaskId(null)
+    }catch(error){
+      console.log('Ошибка при удалении задачи:', error)
+      setError(true)
+    }
+  }
+
+  //⁡⁢⁣⁣CONTEXT⁡
+  const contextValue = useMemo(() => {
+    const state: AppState = {
+      user,
+      lists,
+      tasks,
+      selectedTaskId,
+      currentListId,
+      error,
+    };
+
+    const actions: AppActions = {
+      setSelectedTask,
+      updateTask,
+      updateList,
+      switchList,
+      loadLists,
+      createList,
+      deleteList,
+      createTask,
+      deleteTask,
+    };
+
+    return { state, actions };
+  }, [user, lists, tasks, selectedTaskId, currentListId]);
+
   return(
-    <div>
-      <h1>Taskora</h1>
-    </div>
+    <BrowserRouter>
+      <TaskManagerContext.Provider value={contextValue}>
+        <Routes>
+          <Route path="" element={<SignIn />} />
+          <Route path="sign-up" element={<SignUp />} />
+        </Routes>
+      </TaskManagerContext.Provider>
+    </BrowserRouter>
   )
 }
 

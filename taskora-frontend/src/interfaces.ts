@@ -24,27 +24,26 @@ export interface Task {
 }
 
 export interface AppState {
-	user: User;
-    lists: Record<number, List>;
-    tasks: Record<number, Task>;
-	currentListId: number;
+	user: User | undefined;
+    lists: Array<List>;
+    tasks: Array<Task>;
+	currentListId: number | null;
 	selectedTaskId: number | null;
-    isLoading: boolean;
-    error: string | null;
+    error: boolean;
 }
 
-type CreateTaskDTO = Omit<Task, 'id' | 'completed' | 'deleted'>;
-type UpdateTaskDTO = Partial<Pick<Task, 'title' | 'description' | 'deadline' | 'priority' | 'completed' | 'deleted'>>;
+export type CreateTaskDTO = Omit<Task, 'id' | 'completed' | 'deleted'>;
+export type UpdateTaskDTO = Partial<Pick<Task, 'ownerListId' | 'title' | 'description' | 'deadline' | 'priority' | 'completed'>>;
 
-type CreateListDTO = Omit<List, 'id'>;
-type UpdateListDTO = Partial<Pick<List, 'title' | 'icon' | 'iconColor'>>;
+export type CreateListDTO = Omit<List, 'id'>;
+export type UpdateListDTO = Partial<Pick<List, 'title' | 'icon' | 'iconColor'>>;
 
 export interface AppActions {
-  setSelectedTask: (id: number) => void;
+  setSelectedTask: (taskId: number) => void;
   //⁡⁣⁣⁢Pick берет поля из Task по именам⁡
   //⁡⁣⁣⁢Partial - делает все поля необязательными: title?: string и.т.д⁡
-  updateTask: (id: number, updates: UpdateTaskDTO) => void;
-  updateList: (id: number, updates: UpdateListDTO) => void;
+  updateTask: (updates: UpdateTaskDTO) => void;
+  updateList: (listId: number, updates: UpdateListDTO) => void;
   //Загрузка задач из списка на котороый переключился юзер
   //При первом входе используем чтобы открыть последний открытый список или All List
   switchList: (listId: number) => Promise<void>;
@@ -55,7 +54,7 @@ export interface AppActions {
   //Только созданная задача не может быть completed --> на сервере по умолачинию ставится false
   createList: (list: CreateListDTO) => Promise<void>;
   //Список удаляется навсегда, а все его задачи будут попадать в корзину
-  deleteList: (id: number) => Promise<void>;
+  deleteList: (taskId: number) => Promise<void>;
   createTask: (task: CreateTaskDTO) => Promise<void>;
-  deleteTask: (id: number) => Promise<void>;
+  deleteTask: (listId: number) => Promise<void>;
 }
