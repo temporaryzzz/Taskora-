@@ -86,8 +86,8 @@ a {
 }
 
 :focus-visible {
-    outline: rem(2) solid var(--main-accent);
-    outline-offset: rem(0);
+    outline: rem(3) solid var(--main-accent) !important;
+    outline-offset: rem(2) !important;
     transition-duration: 0s !important;
 }
 
