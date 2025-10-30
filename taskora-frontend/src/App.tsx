@@ -1,11 +1,12 @@
 //⁡⁢⁣⁣𝗜𝗠𝗣𝗢𝗥𝗧𝗦⁡
 import { BrowserRouter, Route, Routes } from 'react-router';
-import { createContext, useState, useMemo } from 'react';
+import { createContext, useState, useMemo, useEffect } from 'react';
 import type { AppState, AppActions, User, List, Task, CreateListDTO, 
               CreateTaskDTO, UpdateTaskDTO, UpdateListDTO} from './interfaces';
 import SignIn from './components/sign-in';
 import SignUp from './components/sign-up';
 import { fetchTasks, fetchLists, updateTaskOnServer, createListOnServer, createTaskOnServer, deleteListOnServer, deleteTaskOnServer } from './api';
+import './styles/main.scss'
 
 export const TaskManagerContext = createContext<{state: AppState; actions: AppActions} | undefined>(undefined);
 
@@ -16,6 +17,7 @@ function App() {
   const [currentListId, setCurrentListId] = useState<number | null>(null)
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
   const [error, setError] = useState<boolean>(false)
+
 
   const setSelectedTask = (taskId: number) => {
     setSelectedTaskId(taskId)
@@ -136,6 +138,18 @@ function App() {
     }
   }
 
+  useEffect(() => {
+    loadLists()
+    console.log(user)
+  }, [user])
+
+  useEffect(() => {
+    if(lists.length > 0) {
+      switchList(0)
+    }
+    //Добавить подсказку пользователю создать список и убрать форму добавления задач
+  }, [lists])
+
   //⁡⁢⁣⁣CONTEXT⁡
   const contextValue = useMemo(() => {
     const state: AppState = {
@@ -148,6 +162,7 @@ function App() {
     };
 
     const actions: AppActions = {
+      setUser,
       setSelectedTask,
       updateTask,
       updateList,

@@ -62,3 +62,10 @@
   clip: rect(0 0 0 0) !important;
   overflow: hidden !important;
 }
+
+@mixin textarea-default {
+	text-align: start;
+	border: none;
+	outline: none;
+	resize: none;
+}

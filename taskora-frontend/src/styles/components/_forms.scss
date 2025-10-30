@@ -1,0 +1,67 @@
+@use "../helpers" as *;
+
+.form {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    background-color: var(--color-dark-15);
+    row-gap: fluid(50, 35);
+    padding-top: rem(75);
+    padding-bottom: rem(30);
+    padding-right: rem(110);
+    padding-left: rem(110);
+    border-radius: rem(40);
+
+    @include laptop {
+        padding-top: rem(75);
+        padding-bottom: rem(30);
+        padding-right: rem(90);
+        padding-left: rem(90);
+    }
+
+    @include mobile {
+        padding-top: rem(35);
+        padding-bottom: rem(35);
+        padding-right: rem(25);
+        padding-left: rem(25);
+    }
+
+    &__input {
+        @include textarea-default;
+        @include fluid-text(20, 16);
+
+        border-radius: rem(20);
+        padding: rem(6);
+    }
+
+    &__inputs-wrapper {
+        display: flex;
+        flex-direction: column;
+        row-gap: rem(25);
+
+        &--wide {
+            min-width: fluid(380, 250);
+
+        }
+    }
+
+    &__buttons-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        row-gap: rem(20);
+        width: rem(210);
+
+        @include laptop {
+            row-gap: rem(15);
+            width: rem(190);
+        }
+
+        @include mobile {
+            row-gap: rem(20);
+            width: rem(250);
+        }
+    }
+}

@@ -13,7 +13,7 @@ body {
     display: flex;
     font-family: var(--font-famaly-base);
     color: var(--color-light);
-    background-color: var(--color-dark);
+    background-color: var(--color-dark-10);
 }
 
 h1, .h1,
@@ -23,6 +23,7 @@ h4, .h4,
 h5, .h5,
 h6, .h6 {
     color: var(--color-light);
+    margin: 0;
 }
 
 h1, .h1 {
@@ -85,7 +86,18 @@ a {
 }
 
 :focus-visible {
-    outline: rem(2) dashed var(--color-light);
-    outline-offset: rem(4);
+    outline: rem(2) solid var(--main-accent);
+    outline-offset: rem(0);
     transition-duration: 0s !important;
+}
+
+.center {
+    @include abs-center;
+
+    text-align: center;
+}
+
+.logo-title {
+    align-self: center;
+    padding: rem(15);
 }

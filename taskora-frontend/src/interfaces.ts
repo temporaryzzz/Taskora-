@@ -1,3 +1,5 @@
+import type { Dispatch, SetStateAction } from "react";
+
 export interface User {
     username: string;
     id: number;
@@ -39,6 +41,7 @@ export type CreateListDTO = Omit<List, 'id'>;
 export type UpdateListDTO = Partial<Pick<List, 'title' | 'icon' | 'iconColor'>>;
 
 export interface AppActions {
+  setUser: Dispatch<SetStateAction<User | undefined>>;
   setSelectedTask: (taskId: number) => void;
   //⁡⁣⁣⁢Pick берет поля из Task по именам⁡
   //⁡⁣⁣⁢Partial - делает все поля необязательными: title?: string и.т.д⁡
