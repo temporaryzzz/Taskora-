@@ -7,6 +7,7 @@ import SignIn from './components/sign-in';
 import SignUp from './components/sign-up';
 import { fetchTasks, fetchLists, updateTaskOnServer, createListOnServer, createTaskOnServer, deleteListOnServer, deleteTaskOnServer } from './api';
 import './styles/main.scss'
+import MainPage from './components/main-page';
 
 export const TaskManagerContext = createContext<{state: AppState; actions: AppActions} | undefined>(undefined);
 
@@ -183,6 +184,7 @@ function App() {
         <Routes>
           <Route path="" element={<SignIn />} />
           <Route path="sign-up" element={<SignUp />} />
+          <Route path='main' element={<MainPage />} />
         </Routes>
       </TaskManagerContext.Provider>
     </BrowserRouter>

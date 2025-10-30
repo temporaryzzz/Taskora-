@@ -21,7 +21,7 @@ function SignUp() {
 			})
 				.then((response) => {
 					if (response.ok) {
-						navigate('../', { replace: false });
+						navigate('main', { replace: false });
 					} else {
 						throw new Error(`Ошибка! Статус: ${response.status}`);
 					}

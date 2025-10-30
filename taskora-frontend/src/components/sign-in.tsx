@@ -49,7 +49,7 @@ function SignIn() {
 					})
 					.then((data) => {
 						setUser({ username: data.username, id: data.id, email: data.email });
-						navigate('profile', { replace: false });
+						navigate('main', { replace: false });
 					})
 					.catch((error) => {
 						console.log(error);
@@ -68,7 +68,7 @@ function SignIn() {
 					})
 					.then((data) => {
 						setUser({ username: data.username, id: data.id, email: data.email });
-						navigate('profile', { replace: false });
+						navigate('main', { replace: false });
 					})
 					.catch((error) => {
 						console.log(error);
@@ -82,7 +82,7 @@ function SignIn() {
 	return (
         <div className="center">
             <h1 className="logo-title icon icon--logo">Taskora~</h1>
-            <form id="sing-in-form" action="/home" className="form" onSubmit={handleSubmit}>
+            <form id="sing-in-form" action="" className="form" onSubmit={handleSubmit}>
                 <h2>Authorization</h2>
                 <div className="form__inputs-wrapper form__inputs-wrapper--wide">
                     <input type="text" 
@@ -115,10 +115,10 @@ function SignIn() {
                 </div>
 
                 <div className="form__buttons-wrapper">
-                    <button className="button" type="submit">
+                    <button className="button button--inverse" type="submit">
                         Sign-in
                     </button>
-                    <a href="/sign-up" className="button button--inverse">
+                    <a href="/sign-up" className="button">
                         Registration
                     </a>
                 </div>
