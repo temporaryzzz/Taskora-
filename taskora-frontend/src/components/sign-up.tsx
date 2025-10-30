@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router';
-import { SERVER_ADDRES } from '../api';
+import { SERVER_ADDRES, FRONTEND_ADDRES } from '../api';
 import '../styles/main.scss'
 
 function SignUp() {
@@ -16,12 +16,15 @@ function SignUp() {
 		try {
 			fetch(`${SERVER_ADDRES}/auth/signup`, {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
+				headers: { 
+					'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
+					'Content-Type': 'application/json'
+				 },
 				body: JSON.stringify({ username: username, email: email, password: password }),
 			})
 				.then((response) => {
 					if (response.ok) {
-						navigate('main', { replace: false });
+						navigate('../', { replace: false });
 					} else {
 						throw new Error(`Ошибка! Статус: ${response.status}`);
 					}

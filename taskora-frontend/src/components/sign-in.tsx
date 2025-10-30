@@ -1,6 +1,6 @@
 import { useContext, useRef, type Dispatch, type FormEvent, type SetStateAction, } from "react";
 import { useNavigate } from 'react-router';
-import { SERVER_ADDRES } from "../api";
+import { SERVER_ADDRES, FRONTEND_ADDRES } from "../api";
 import { TaskManagerContext } from "../App";
 import type { User } from "../interfaces";
 import '../styles/main.scss'
@@ -38,7 +38,10 @@ function SignIn() {
 			if (/@/.test(username)) {
 				fetch(`${SERVER_ADDRES}/auth/signin`, {
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
+					headers: { 
+						'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
+						'Content-Type': 'application/json'
+					 },
 					body: JSON.stringify({ email: username, password: password }),
 				})
 					.then((response) => {

@@ -5,7 +5,7 @@ const SERVER_ADDRES__TASKS = 'http://localhost:8080/api/tasks/';
 const SERVER_ADDRES__TASKS_NO_SLASH = 'http://localhost:8080/api/tasks';
 const SERVER_ADDRES__LISTS = 'http://localhost:8080/api/tasklists/';
 const SERVER_ADDRES__LISTS_NO_SLASH = 'http://localhost:8080/api/tasklists';
-const FRONTEND_ADDRES = 'http://localhost:3000';
+export const FRONTEND_ADDRES = 'http://localhost:3000';
 
 
 const fetchTasks = async (listId: number): Promise<Array<Task>> => {
@@ -38,7 +38,7 @@ const fetchLists = async (userId: number): Promise<Array<List>> => {
   }
 
   const lists: Array<List> = await response.json();
-
+  
   return lists;
 }
 
@@ -61,14 +61,14 @@ const createListOnServer = async (userId: number, create: CreateListDTO): Promis
   return list;
 }
 
-const createTaskOnServer = async (listId: number, create: CreateTaskDTO): Promise<Task> => {
+const createTaskOnServer = async (create: CreateTaskDTO): Promise<Task> => {
     const response = await fetch(`${SERVER_ADDRES__TASKS_NO_SLASH}`, {
     method: 'POST',
-    headers: {
+    headers: {  
       'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({...create, ownerListId: listId})
+    body: JSON.stringify(create)
   });
 
   if (!response.ok) {

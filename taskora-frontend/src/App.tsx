@@ -5,7 +5,7 @@ import type { AppState, AppActions, User, List, Task, CreateListDTO,
               CreateTaskDTO, UpdateTaskDTO, UpdateListDTO} from './interfaces';
 import SignIn from './components/sign-in';
 import SignUp from './components/sign-up';
-import { fetchTasks, fetchLists, updateTaskOnServer, createListOnServer, createTaskOnServer, deleteListOnServer, deleteTaskOnServer } from './api';
+import { fetchTasks, fetchLists, updateTaskOnServer, updateListOnServer, createListOnServer, createTaskOnServer, deleteListOnServer, deleteTaskOnServer } from './api';
 import './styles/main.scss'
 import MainPage from './components/main-page';
 
@@ -48,7 +48,7 @@ function App() {
     setLists(updatedLists);
 
     try {
-      updateTaskOnServer(listId, updates)
+      updateListOnServer(listId, updates)
     }catch(error) {
       console.log(error)
       setError(true)
@@ -95,7 +95,7 @@ function App() {
   const createTask = async (task: CreateTaskDTO) => {
     try {
       if(currentListId) {
-        const newTask = await createTaskOnServer(currentListId, task)
+        const newTask = await createTaskOnServer(task)
         setTasks(tasks => [...tasks, newTask]);
       }
     }catch(error) {
@@ -141,7 +141,7 @@ function App() {
 
   useEffect(() => {
     loadLists()
-    console.log(user)
+    console.log('user', user)
   }, [user])
 
   useEffect(() => {

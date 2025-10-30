@@ -1,8 +1,8 @@
 import type { Dispatch, SetStateAction } from "react";
 
 export interface User {
-    username: string;
     id: number;
+    username: string;
     email: string;
 }
 
@@ -35,10 +35,10 @@ export interface AppState {
 }
 
 export type CreateTaskDTO = Omit<Task, 'id' | 'completed' | 'deleted'>;
-export type UpdateTaskDTO = Partial<Pick<Task, 'ownerListId' | 'title' | 'description' | 'deadline' | 'priority' | 'completed'>>;
+export type UpdateTaskDTO = Pick<Task, 'ownerListId' | 'title' | 'description' | 'deadline' | 'priority' | 'completed'>;
 
 export type CreateListDTO = Omit<List, 'id'>;
-export type UpdateListDTO = Partial<Pick<List, 'title' | 'icon' | 'iconColor'>>;
+export type UpdateListDTO = Pick<List, 'title' | 'icon' | 'iconColor'>;
 
 export interface AppActions {
   setUser: Dispatch<SetStateAction<User | undefined>>;
