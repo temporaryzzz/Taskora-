@@ -7,8 +7,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.taskora.backend.dto.SignRequestDTO;
 import com.taskora.backend.dto.UserDTO;
-import com.taskora.backend.dto.UserRequestDTO;
 import com.taskora.backend.entity.User;
 import com.taskora.backend.repository.UserRepository;
 import com.taskora.backend.utils.ResponseDTO;
@@ -29,7 +29,7 @@ public class UserService {
      * @param requestDTO - {@code username}, {@code email}, {@code password}
      * @return {@link UserDTO} созданного пользователя
      */
-    public UserDTO createUser(UserRequestDTO requestDTO) {
+    public UserDTO createUser(SignRequestDTO requestDTO) {
         User user = new User();
         user.setUsername(requestDTO.getUsername());
         user.setEmail(requestDTO.getEmail());
@@ -101,7 +101,7 @@ public class UserService {
      * @param requestDTO - DTO с данными для замены
      * @return {@link UserDTO} обновленного пользователя; {@code null}, если пользователь не найден
      */
-    public UserDTO updateUser(Long id, UserRequestDTO requestDTO) {
+    public UserDTO updateUser(Long id, SignRequestDTO requestDTO) {
         User user = repository.findById(id)
             .orElse(null);
 
@@ -120,15 +120,15 @@ public class UserService {
         repository.deleteById(id);
     }
 
-    public boolean isUserExistsByEmail(UserRequestDTO requestDTO) {
-        if (repository.existsByEmail(requestDTO.getEmail())) 
+    public boolean isUserExistsByEmail(String email) {
+        if (repository.existsByEmail(email)) 
             return true;
 
         return false;
     }
 
-    public boolean isUserExistsByUsername(UserRequestDTO requestDTO) {
-        if (repository.existsByUsername(requestDTO.getUsername()))
+    public boolean isUserExistsByUsername(String username) {
+        if (repository.existsByUsername(username))
             return true;
 
         return false;

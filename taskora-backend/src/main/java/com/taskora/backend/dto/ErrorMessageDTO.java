@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "Сообщение об ошибке")
 public class ErrorMessageDTO {
     
-    @Schema(description = "Сообщение об ошибке", example = "Пользователь уже существует")
+    @Schema(description = "Сообщение об ошибке", example = "Грамматическая ошибка")
     String message;
 
 

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.taskora.backend.dto.TaskListDTO;
+import com.taskora.backend.dto.TaskListUpdateRequest;
 import com.taskora.backend.entity.TaskList;
 import com.taskora.backend.entity.User;
 import com.taskora.backend.repository.TaskListRepository;
@@ -26,7 +27,7 @@ public class TaskListService {
      * @param user кому принадлежит список
      * @return {@link TaskListDTO} созданного списка
      */
-    public TaskListDTO createTaskList(User user) {
+    public TaskListDTO createDefaultTaskList(User user) {
         TaskList taskList = new TaskList();
         taskList.setOwner(user);
         taskList.setTitle("Default list name");
@@ -34,6 +35,18 @@ public class TaskListService {
         repository.save(taskList);
         ResponseDTO responseDTO = new ResponseDTO();
 
+        return responseDTO.fromTaskListEntityToDTO(taskList);
+    }
+
+    // [fix] добавить проверку и документацию
+    public TaskListDTO createTaskList(User owner, String title) {
+        TaskList taskList = new TaskList();
+        taskList.setOwner(owner);
+        taskList.setTitle(title);
+
+        repository.save(taskList);
+
+        ResponseDTO responseDTO = new ResponseDTO();
         return responseDTO.fromTaskListEntityToDTO(taskList);
     }
 
@@ -50,4 +63,19 @@ public class TaskListService {
         return responseDTO.fromTaskListsToDTOList(taskLists);
     }
 
+    // [fix] добавить проверку и документацию
+    public TaskListDTO updateTaskList(Long taskList_id, TaskListUpdateRequest new_taskList) {
+        TaskList old_taskList = repository.findById(taskList_id).get();
+        old_taskList.setTitle(new_taskList.getTitle());
+
+        repository.save(old_taskList);
+
+        ResponseDTO responseDTO = new ResponseDTO();
+        return responseDTO.fromTaskListEntityToDTO(old_taskList);
+    }
+
+    // [fix] добавить проверку и документацию
+    public void deleteTaskListById(Long id) {
+        repository.deleteById(id);
+    }
 }
