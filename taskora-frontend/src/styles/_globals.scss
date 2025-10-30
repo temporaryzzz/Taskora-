@@ -60,6 +60,10 @@ svg * {
     transition-duration: var(--transition-duration);
 }
 
+input [type="password"] {
+    font-weight: 800;
+}
+
 a, button {
     &[aria-label] {
         position: relative;

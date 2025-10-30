@@ -35,15 +35,13 @@ function SignUp() {
 	};
 
 	return (
-		<>
-			<h1>TASKORA</h1>
-			<form id="singup-form" action="" data-js-singin onSubmit={handleSubmit}>
-				<p className="field">
-					<label className="field__label" htmlFor="username">
-						Username
-					</label>
+		<div className="center">
+			<h1 className='logo-title icon icon--logo'>Taskora~</h1>
+			<form id="singup-form" action="" className="form" onSubmit={handleSubmit}>
+				<div className="form__inputs-wrapper form__inputs-wrapper--wide">
 					<input
-						className="field__control"
+						className="form__input"
+						placeholder='username'
 						id="username"
 						name="username"
 						onChange={(event) => setUsername(event.target.value)}
@@ -53,21 +51,16 @@ function SignUp() {
 						title="Username должен иметь длину от 4 до 18 символов и не может содержать @"
 						aria-errormessage="username-errors"
 						data-username
-						required
-					/>
+						required/>
 
 					<span
-						className="field__errors"
+						className="imput__errors"
 						id="username-errors"
-						data-js-singin-field-errors></span>
-				</p>
+						data-js-singin-input-errors></span>
 
-				<p className="field">
-					<label className="field__label" htmlFor="email">
-						Email address
-					</label>
 					<input
-						className="field__control"
+						className="form__input"
+						placeholder='email@'
 						id="email"
 						name="email"
 						onChange={(event) => setEmail(event.target.value)}
@@ -80,17 +73,13 @@ function SignUp() {
 					/>
 
 					<span
-						className="field__errors"
+						className="input__errors"
 						id="email-errors"
-						data-js-singin-field-errors></span>
-				</p>
+						data-js-singin-input-errors></span>
 
-				<p className="field">
-					<label className="field__label" htmlFor="password">
-						Password
-					</label>
 					<input
-						className="field__control"
+						className="form__input"
+						placeholder='password'
 						id="password"
 						name="password"
 						type="password"
@@ -105,17 +94,13 @@ function SignUp() {
 					/>
 
 					<span
-						className="field__errors"
+						className="input__errors"
 						id="password-errors"
-						data-js-singin-field-errors></span>
-				</p>
+						data-js-singin-input-errors></span>
 
-				<p className="field">
-					<label className="field__label" htmlFor="password">
-						Repeat password
-					</label>
 					<input
-						className="field__control"
+						className="form__input"
+						placeholder='repeat password'
 						id="password"
 						name="password"
 						type="password"
@@ -130,22 +115,22 @@ function SignUp() {
 					/>
 
 					<span
-						className="field__errors"
+						className="input__errors"
 						id="password-errors"
-						data-js-singin-field-errors></span>
-				</p>
+						data-js-singin-input-errors></span>
+				</div>
 
-				<button className="main-button main-button--green" type="submit">
-					Sing-Up
-				</button>
-			</form>
+				<div className="form__buttons-wrapper">
+					<button className="button" type="submit">
+						Continue
+					</button>
 
-			<form>
-				<button className="main-button main-button--back" onClick={() => navigate('../')}>
-					Назад
-				</button>
+					<a className="button button--inverse" href='/'>
+						Back
+					</a>
+				</div>
 			</form>
-		</>
+		</div>
 	);
 }
 
