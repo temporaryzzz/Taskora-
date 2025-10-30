@@ -1,19 +1,28 @@
-//⁡⁣⁣⁢-------------Цвета---------------⁡
-$bgColor-default: #1C1C1C;
-$bgColor-lightAccent: #242424;
-$bgColor-current: #3d444db3;
-$muted-element: #8B8989;
-$border-default: #3d444db3;
-$hover-element: #5b6068b3;
-$completed-element: #5b6068b3;
-$muted-hover-element: #a9b1c02f;
-$fgColor-default: #f0f6fc;
-$muted-blueAccent: #23478a;
-$bright-blueAccent: #1962e8;
-$greenAccent: #238636;
-$redAccent: #d52b24;
+@use "helpers" as *;
 
+:root {
+  //⁡⁣⁣⁢COLORS⁡
+  --color-light: #ffffff;
 
+  --color-dark: #141414;
+  --color-dark-10: #1a1a1a;
+  --color-dark-15: #262626;
+  --color-dark-20: #333333;
+  --color-dark-40: #666666;
 
-//⁡⁣⁣⁡⁣⁢⁢-------------Border---------------⁡
-$border-radius-default: 6px;
+  --color-gray-50: #7e7e81;
+  --color-gray-60: #98989a;
+
+  --color-red: #ff5500;
+  --color-yellow: #ffd11a;
+  --color-blue: #4B29C3;
+
+  --main-accent: #8212D9;
+
+  //⁡⁣⁣⁢FONTS⁡
+  --font-famaly-base: "Inter", sans-serif;
+  --font-famaly-accent: "Kumbh Sans", sans-serif;
+
+  //⁡⁣⁣⁢TRANSITION⁡
+  --transition-duration: 0.2s;
+}

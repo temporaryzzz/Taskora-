@@ -1,148 +1,193 @@
 //⁡⁢⁣⁣𝗜𝗠𝗣𝗢𝗥𝗧𝗦⁡
 import { BrowserRouter, Route, Routes } from 'react-router';
-import SingInForm from './components/singIn';
-import SingUpForm from './components/singup';
-import Header from './components/header';
-import TaskPage from './components/task-manager/task-page';
-import { useEffect, useState, createContext } from 'react';
-import ProfilePage from './components/profile/profile-page';
-import InizializateTasks, { InizializateLists, ChangeTask } from './scripts/dataTaskManager';
+import { createContext, useState, useMemo, useEffect } from 'react';
+import type { AppState, AppActions, User, List, Task, CreateListDTO, 
+              CreateTaskDTO, UpdateTaskDTO, UpdateListDTO} from './interfaces';
+import SignIn from './components/sign-in';
+import SignUp from './components/sign-up';
+import { fetchTasks, fetchLists, updateTaskOnServer, createListOnServer, createTaskOnServer, deleteListOnServer, deleteTaskOnServer } from './api';
+import './styles/main.scss'
+import MainPage from './components/main-page';
 
-console.log(document.cookie)
-
-export interface User {
-  username: string;
-  user_id: number;
-  email: string;
-}
-
-export interface List {
-  id: number;
-  owner_id: number;
-  title: string;
-}
-
-export interface TaskInfo {
-  task_id: number;
-  title: string;
-  description: string;
-  date: string;
-  completed: boolean;
-  priority: 'highest' | 'high' | 'middle' | 'default';
-}
-
-interface TaskManager {
-    list_id: number | undefined;
-    lists: Array<List> |undefined;
-    tasks: Array<TaskInfo> | undefined;
-    currentTaskInfo: TaskInfo | undefined;
-    setCurrentTask: (id: number) => void;
-    changeCurrentTask: (title: string, description: string, date: string, priority: 'highest' | 'high' | 'middle' | 'default') => void;
-    updateList: () => void;
-    GetTasks: (list_id: number) => void;
-}
-
-export const TaskInfoContext = createContext<TaskManager | undefined>(undefined);
+export const TaskManagerContext = createContext<{state: AppState; actions: AppActions} | undefined>(undefined);
 
 function App() {
-  const [user, setUser] = useState<User | undefined>(undefined)
-  const [lists, setLists] = useState<Array<List> | undefined>()
-  const [list_id, setList_id] = useState<number | undefined>()
-  const [tasks, setTasks] = useState<Array<TaskInfo> | undefined>()
-  const [currentTaskInfo, setCurrentTaskInfo] = useState<TaskInfo | undefined>()
+  const [user, setUser] = useState<User | undefined>()
+  const [lists, setLists] = useState<Array<List>>([])
+  const [tasks, setTasks] = useState<Array<Task>>([])
+  const [currentListId, setCurrentListId] = useState<number | null>(null)
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
+  const [error, setError] = useState<boolean>(false)
 
-  const GetTasks = (list_id: number) => {
-    //taskDTOs - это хуйня с бэка
-    InizializateTasks(list_id).then((data) => {setTasks(data.taskDTOs)})
-    setList_id(list_id)
+
+  const setSelectedTask = (taskId: number) => {
+    setSelectedTaskId(taskId)
   }
 
-  //Передаем данные о задаче в фокусе
-  const setCurrentTask = (id: number) => {
-      if(tasks) {
-          const currentTaskIndex = tasks.findIndex(task => task.task_id === id)
-          setCurrentTaskInfo(tasks[currentTaskIndex])
-      }
-  }
-  
-  const updateList = () => {
-      if(tasks) 
-          setTasks([...tasks])
-  }
+  const updateTask = (updates: UpdateTaskDTO) => {
+    const updatedTasks = tasks?.map(task =>
+      task.id === selectedTaskId ? { ...task, ...updates } : task
+    );
 
-  const changeCurrentTask = (title: string, description: string, date: string, priority: 'highest' | 'high' | 'middle' | 'default') => {
-      if(tasks != undefined) {
-          const currentTaskIndex = tasks.findIndex(task => task.task_id === currentTaskInfo?.task_id)
-          if(currentTaskIndex != undefined && currentTaskInfo != undefined) {
+    setTasks(updatedTasks);
 
-              //Изменяем значение tasks[currentTaskIndex], а потом обновляем сам tasks
-              //Нужно для того чтобы своевременно обновился contextValue
-              tasks[currentTaskIndex].title = title
-              tasks[currentTaskIndex].description = description
-              tasks[currentTaskIndex].date = date
-              tasks[currentTaskIndex].priority = priority
-              ChangeTask(currentTaskInfo.task_id, title, description, date, priority)
-              updateList()
-              setCurrentTaskInfo(tasks[currentTaskIndex])
-          }
-      }
-
-  }
-  
-
-  //Запрос на получение списков задач
-  useEffect(() => {
-    if(user?.user_id) {
-      InizializateLists(user.user_id).then((data) => {setLists(data.taskLists)})
+    try {
+      if(selectedTaskId)
+        updateTaskOnServer(selectedTaskId, updates)
+    }catch(error) {
+      console.log(error)
+      setError(true)
     }
+  }
+
+  const updateList = (listId: number, updates: UpdateListDTO) => {
+    const updatedLists = lists?.map(list =>
+      list.id === listId ? { ...list, ...updates } : list
+    );
+
+    setLists(updatedLists);
+
+    try {
+      updateTaskOnServer(listId, updates)
+    }catch(error) {
+      console.log(error)
+      setError(true)
+    }
+  }
+
+  const switchList = async (listId: number) => {
+    setCurrentListId(listId)
+    setSelectedTaskId(null);
+    
+    try {
+      const loadedTasks = await fetchTasks(listId)
+      setTasks(loadedTasks)
+    }catch(error) {
+      console.log(error)
+      setError(true)
+    }
+  }
+
+  const loadLists = async () => {
+    try {
+      if(user) {
+        const loadedLists = await fetchLists(user.id)
+        setLists(loadedLists)
+      }
+    }catch(error) {
+      console.log(error)
+      setError(true)
+    }
+  }
+
+  const createList = async (list: CreateListDTO) => {
+    try {
+      if(user) {
+        const newList = await createListOnServer(user.id, list)
+        setLists(lists => [...lists, newList]);
+      }
+    }catch(error) {
+      console.log(error)
+      setError(true)
+    }
+  }
+
+  const createTask = async (task: CreateTaskDTO) => {
+    try {
+      if(currentListId) {
+        const newTask = await createTaskOnServer(currentListId, task)
+        setTasks(tasks => [...tasks, newTask]);
+      }
+    }catch(error) {
+      console.log(error)
+      setError(true)
+    }
+  }
+
+  const deleteList = async (listId: number) => {
+    try{ 
+      deleteListOnServer(listId)
+      setLists(lists => lists.filter(list => list.id !== listId))
+
+      if (currentListId === listId) {
+        const remainingList = lists.find(list => list.id !== listId)
+
+        if (remainingList) {
+          switchList(remainingList.id)
+        } 
+        else {
+          setTasks([])
+          setCurrentListId(null)
+          setSelectedTaskId(null)
+        }
+      }
+    }catch(error){
+      console.log('Ошибка при удалении списка:', error)
+      setError(true)
+    }
+  }
+
+  const deleteTask = async (taskId: number) => {
+    try{ 
+      deleteTaskOnServer(taskId)
+      setTasks(tasks => tasks.filter(task => task.id !== taskId))
+
+      setSelectedTaskId(null)
+    }catch(error){
+      console.log('Ошибка при удалении задачи:', error)
+      setError(true)
+    }
+  }
+
+  useEffect(() => {
+    loadLists()
+    console.log(user)
   }, [user])
 
-  //Получение последнего открытого списка или дефолтного(единственного)
   useEffect(() => {
-
-    if(lists?.length == 1) {
-      InizializateTasks(lists[0].id).then((data) => {setTasks(data)})
-      setList_id(lists[0].id)
-      GetTasks(lists[0].id)
+    if(lists.length > 0) {
+      switchList(0)
     }
-
+    //Добавить подсказку пользователю создать список и убрать форму добавления задач
   }, [lists])
 
-  const contextValue = {
-    list_id,
-    lists,
-    tasks, 
-    currentTaskInfo,
-    setCurrentTask, 
-    changeCurrentTask,
-    updateList,
-    GetTasks
-  }
+  //⁡⁢⁣⁣CONTEXT⁡
+  const contextValue = useMemo(() => {
+    const state: AppState = {
+      user,
+      lists,
+      tasks,
+      selectedTaskId,
+      currentListId,
+      error,
+    };
 
-  return (
+    const actions: AppActions = {
+      setUser,
+      setSelectedTask,
+      updateTask,
+      updateList,
+      switchList,
+      loadLists,
+      createList,
+      deleteList,
+      createTask,
+      deleteTask,
+    };
+
+    return { state, actions };
+  }, [user, lists, tasks, selectedTaskId, currentListId]);
+
+  return(
     <BrowserRouter>
+      <TaskManagerContext.Provider value={contextValue}>
         <Routes>
-            <Route path='' element={<SingInForm setUser={setUser}/>} />
-            <Route path='sing-up' element={<SingUpForm />} />
-            <Route path='profile' element={
-              <>
-                <Header active="profile" username={user?.username}/>
-                <ProfilePage />
-              </>} />
-            <Route path='task-lists' element={
-              <>
-                <Header active="task-lists" username={user?.username}/>
-                <TaskInfoContext.Provider value={contextValue}>
-                  <TaskPage />
-                </TaskInfoContext.Provider>
-              </>} />
-            <Route path='task-board' element={
-              <>
-                <Header active="task-board" username={user?.username}/>
-                <div>IN DEVELOPMENT...</div>
-              </>} />
+          <Route path="" element={<SignIn />} />
+          <Route path="sign-up" element={<SignUp />} />
+          <Route path='main' element={<MainPage />} />
         </Routes>
-    </BrowserRouter>  
+      </TaskManagerContext.Provider>
+    </BrowserRouter>
   )
 }
 
