@@ -13,7 +13,11 @@ body {
     display: flex;
     font-family: var(--font-famaly-base);
     color: var(--color-light);
-    background-color: var(--color-dark-10);
+    background-color: var(--color-dark);
+}
+
+main {
+    height: calc(100vh - var(--header-hieght));
 }
 
 h1, .h1,

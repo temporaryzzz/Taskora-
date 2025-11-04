@@ -2,6 +2,7 @@ import { useContext, useEffect } from 'react'
 import '../styles/main.scss'
 import { TaskManagerContext } from '../App'
 import { useNavigate } from 'react-router'
+import { SideBar } from './side-bar'
 
 function MainPage() {
     const navigate = useNavigate()
@@ -15,9 +16,9 @@ function MainPage() {
     })
 
     return(
-        <>
-            <h1>TASKORA</h1>
-        </>
+        <main>
+            <SideBar />
+        </main>
     )
 }
 

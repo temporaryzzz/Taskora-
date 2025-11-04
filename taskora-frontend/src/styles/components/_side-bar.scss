@@ -1,0 +1,67 @@
+@use "../helpers" as *;
+
+.side-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: var(--color-light);
+    font-size: rem(16);
+    row-gap: rem(5);
+    height: 100%;
+
+    &__wrapper {
+        background-color: var(--color-dark-15);
+        padding-right: rem(10);
+        padding-block: rem(10);
+        padding-left: rem(5);
+        border-bottom-right-radius: rem(20);
+        border-top-right-radius: rem(20);
+
+        &--max-hieght {
+            flex-grow: 1;
+        }
+    }
+    
+    &__list {
+        padding-block: rem(10);
+        padding-left: rem(5);
+
+        @include mobile {
+            border-bottom-right-radius: rem(0);
+        }
+    }
+
+    &__button {
+        width: 100%;
+        column-gap: rem(15);
+        color: inherit;
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        font-weight: 500;
+        background-color: transparent;
+        justify-content: start;
+        padding-left: rem(10);
+        
+        @include hover {
+            background-color: var(--color-dark-25);
+        }
+
+        &--title {
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-right: rem(10);
+
+            &::after {
+                @include square(#{fluid(16, 14)});
+
+                content: '';
+                flex-shrink: 0;
+                background-position: center;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-image: url('../../assets/icons/plus-icon.svg');
+            }
+        }
+    }
+}

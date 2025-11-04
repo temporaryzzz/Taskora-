@@ -29,4 +29,58 @@
             background-image: url('../../assets/icons/logo.svg');
         }
     }
+
+    &--basket {
+
+        &::before {
+            --size: #{fluid(30, 24)};
+            
+            background-image: url('../../assets/icons/basket-icon.svg');
+        }
+    }
+
+    &--completed {
+
+        &::before {
+            --size: #{fluid(30, 24)};
+
+            background-image: url('../../assets/icons/completed-icon.svg');
+        }
+    }
+
+    &--stats {
+
+        &::before {
+            --size: #{fluid(30, 24)};
+
+            background-image: url('../../assets/icons/stats-icon.svg');
+        }
+    }
+
+    &--inbox {
+
+        &::before {
+            --size: #{fluid(30, 24)};
+
+            background-image: url('../../assets/icons/inbox-icon.svg');
+        }
+    }
+
+    &--profile {
+
+        &::before {
+            --size: #{fluid(30, 24)};
+
+            background-image: url('../../assets/icons/priofile-icon.svg');
+        }
+    }
+
+    &--circle-default {
+
+        &::before {
+            --size: #{fluid(30, 24)};
+
+            background-image: url('../../assets/icons/circle-default-icon.svg');
+        }
+    }
 }

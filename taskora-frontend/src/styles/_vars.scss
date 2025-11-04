@@ -8,6 +8,7 @@
   --color-dark-10: #1a1a1a;
   --color-dark-15: #262626;
   --color-dark-20: #333333;
+  --color-dark-25: #444444;
   --color-dark-40: #666666;
 
   --color-gray-50: #7e7e81;
@@ -25,4 +26,7 @@
 
   //⁡⁣⁣⁢TRANSITION⁡
   --transition-duration: 0.2s;
+
+  //⁡⁣⁣⁢SIZES⁡
+  --header-hieght: #{rem(60)};
 }
