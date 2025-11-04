@@ -5,7 +5,7 @@ import type { AppState, AppActions, User, List, Task, CreateListDTO,
               CreateTaskDTO, UpdateTaskDTO, UpdateListDTO} from './interfaces';
 import SignIn from './components/sign-in';
 import SignUp from './components/sign-up';
-import { fetchTasks, fetchLists, updateTaskOnServer, updateListOnServer, createListOnServer, createTaskOnServer, deleteListOnServer, deleteTaskOnServer } from './api';
+import { fetchTasks, fetchLists, updateTaskOnServer, updateListOnServer, createListOnServer, createTaskOnServer} from './api';
 import './styles/main.scss'
 import MainPage from './components/main-page';
 
@@ -104,41 +104,6 @@ function App() {
     }
   }
 
-  const deleteList = async (listId: number) => {
-    try{ 
-      deleteListOnServer(listId)
-      setLists(lists => lists.filter(list => list.id !== listId))
-
-      if (currentListId === listId) {
-        const remainingList = lists.find(list => list.id !== listId)
-
-        if (remainingList) {
-          switchList(remainingList.id)
-        } 
-        else {
-          setTasks([])
-          setCurrentListId(null)
-          setSelectedTaskId(null)
-        }
-      }
-    }catch(error){
-      console.log('Ошибка при удалении списка:', error)
-      setError(true)
-    }
-  }
-
-  const deleteTask = async (taskId: number) => {
-    try{ 
-      deleteTaskOnServer(taskId)
-      setTasks(tasks => tasks.filter(task => task.id !== taskId))
-
-      setSelectedTaskId(null)
-    }catch(error){
-      console.log('Ошибка при удалении задачи:', error)
-      setError(true)
-    }
-  }
-
   useEffect(() => {
     loadLists()
     console.log('user', user)
@@ -170,9 +135,7 @@ function App() {
       switchList,
       loadLists,
       createList,
-      deleteList,
       createTask,
-      deleteTask,
     };
 
     return { state, actions };

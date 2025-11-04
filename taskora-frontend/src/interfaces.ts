@@ -10,6 +10,7 @@ export interface List {
 	id: number;
 	ownerUserId: number; // id user'a
 	title: string;
+    deleted: boolean;
     icon: 'DEFAULT' | 'ARCHIVE';
     iconColor: 'DEFAULT' | 'VIOLET' | 'YELLOW' | 'BLUE' | 'RED';
 }
@@ -35,10 +36,10 @@ export interface AppState {
 }
 
 export type CreateTaskDTO = Omit<Task, 'id' | 'completed' | 'deleted'>;
-export type UpdateTaskDTO = Pick<Task, 'ownerListId' | 'title' | 'description' | 'deadline' | 'priority' | 'completed'>;
+export type UpdateTaskDTO = Omit<Task, 'id'>;
 
 export type CreateListDTO = Omit<List, 'id'>;
-export type UpdateListDTO = Pick<List, 'title' | 'icon' | 'iconColor'>;
+export type UpdateListDTO = Pick<List, 'title' | 'icon' | 'iconColor' | 'deleted'>;
 
 export interface AppActions {
   setUser: Dispatch<SetStateAction<User | undefined>>;
@@ -57,7 +58,5 @@ export interface AppActions {
   //Только созданная задача не может быть completed --> на сервере по умолачинию ставится false
   createList: (list: CreateListDTO) => Promise<void>;
   //Список удаляется навсегда, а все его задачи будут попадать в корзину
-  deleteList: (taskId: number) => Promise<void>;
   createTask: (task: CreateTaskDTO) => Promise<void>;
-  deleteTask: (listId: number) => Promise<void>;
 }
