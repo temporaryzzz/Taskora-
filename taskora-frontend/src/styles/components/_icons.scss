@@ -30,6 +30,15 @@
         }
     }
 
+    &--logo-small {
+
+        &::before {
+            --size: #{fluid(30, 24)};
+
+            background-image: url('../../assets/icons/logo.svg');
+        }
+    }
+
     &--basket {
 
         &::before {

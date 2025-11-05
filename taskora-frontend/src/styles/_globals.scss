@@ -16,8 +16,14 @@ body {
     background-color: var(--color-dark);
 }
 
+#root {
+    display: flex;
+    flex-direction: column;
+    row-gap: rem(5);
+}
+
 main {
-    height: calc(100vh - var(--header-hieght));
+    flex-grow: 1;
 }
 
 h1, .h1,
