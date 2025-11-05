@@ -11,8 +11,7 @@ export interface List {
 	ownerUserId: number; // id user'a
 	title: string;
     deleted: boolean;
-    icon: 'DEFAULT' | 'ARCHIVE';
-    iconColor: 'DEFAULT' | 'VIOLET' | 'YELLOW' | 'BLUE' | 'RED';
+    icon: 'DEFAULT' | 'DEFAULT_RED' | 'DEFAULT_BLUE' | 'DEFAULT_YELLOW' | 'DEFAULT_VIOLET' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET';
 }
 
 export interface Task {
@@ -39,7 +38,7 @@ export type CreateTaskDTO = Omit<Task, 'id' | 'completed' | 'deleted'>;
 export type UpdateTaskDTO = Omit<Task, 'id'>;
 
 export type CreateListDTO = Omit<List, 'id'>;
-export type UpdateListDTO = Pick<List, 'title' | 'icon' | 'iconColor' | 'deleted'>;
+export type UpdateListDTO = Pick<List, 'title' | 'icon' | 'deleted'>;
 
 export interface AppActions {
   setUser: Dispatch<SetStateAction<User | undefined>>;

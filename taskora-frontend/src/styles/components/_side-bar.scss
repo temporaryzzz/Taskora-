@@ -4,10 +4,19 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    width: fit-content;
     color: var(--color-light);
     font-size: rem(16);
     row-gap: rem(5);
     height: 100%;
+    transition-duration: var(--transition-duration);
+
+    @include mobile {
+        @include hide;
+
+        translate: -100%;
+        min-width: 35%;
+    }
 
     &__wrapper {
         background-color: var(--color-dark-15);
@@ -23,8 +32,11 @@
     }
     
     &__list {
+        display: flex;
+        flex-direction: column;
         padding-block: rem(10);
         padding-left: rem(5);
+        row-gap: rem(2);
 
         @include mobile {
             border-bottom-right-radius: rem(0);
@@ -41,6 +53,7 @@
         background-color: transparent;
         justify-content: start;
         padding-left: rem(10);
+        padding-block: rem(5);
         
         @include hover {
             background-color: var(--color-dark-25);
@@ -62,6 +75,10 @@
                 background-repeat: no-repeat;
                 background-image: url('../../assets/icons/plus-icon.svg');
             }
+        }
+
+        &--active {
+            background-color: var(--color-dark-25);
         }
     }
 }

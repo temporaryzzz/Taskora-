@@ -13,7 +13,7 @@ export const TaskManagerContext = createContext<{state: AppState; actions: AppAc
 
 function App() {
   const [user, setUser] = useState<User | undefined>()
-  const [lists, setLists] = useState<Array<List>>([])
+  const [lists, setLists] = useState<Array<List>>([{title: 'Basket', id: 0, ownerUserId: 0, deleted: false, icon: "BASKET"}])
   const [tasks, setTasks] = useState<Array<Task>>([])
   const [currentListId, setCurrentListId] = useState<number | null>(null)
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
