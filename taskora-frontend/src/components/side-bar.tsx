@@ -14,7 +14,7 @@ export function SideBar() {
             <div className="side-bar__wrapper">
                 <ul className="side-bar__list" id="profile">
                     <li className="side-bar__item">
-                        <button className="side-bar__button side-bar__button--active button icon icon--profile">Profile</button>
+                        <button className="side-bar__button button icon icon--profile">Profile</button>
                     </li>
                     <li className="side-bar__item">
                         <button className="side-bar__button button icon icon--stats">Statistics</button>
