@@ -10,7 +10,7 @@ export interface List {
 	id: number;
 	ownerUserId: number; // id user'a
 	title: string;
-    sections: string[] | null;
+    sections: string[] | null;//
     deleted: boolean;
     icon: 'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET';
     color: 'LIGHT' | 'RED' | 'BLUE' | 'YELLOW' | 'VIOLET' | 'GREEN' | "NONE";

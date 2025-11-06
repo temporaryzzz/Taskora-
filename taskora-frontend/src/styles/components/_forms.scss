@@ -65,3 +65,226 @@
         }
     }
 }
+
+.edit-form {
+    @include abs-center;
+
+    background-color: var(--color-dark-15);
+    display: flex;
+    flex-direction: column;
+    padding: rem(25) rem(20);
+    border-radius: rem(25);
+    row-gap: fluid(30, 20);
+
+    &__input {
+        background: transparent;
+        width: 100%;
+        color: var(--color-light);
+        border: rem(2) solid var(--color-dark-40);
+        border-radius: rem(10);
+        padding: rem(5) rem(10);
+
+        &:focus-visible {
+            border: rem(2) solid var(--main-accent); 
+            outline: none;
+        }
+    }
+
+    &__select {
+        display: flex;
+        column-gap: rem(20);
+
+        &-title {
+            width: rem(120);
+            cursor: default;
+        }
+
+        &-items {
+            display: flex;
+            column-gap: rem(10);
+        }
+
+        &-item {
+            --color: var(--color-muted-light);
+
+            position: relative;
+
+            [type="radio"] {
+                z-index: -1;
+                opacity: 0;
+            }
+
+            [type="radio"] + label{
+
+                &::before {
+                    --size: #{rem(20)};
+
+                    @include square(var(--size));
+
+                    display: flex;
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    border-radius: 100%;
+                    background-color: var(--color);
+                }
+            }
+
+            [type="radio"]:checked + label{
+
+                &::before {
+                    outline: rem(2) solid var(--color);
+                    outline-offset: rem(3);
+                }
+            }
+
+            &--color-none {
+                --color: var(--color-dark-40);
+
+                [type="radio"] + label{
+
+                    &::before {
+                        --size: #{rem(20)};
+
+                        @include square(var(--size));
+
+                        flex-shrink: 0;
+                        background-position: center;
+                        background-size: contain;
+                        background-repeat: no-repeat;
+                        background-image: url('../../assets/icons/none-icon.svg');
+                        background-color: transparent;
+                    }
+                }
+            }
+
+            &--color-violet {
+                --color: var(--main-accent);
+            }
+
+            &--color-blue {
+                --color: var(--color-blue);
+            }
+
+            &--color-green {
+                --color: var(--color-green);
+            }
+
+            &--color-yellow {
+                --color: var(--color-yellow);
+            }
+
+            &--color-red {
+                --color: var(--color-red);
+            }
+
+            &--icon-default {
+                --color: var(--main-accent);
+
+                [type="radio"] + label{
+
+                    &::before {
+                        --size: #{rem(20)};
+
+                        @include square(var(--size));
+
+                        flex-shrink: 0;
+                        background-position: center;
+                        background-size: contain;
+                        background-repeat: no-repeat;
+                        background-image: url('../../assets/icons/circle-default-icon.svg');
+                        background-color: transparent;
+                    }
+                }
+            }
+
+            &--icon-lines {
+                --color: var(--main-accent);
+
+                [type="radio"] + label{
+                    &::before {
+                        --size: #{rem(20)};
+
+                        @include square(var(--size));
+
+                        flex-shrink: 0;
+                        border-radius: rem(2);
+                        background-position: center;
+                        background-size: contain;
+                        background-repeat: no-repeat;
+                        background-image: url('../../assets/icons/list-line-icon.svg');
+                        background-color: transparent;
+                    }
+                }
+            }
+
+            &--icon-sheet {
+                --color: var(--main-accent);
+
+                [type="radio"] + label{
+                    &::before {
+                        --size: #{rem(20)};
+
+                        @include square(var(--size));
+
+                        flex-shrink: 0;
+                        border-radius: rem(2);
+                        background-position: center;
+                        background-size: contain;
+                        background-repeat: no-repeat;
+                        background-image: url('../../assets/icons/list-sheet-icon.svg');
+                        background-color: transparent;
+                    }
+                }
+            }
+
+            &--icon-folder {
+                --color: var(--main-accent);
+
+                [type="radio"] + label{
+                    &::before {
+                        --size: #{rem(20)};
+
+                        @include square(var(--size));
+
+                        flex-shrink: 0;
+                        border-radius: rem(2);
+                        background-position: center;
+                        background-size: contain;
+                        background-repeat: no-repeat;
+                        background-image: url('../../assets/icons/list-folder-icon.svg');
+                        background-color: transparent;
+                    }
+                }
+            }
+        }
+    }
+
+    &__button {
+        width: rem(110);
+        height: rem(30);
+        border-radius: rem(10);
+        font-size: rem(16);
+        padding-block: rem(4);
+        font-weight: 400;
+        align-items: center;
+
+        &--transparent {
+            color: var(--color-dark-40);
+            background-color: transparent;
+            border: rem(1) solid var(--color-dark-40);
+
+            @include hover {
+                background-color: var(--color-dark-40);
+                color: var(--color-muted-light);
+            }
+        }
+    }
+
+    &__buttons-wrapper {
+        display: flex;
+        column-gap: rem(10);
+    }
+}

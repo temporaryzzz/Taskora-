@@ -1,9 +1,10 @@
-import { useContext, useEffect } from 'react'
+//import { useContext, useEffect } from 'react'
 import '../styles/main.scss'
-import { TaskManagerContext } from '../App'
-import { useNavigate } from 'react-router'
+//import { TaskManagerContext } from '../App'
+//import { useNavigate } from 'react-router'
 import { SideBar } from './side-bar'
 import { Header } from './header'
+import { CreateListForm } from './create-list-form'
 
 function MainPage() {
 /**
@@ -22,6 +23,7 @@ function MainPage() {
         <Header />
             <main>
                 <SideBar />
+                <CreateListForm />
             </main>
         </>
     )
