@@ -59,6 +59,13 @@
             background-color: var(--color-dark-25);
         }
 
+        &-title {
+            max-width: rem(85);
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
         &--title {
             display: inline-flex;
             align-items: center;

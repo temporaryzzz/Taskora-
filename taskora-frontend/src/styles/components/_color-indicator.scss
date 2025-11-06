@@ -1,0 +1,34 @@
+@use "../helpers" as *;
+
+.color-indicator {
+    --size: #{rem(8)};
+
+    @include square(var(--size));
+
+    position: absolute;
+    right: rem(12);
+    border-radius: 100%;
+
+    @include laptop {
+        --size: #{rem(6)};            
+    }
+
+    &--red {
+        background-color: var(--color-red);
+    }
+    &--yellow {
+        background-color: var(--color-yellow);
+    }
+    &--blue {
+        background-color: var(--color-blue);
+    }
+    &--violet {
+        background-color: var(--main-accent);
+    }
+    &--green {
+        background-color: var(--color-green);
+    }
+    &--light {
+        background-color: var(--color-light);
+    }
+}

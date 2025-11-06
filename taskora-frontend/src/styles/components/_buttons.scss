@@ -1,6 +1,7 @@
 @use "../helpers" as *;
 
 .button {
+    position: relative;
     display: inline-flex;
     justify-content: center;
     padding: rem(8) rem(48);

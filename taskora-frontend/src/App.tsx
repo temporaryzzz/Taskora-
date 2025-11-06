@@ -13,7 +13,7 @@ export const TaskManagerContext = createContext<{state: AppState; actions: AppAc
 
 function App() {
   const [user, setUser] = useState<User | undefined>()
-  const [lists, setLists] = useState<Array<List>>([{title: 'Basket', id: 0, ownerUserId: 0, deleted: false, icon: "BASKET"}])
+  const [lists, setLists] = useState<Array<List>>([{title: 'Completed', id: 0, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "COMPLETED", color: "NONE"},{title: 'Basket', id: 1, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "BASKET", color: "NONE"},{title: 'All', id: 2, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "DEFAULT", color: "RED"},])
   const [tasks, setTasks] = useState<Array<Task>>([])
   const [currentListId, setCurrentListId] = useState<number | null>(null)
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
@@ -111,9 +111,10 @@ function App() {
 
   useEffect(() => {
     if(lists.length > 0) {
-      switchList(0)
+      //При первом входе открывать 2й список - All
+      switchList(2)
     }
-    //Добавить подсказку пользователю создать список и убрать форму добавления задач
+    //Усли в куках есть последний открытый список - то открывать его
   }, [lists])
 
   //⁡⁢⁣⁣CONTEXT⁡

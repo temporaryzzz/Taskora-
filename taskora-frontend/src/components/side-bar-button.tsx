@@ -9,18 +9,27 @@ function SideBarButton(props: SideBarButtonProps) {
 	const taskManagerContext = useContext(TaskManagerContext);
 	const activeRef = useRef<HTMLButtonElement>(null);
     const [icon, setIcon] = useState<string>()
+    const [color, setColor] = useState<string>()
 
-    const stateClasses = {
+    const stateClassesIcon = {
         DEFAULT: "icon--circle-default",
-        DEFAULT_RED: "icon--circle-red",
-        DEFAULT_BLUE: "icon--circle-blue",
-        DEFAULT_VIOLET: "icon--circle-violet",
-        DEFAULT_YELLOW: "icon--circle-yellow",
+        LINES: "icon--lines",
+        SHEET: "icon--sheet",
         INBOX: "icon--inbox",
         TODAY: "icon--today",
         ALL: "icon--all",
         COMPLETED: "icon--completed",
         BASKET: "icon--basket",
+    }
+
+    const stateClassesColor = {
+        LIGHT: "color-indicator--light",
+        RED: "color-indicator--red",
+        VIOLET: "color-indicator--violet",
+        GREEN: "color-indicator--green",
+        BLUE: "color-indicator--blue",
+        YELLOW: "color-indicator--yellow",
+        NONE: "",
     }
 
     if(taskManagerContext == undefined) {
@@ -30,34 +39,54 @@ function SideBarButton(props: SideBarButtonProps) {
     const InitializationButtonIcon = () => {
         switch (props.list.icon) {
             case 'DEFAULT':
-                setIcon(stateClasses.DEFAULT)
+                setIcon(stateClassesIcon.DEFAULT)
                 break;
-            case 'DEFAULT_RED':
-                setIcon(stateClasses.DEFAULT_RED)
+            case 'LINES':
+                setIcon(stateClassesIcon.LINES)
                 break;
-            case 'DEFAULT_BLUE':
-                setIcon(stateClasses.DEFAULT_BLUE)
-                break;
-            case 'DEFAULT_VIOLET':
-                setIcon(stateClasses.DEFAULT_VIOLET)
-                break;
-            case 'DEFAULT_YELLOW':
-                setIcon(stateClasses.DEFAULT_YELLOW)
+            case 'SHEET':
+                setIcon(stateClassesIcon.SHEET)
                 break;
             case 'INBOX':
-                setIcon(stateClasses.INBOX)
+                setIcon(stateClassesIcon.INBOX)
                 break;
             case 'TODAY':
-                setIcon(stateClasses.TODAY)
+                setIcon(stateClassesIcon.TODAY)
                 break;
             case 'ALL':
-                setIcon(stateClasses.ALL)
+                setIcon(stateClassesIcon.ALL)
                 break;
             case 'BASKET':
-                setIcon(stateClasses.BASKET)
+                setIcon(stateClassesIcon.BASKET)
                 break;
             case 'COMPLETED':
-                setIcon(stateClasses.COMPLETED)
+                setIcon(stateClassesIcon.COMPLETED)
+                break;
+        }
+    }
+
+    const InitializationColorIndicator = () => {
+        switch (props.list.color) {
+            case 'LIGHT':
+                setColor(stateClassesColor.LIGHT)
+                break;
+            case 'RED':
+                setColor(stateClassesColor.RED)
+                break;
+            case 'VIOLET':
+                setColor(stateClassesColor.VIOLET)
+                break;
+            case 'GREEN':
+                setColor(stateClassesColor.GREEN)
+                break;
+            case 'BLUE':
+                setColor(stateClassesColor.BLUE)
+                break;
+            case 'YELLOW':
+                setColor(stateClassesColor.YELLOW)
+                break;
+            case 'NONE':
+                setColor(stateClassesColor.NONE)
                 break;
         }
     }
@@ -82,16 +111,39 @@ function SideBarButton(props: SideBarButtonProps) {
         InitializationButtonIcon()
     }, [props.list.icon])
 
-	return (
-        <li 
-            className="side-bar__item" 
-            onClick={() => {
-                taskManagerContext.actions.switchList(props.list.id)
-                setActiveButton(true)
-                }}>
-    <button className={`side-bar__button button icon ${icon}`} ref={activeRef}>{props.list.title}</button>
-        </li>
-	);
+    useEffect(() => {
+        InitializationColorIndicator()
+    }, [props.list.color])
+
+    if(props.list.title == 'Basket' || props.list.title == 'Completed') {
+        return (
+            <li 
+                className="side-bar__item" 
+                onClick={() => {
+                    taskManagerContext.actions.switchList(props.list.id)
+                    setActiveButton(true)
+                    }}>
+                <button className={`side-bar__button button icon ${icon}`} ref={activeRef}>
+                    {props.list.title}
+                </button>
+            </li>
+        );
+    }
+    else {
+        return (
+            <li 
+                className="side-bar__item" 
+                onClick={() => {
+                    taskManagerContext.actions.switchList(props.list.id)
+                    setActiveButton(true)
+                    }}>
+                <button className={`side-bar__button button icon ${icon}`} ref={activeRef}>
+                    <p className="side-bar__button-title">{props.list.title}</p>
+                    <span className={`color-indicator ${color}`}></span>
+                </button>
+            </li>
+        );
+    }
 }
 
 export default SideBarButton;
