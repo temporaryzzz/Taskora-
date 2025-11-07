@@ -1,9 +1,11 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { TaskManagerContext } from "../App";
+import { CreateListForm } from './create-list-form'
 import SideBarButton from "./side-bar-button";
 
 export function SideBar() {
     const taskManagerContext = useContext(TaskManagerContext)
+    const [activeCreateForm, setActiveCreateForm] = useState<boolean>(false)
 
     if(taskManagerContext == undefined) {
         return
@@ -22,7 +24,8 @@ export function SideBar() {
                 </ul>
             </div>
             <div className="side-bar__wrapper side-bar__wrapper--max-hieght">
-                <button className="side-bar__button  side-bar__button--title button">Task-lists</button>
+                <button className="side-bar__button  side-bar__button--title button" onClick={() => setActiveCreateForm(true)}>Task-lists</button>
+                <CreateListForm activeCreateForm={activeCreateForm} setActiveCreateForm={setActiveCreateForm}/>
                 <ul className="side-bar__list" id="lists">
                     {taskManagerContext.state.lists.map((list) => {
                         if(list.title !== 'Basket' && list.title !== 'Completed') {

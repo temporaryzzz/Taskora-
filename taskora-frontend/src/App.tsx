@@ -12,8 +12,8 @@ import MainPage from './components/main-page';
 export const TaskManagerContext = createContext<{state: AppState; actions: AppActions} | undefined>(undefined);
 
 function App() {
-  const [user, setUser] = useState<User | undefined>()
-  const [lists, setLists] = useState<Array<List>>([{title: 'Completed', id: 0, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "COMPLETED", color: "NONE"},{title: 'Basket', id: 1, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "BASKET", color: "NONE"},{title: 'All', id: 2, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "DEFAULT", color: "RED"},])
+  const [user, setUser] = useState<User | undefined>({username: 'admin', id: 0, email: 'admin@bk.ru'})
+  const [lists, setLists] = useState<Array<List>>([{title: 'Completed', id: 0, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "COMPLETED", color: "NONE"},{title: 'Basket', id: 1, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "BASKET", color: "NONE"},{title: 'All', id: 2, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "DEFAULT", color: "YELLOW"},])
   const [tasks, setTasks] = useState<Array<Task>>([])
   const [currentListId, setCurrentListId] = useState<number | null>(null)
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)

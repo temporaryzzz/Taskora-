@@ -12,8 +12,8 @@ export interface List {
 	title: string;
     sections: string[] | null;//
     deleted: boolean;
-    icon: 'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET';
-    color: 'LIGHT' | 'RED' | 'BLUE' | 'YELLOW' | 'VIOLET' | 'GREEN' | "NONE";
+    icon: 'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET' | 'FOLDER';
+    color: 'LIGHT' | 'RED' | 'BLUE' | 'YELLOW' | 'VIOLET' | 'GREEN' | 'NONE';
 }
 
 export interface Task {
@@ -40,7 +40,7 @@ export interface AppState {
 export type CreateTaskDTO = Omit<Task, 'id' | 'completed' | 'deleted'>;
 export type UpdateTaskDTO = Omit<Task, 'id'>;
 
-export type CreateListDTO = Omit<List, 'id'>;
+export type CreateListDTO = Omit<List, 'id' | 'deleted'>;
 export type UpdateListDTO = Pick<List, 'title' | 'icon' | 'deleted' | 'color' | 'sections'>;
 
 export interface AppActions {
