@@ -4,9 +4,7 @@
     --size: #{rem(8)};
 
     @include square(var(--size));
-
-    position: absolute;
-    right: rem(12);
+    
     border-radius: 100%;
 
     @include laptop {

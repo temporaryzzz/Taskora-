@@ -1,0 +1,18 @@
+@use "../helpers" as *;
+
+.three-dots-menu {
+    --size: #{rem(18)};
+
+    @include square(var(--size));
+
+    display: none;
+    flex-shrink: 0;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url('../../assets/icons/dots-menu-icon.svg');
+
+    @include laptop {
+        --size: #{rem(16)};            
+    }
+}

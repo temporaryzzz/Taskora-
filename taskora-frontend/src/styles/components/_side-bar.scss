@@ -57,6 +57,19 @@
         
         @include hover {
             background-color: var(--color-dark-25);
+
+            .three-dots-menu {
+                display: inline;
+            }
+        }
+
+        &-indications {
+            position: absolute;
+            right: rem(10);
+            display: inline-flex;
+            align-items: center;
+            column-gap: rem(10);
+            justify-content: end;
         }
 
         &-title {

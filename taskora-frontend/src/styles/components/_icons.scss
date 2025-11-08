@@ -33,7 +33,7 @@
     &--logo-small {
 
         &::before {
-            --size: #{fluid(30, 24)};
+            --size: #{fluid(34, 28)};
 
             background-image: url('../../assets/icons/logo.svg');
         }
@@ -42,7 +42,7 @@
     &--basket {
 
         &::before {
-            --size: #{fluid(30, 24)};
+            --size: #{fluid(26, 22)};
             
             background-image: url('../../assets/icons/basket-icon.svg');
         }
@@ -51,7 +51,7 @@
     &--completed {
 
         &::before {
-            --size: #{fluid(30, 24)};
+            --size: #{fluid(26, 22)};
 
             background-image: url('../../assets/icons/completed-icon.svg');
         }
@@ -60,7 +60,7 @@
     &--stats {
 
         &::before {
-            --size: #{fluid(30, 24)};
+            --size: #{fluid(26, 22)};
 
             background-image: url('../../assets/icons/stats-icon.svg');
         }
@@ -69,7 +69,7 @@
     &--inbox {
 
         &::before {
-            --size: #{fluid(30, 24)};
+            --size: #{fluid(26, 22)};
 
             background-image: url('../../assets/icons/inbox-icon.svg');
         }
@@ -78,7 +78,7 @@
     &--profile {
 
         &::before {
-            --size: #{fluid(30, 24)};
+            --size: #{fluid(26, 22)};
 
             background-image: url('../../assets/icons/priofile-icon.svg');
         }
@@ -87,9 +87,36 @@
     &--circle-default {
 
         &::before {
-            --size: #{fluid(30, 24)};
+            --size: #{fluid(24, 20)};
 
             background-image: url('../../assets/icons/circle-default-icon.svg');
+
+        }
+    }
+
+    &--lines {
+        &::before {
+            --size: #{fluid(24, 20)};
+
+            background-image: url('../../assets/icons/list-line-icon.svg');
+
+        }
+    }
+
+    &--sheet {
+        &::before {
+            --size: #{fluid(24, 20)};
+
+            background-image: url('../../assets/icons/list-sheet-icon.svg');
+
+        }
+    }
+
+    &--folder {
+        &::before {
+            --size: #{fluid(24, 20)};
+
+            background-image: url('../../assets/icons/list-folder-icon.svg');
 
         }
     }

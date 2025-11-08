@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import type { List } from "../interfaces";
 import { TaskManagerContext } from "../App";
+import { EditListForm } from "./edit-list-form";
 
 
 type SideBarButtonProps = { list: List };
@@ -10,11 +11,13 @@ function SideBarButton(props: SideBarButtonProps) {
 	const activeRef = useRef<HTMLButtonElement>(null);
     const [icon, setIcon] = useState<string>()
     const [color, setColor] = useState<string>()
+    const [activeEditForm, setActiveEditForm] = useState<boolean>(false)
 
     const stateClassesIcon = {
         DEFAULT: "icon--circle-default",
         LINES: "icon--lines",
         SHEET: "icon--sheet",
+        FOLDER: "icon--folder",
         INBOX: "icon--inbox",
         TODAY: "icon--today",
         ALL: "icon--all",
@@ -46,6 +49,9 @@ function SideBarButton(props: SideBarButtonProps) {
                 break;
             case 'SHEET':
                 setIcon(stateClassesIcon.SHEET)
+                break;
+            case 'FOLDER':
+                setIcon(stateClassesIcon.FOLDER)
                 break;
             case 'INBOX':
                 setIcon(stateClassesIcon.INBOX)
@@ -132,15 +138,19 @@ function SideBarButton(props: SideBarButtonProps) {
     else {
         return (
             <li 
-                className="side-bar__item" 
-                onClick={() => {
-                    taskManagerContext.actions.switchList(props.list.id)
-                    setActiveButton(true)
+                className="side-bar__item">
+                <button className={`side-bar__button button icon ${icon}`} ref={activeRef}
+                    onClick={() => {
+                        taskManagerContext.actions.switchList(props.list.id)
+                        setActiveButton(true)
                     }}>
-                <button className={`side-bar__button button icon ${icon}`} ref={activeRef}>
                     <p className="side-bar__button-title">{props.list.title}</p>
-                    <span className={`color-indicator ${color}`}></span>
+                    <div className="side-bar__button-indications">
+                        <span className={`color-indicator ${color}`}></span>
+                        <span className="three-dots-menu" onClick={() => {setActiveEditForm(true)}}></span>
+                    </div>
                 </button>
+                <EditListForm list={props.list} activeEditForm={activeEditForm} setActiveEditForm={setActiveEditForm}/>
             </li>
         );
     }

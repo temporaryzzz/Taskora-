@@ -29,7 +29,7 @@ export function SideBar() {
                 <ul className="side-bar__list" id="lists">
                     {taskManagerContext.state.lists.map((list) => {
                         if(list.title !== 'Basket' && list.title !== 'Completed') {
-                            return (<SideBarButton list={list} />)
+                            return (<SideBarButton list={list} key={list.id}/>)
                         }
                     })}
                 </ul>
@@ -38,7 +38,7 @@ export function SideBar() {
                 <ul className="side-bar__list" id="basket">
                     {taskManagerContext.state.lists.map((list) => {
                         if(list.title == 'Basket' || list.title == 'Completed') {
-                            return (<SideBarButton list={list} />)
+                            return (<SideBarButton list={list} key={list.id}/>)
                         }
                     })}
                 </ul>
