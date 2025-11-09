@@ -70,7 +70,7 @@ export function CreateListForm(props: CreateListFormnProps) {
 
     return(
         <div className="not-clickable" ref={createFormRef}>
-            <div className="edit-form">
+            <div className="edit-form pop-up-window">
                 <input type="text" className="edit-form__input" placeholder="title" required onChange={(event) => {setTitle(event.target.value)}}/>
                 <div className="edit-form__select">
                     <label className="edit-form__select-title" aria-label="List color">List color</label>
