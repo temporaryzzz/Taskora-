@@ -71,7 +71,6 @@ export function EditListForm(props: EditListFormnProps) {
             colorRadioButtons.forEach(radioButton => {
                 const inputElement = radioButton as HTMLInputElement
                 if(inputElement.value === color) {
-                    console.log(inputElement.value, color)
                     inputElement.checked = true
                 }
             })

@@ -1,3 +1,4 @@
+import { getCookie } from "./cookies";
 import type { UpdateTaskDTO, UpdateListDTO, Task, List, CreateListDTO, CreateTaskDTO } from "./interfaces";
 
 export const SERVER_ADDRES = 'http://localhost:8080/api';
@@ -13,6 +14,7 @@ const fetchTasks = async (listId: number): Promise<Array<Task>> => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'Authorization' : `Bearer ${getCookie('token')}`,
     }
   });
 
@@ -30,6 +32,7 @@ const fetchLists = async (userId: number): Promise<Array<List>> => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'Authorization' : `Bearer ${getCookie('token')}`,
     }
   });
 
@@ -48,6 +51,7 @@ const createListOnServer = async (userId: number, create: CreateListDTO): Promis
     headers: {
       'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
       'Content-Type': 'application/json',
+      'Authorization' : `Bearer ${getCookie('token')}`,
     },
     body: JSON.stringify({...create, ownerUserId: userId})
   });
@@ -67,6 +71,7 @@ const createTaskOnServer = async (create: CreateTaskDTO): Promise<Task> => {
     headers: {  
       'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
       'Content-Type': 'application/json',
+      'Authorization' : `Bearer ${getCookie('token')}`,
     },
     body: JSON.stringify(create)
   });
@@ -83,7 +88,7 @@ const createTaskOnServer = async (create: CreateTaskDTO): Promise<Task> => {
 const updateTaskOnServer = async (taskId: number, updates: UpdateTaskDTO): Promise<void> => {
   const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {
     method: 'PUT',
-    headers: {'Content-Type': 'application/json'},
+    headers: {'Content-Type': 'application/json', 'Authorization' : `Bearer ${getCookie('token')}`,},
     body: JSON.stringify(updates)
   });
 
@@ -95,7 +100,7 @@ const updateTaskOnServer = async (taskId: number, updates: UpdateTaskDTO): Promi
 const updateListOnServer = async (listId: number, updates: UpdateListDTO): Promise<void> => {
   const response = await fetch(`${SERVER_ADDRES__LISTS}${listId}`, {
     method: 'PUT',
-    headers: {'Content-Type': 'application/json'},
+    headers: {'Content-Type': 'application/json', 'Authorization' : `Bearer ${getCookie('token')}`,},
     body: JSON.stringify(updates)
   });
 

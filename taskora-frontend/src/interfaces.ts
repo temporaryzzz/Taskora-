@@ -10,7 +10,7 @@ export interface List {
 	id: number;
 	ownerUserId: number; // id user'a
 	title: string;
-    sections: string[] | null;//
+    sections: string[] | null;
     deleted: boolean;
     icon: 'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET' | 'FOLDER';
     color: 'LIGHT' | 'RED' | 'BLUE' | 'YELLOW' | 'VIOLET' | 'GREEN' | 'NONE';
@@ -18,7 +18,8 @@ export interface List {
 
 export interface Task {
 	id: number;
-	ownerListId: number; //id list'a
+	ownerListId: number;
+	ownerUserId: number;
 	title: string;
 	description: string;
     section: string;
@@ -37,7 +38,7 @@ export interface AppState {
     error: boolean;
 }
 
-export type CreateTaskDTO = Omit<Task, 'id' | 'completed' | 'deleted'>;
+export type CreateTaskDTO = Omit<Task, 'id' | 'completed' | 'deleted' | 'ownerUserId'>;
 export type UpdateTaskDTO = Omit<Task, 'id'>;
 
 export type CreateListDTO = Omit<List, 'id' | 'deleted'>;

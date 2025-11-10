@@ -4,12 +4,17 @@ import { SERVER_ADDRES, FRONTEND_ADDRES } from "../api";
 import { TaskManagerContext } from "../App";
 import type { User } from "../interfaces";
 import '../styles/main.scss'
+import { getCookie, setCookie } from "../cookies";
 
 function SignIn() {
     const navigate = useNavigate();
 	const usernameInput = useRef<HTMLInputElement>(null);
 	const passwordInput = useRef<HTMLInputElement>(null);
     const taskManagerContext = useContext(TaskManagerContext)
+
+    if(!!(getCookie('token'))) {
+        navigate('main', {replace: true})
+    }
 
     let setUser: Dispatch<SetStateAction<User | undefined>>
     if(taskManagerContext)
@@ -35,48 +40,26 @@ function SignIn() {
 		}
 
         try {
-			if (/@/.test(username)) {
-				fetch(`${SERVER_ADDRES}/auth/signin`, {
-					method: 'POST',
-					headers: { 
-						'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
-						'Content-Type': 'application/json'
-					 },
-					body: JSON.stringify({ email: username, password: password }),
+			fetch(`${SERVER_ADDRES}/auth/signin`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`, },
+				body: JSON.stringify({ дщпшт: username, password: password }),
+			})
+				.then((response) => {
+					if (!response.ok) {
+						throw new Error(`Ошибка! Статус: ${response.clone().status}`);
+					}
+					return response.json();
 				})
-					.then((response) => {
-						if (!response.ok) {
-							throw new Error(`Ошибка! Статус: ${response.clone().status}`);
-						}
-						return response.json();
-					})
-					.then((data) => {
-						setUser({ username: data.username, id: data.id, email: data.email });
-						navigate('main', { replace: false });
-					})
-					.catch((error) => {
-						console.log(error);
-					});
-			} else {
-				fetch(`${SERVER_ADDRES}/auth/signin`, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ username: username, password: password }),
+				.then((data) => {
+					setUser({ username: data.username, id: data.id, email: data.email });
+					setCookie("token", data.Authorization)
+					setCookie("userId", data.id)
+					navigate('main', { replace: true });
 				})
-					.then((response) => {
-						if (!response.ok) {
-							throw new Error(`Ошибка! Статус: ${response.clone().status}`);
-						}
-						return response.json();
-					})
-					.then((data) => {
-						setUser({ username: data.username, id: data.id, email: data.email });
-						navigate('main', { replace: false });
-					})
-					.catch((error) => {
-						console.log(error);
-					});
-			}
+				.catch((error) => {
+					console.log(error);
+				});
 		} catch (error) {
 			console.error('Ошибка:', error);
 		}
@@ -121,9 +104,9 @@ function SignIn() {
                     <button className="button button--inverse" type="submit">
                         Sign-in
                     </button>
-                    <a href="/sign-up" className="button">
+                    <button className="button" onClick={() => navigate('sign-up')}>
                         Registration
-                    </a>
+                    </button>
                 </div>
             </form>
         </div>
