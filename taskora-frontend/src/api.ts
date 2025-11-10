@@ -8,6 +8,16 @@ const SERVER_ADDRES__LISTS = 'http://localhost:8080/api/tasklists/';
 const SERVER_ADDRES__LISTS_NO_SLASH = 'http://localhost:8080/api/tasklists';
 export const FRONTEND_ADDRES = 'http://localhost:3000';
 
+export class CustomError extends Error {
+  statusCode: number;
+
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.name = "CustomError"; 
+    this.statusCode = statusCode;
+  }
+}
+
 
 const fetchTasks = async (listId: number): Promise<Array<Task>> => {
   const response = await fetch(`${SERVER_ADDRES__TASKS}${listId}`, {
@@ -19,7 +29,7 @@ const fetchTasks = async (listId: number): Promise<Array<Task>> => {
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch tasks for list ${listId}: ${response.status}`);
+    throw new CustomError(`Failed to fetch tasks for list ${listId}: ${response.status}`, response.status);
   }
 
   const tasks: Array<Task> = await response.json();
@@ -37,7 +47,7 @@ const fetchLists = async (userId: number): Promise<Array<List>> => {
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch lists for user: ${userId}: ${response.status}`);
+    throw new CustomError(`Failed to fetch lists for user: ${userId}: ${response.status}`, response.status);
   }
 
   const lists: Array<List> = await response.json();
@@ -57,7 +67,7 @@ const createListOnServer = async (userId: number, create: CreateListDTO): Promis
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to create list: ${response.status}`);
+    throw new CustomError(`Failed to create list: ${response.status}`, response.status);
   }
 
   const list: List = await response.json();
@@ -77,7 +87,7 @@ const createTaskOnServer = async (create: CreateTaskDTO): Promise<Task> => {
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to create task: ${response.status}`);
+    throw new CustomError(`Failed to create task: ${response.status}`, response.status);
   }
 
   const task: Task = await response.json();
@@ -93,7 +103,7 @@ const updateTaskOnServer = async (taskId: number, updates: UpdateTaskDTO): Promi
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to update task: ${response.status} ${response.statusText}`);
+    throw new CustomError(`Failed to update task: ${response.status} ${response.statusText}`, response.status);
   }
 }
 
@@ -105,7 +115,7 @@ const updateListOnServer = async (listId: number, updates: UpdateListDTO): Promi
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to update task: ${response.status} ${response.statusText}`);
+    throw new CustomError(`Failed to update task: ${response.status} ${response.statusText}`, response.status);
   }
 }
 

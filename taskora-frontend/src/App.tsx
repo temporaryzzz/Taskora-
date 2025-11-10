@@ -5,7 +5,7 @@ import type { AppState, AppActions, User, List, Task, CreateListDTO,
               CreateTaskDTO, UpdateTaskDTO, UpdateListDTO} from './interfaces';
 import SignIn from './components/sign-in';
 import SignUp from './components/sign-up';
-import { fetchTasks, fetchLists, updateTaskOnServer, updateListOnServer, createListOnServer, createTaskOnServer} from './api';
+import { fetchTasks, fetchLists, updateTaskOnServer, updateListOnServer, createListOnServer, createTaskOnServer, CustomError} from './api';
 import './styles/main.scss'
 import MainPage from './components/main-page';
 import { useAuthWrapper } from './hooks';
@@ -37,8 +37,16 @@ function App() {
       if(selectedTaskId)
         updateTaskOnServer(selectedTaskId, updates)
     }catch(error) {
-      console.log(error)
-      setError(true)
+      if (error instanceof CustomError) {
+        console.log(error.message)
+        if(error.statusCode == 401) {
+          navigate('', {replace: true})
+        }
+        else {
+          console.error(error.message);
+          setError(true)
+        }
+      }
     }
   })
 
@@ -52,8 +60,16 @@ function App() {
     try {
       updateListOnServer(listId, updates)
     }catch(error) {
-      console.log(error)
-      setError(true)
+      if (error instanceof CustomError) {
+        console.log(error.message)
+        if(error.statusCode == 401) {
+          navigate('', {replace: true})
+        }
+        else {
+          console.error(error.message);
+          setError(true)
+        }
+      }
     }
   })
 
@@ -65,8 +81,16 @@ function App() {
       const loadedTasks = await fetchTasks(listId)
       setTasks(loadedTasks)
     }catch(error) {
-      console.log(error)
-      setError(true)
+      if (error instanceof CustomError) {
+        console.log(error.message)
+        if(error.statusCode == 401) {
+          navigate('', {replace: true})
+        }
+        else {
+          console.error(error.message);
+          setError(true)
+        }
+      }
     }
   })
 
@@ -77,8 +101,16 @@ function App() {
         setLists(loadedLists)
       }
     }catch(error) {
-      console.log(error)
-      setError(true)
+      if (error instanceof CustomError) {
+        console.log(error.message)
+        if(error.statusCode == 401) {
+          navigate('', {replace: true})
+        }
+        else {
+          console.error(error.message);
+          setError(true)
+        }
+      }
     }
   })
 
@@ -89,8 +121,16 @@ function App() {
         setLists(lists => [...lists, newList]);
       }
     }catch(error) {
-      console.log(error)
-      setError(true)
+      if (error instanceof CustomError) {
+        console.log(error.message)
+        if(error.statusCode == 401) {
+          navigate('', {replace: true})
+        }
+        else {
+          console.error(error.message);
+          setError(true)
+        }
+      }
     }
   })
 
@@ -101,8 +141,16 @@ function App() {
         setTasks(tasks => [...tasks, newTask]);
       }
     }catch(error) {
-      console.log(error)
-      setError(true)
+      if (error instanceof CustomError) {
+        console.error(error.message)
+        if(error.statusCode == 401) {
+          navigate('', {replace: true})
+        }
+        else {
+          console.error("Произошла неизвестная ошибка.");
+          setError(true)
+        }
+      }
     }
   })
 
