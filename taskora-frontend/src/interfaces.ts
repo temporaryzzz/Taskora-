@@ -39,10 +39,10 @@ export interface AppState {
 }
 
 export type CreateTaskDTO = Omit<Task, 'id' | 'completed' | 'deleted' | 'ownerUserId'>;
-export type UpdateTaskDTO = Omit<Task, 'id'>;
+export type UpdateTaskDTO = Omit<Task, 'id' | 'deleted'>;
 
 export type CreateListDTO = Omit<List, 'id' | 'deleted'>;
-export type UpdateListDTO = Pick<List, 'title' | 'icon' | 'deleted' | 'color' | 'sections'>;
+export type UpdateListDTO = Pick<List, 'title' | 'icon' | 'color' | 'sections'>;
 
 export interface AppActions {
   setUser: Dispatch<SetStateAction<User | undefined>>;
@@ -58,4 +58,6 @@ export interface AppActions {
   //Только созданная задача не может быть completed --> на сервере по умолачинию ставится false
   createList: (list: CreateListDTO) => Promise<void>;
   createTask: (task: CreateTaskDTO) => Promise<void>;
+  deleteList: (listId: number) => Promise<void>;
+  deleteTask: (taskId: number) => Promise<void>;
 }

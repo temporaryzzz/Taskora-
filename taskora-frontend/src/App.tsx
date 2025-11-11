@@ -5,7 +5,8 @@ import type { AppState, AppActions, User, List, Task, CreateListDTO,
               CreateTaskDTO, UpdateTaskDTO, UpdateListDTO} from './interfaces';
 import SignIn from './components/sign-in';
 import SignUp from './components/sign-up';
-import { fetchTasks, fetchLists, updateTaskOnServer, updateListOnServer, createListOnServer, createTaskOnServer, CustomError} from './api';
+import { fetchTasks, fetchLists, updateTaskOnServer, updateListOnServer, createListOnServer, createTaskOnServer, 
+  deleteListOnServer, deleteTaskOnServer, CustomError} from './api';
 import './styles/main.scss'
 import MainPage from './components/main-page';
 import { useAuthWrapper } from './hooks';
@@ -16,7 +17,10 @@ function App() {
   const navigate = useNavigate()
   const { wrapWithAuth } = useAuthWrapper(navigate)
   const [user, setUser] = useState<User | undefined>({username: 'admin', id: 0, email: 'admin@bk.ru'})
-  const [lists, setLists] = useState<Array<List>>([{title: 'Completed', id: 0, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "COMPLETED", color: "NONE"},{title: 'Basket', id: 1, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "BASKET", color: "NONE"},{title: 'All', id: 2, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "DEFAULT", color: "YELLOW"},])
+  const [lists, setLists] = useState<Array<List>>([{title: 'Completed', id: 0, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "COMPLETED", color: "NONE"},
+    {title: 'Basket', id: 1, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "BASKET", color: "NONE"},
+    {title: 'All', id: 2, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "DEFAULT", color: "NONE"},
+    {title: 'Custom List', id: 3, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "DEFAULT", color: "YELLOW"},])
   const [tasks, setTasks] = useState<Array<Task>>([])
   const [currentListId, setCurrentListId] = useState<number | null>(null)
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
@@ -154,6 +158,46 @@ function App() {
     }
   })
 
+  const deleteList = async (listId: number) => {
+    try{ 
+      deleteListOnServer(listId)
+      setLists(lists => lists.filter(list => list.id !== listId))
+      switchList(2)
+
+    }catch(error){
+      if (error instanceof CustomError) {
+        console.error(error.message)
+        if(error.statusCode == 401) {
+          navigate('', {replace: true})
+        }
+        else {
+          console.error("Произошла неизвестная ошибка.");
+          setError(true)
+        }
+      }
+    }
+  }
+
+  const deleteTask = async (taskId: number) => {
+    try{ 
+      deleteTaskOnServer(taskId)
+      setTasks(tasks => tasks.filter(task => task.id !== taskId))
+
+      setSelectedTaskId(null)
+    }catch(error){
+      if (error instanceof CustomError) {
+        console.error(error.message)
+        if(error.statusCode == 401) {
+          navigate('', {replace: true})
+        }
+        else {
+          console.error("Произошла неизвестная ошибка.");
+          setError(true)
+        }
+      }
+    }
+  }
+
   useEffect(() => {
     loadLists()
   }, [user])
@@ -186,6 +230,8 @@ function App() {
       loadLists,
       createList,
       createTask,
+      deleteList,
+      deleteTask,
     };
 
     return { state, actions };

@@ -24,9 +24,9 @@ export function EditListForm(props: EditListFormnProps) {
     }
 
     const updateList = () => {
-        if(/\S/.test(title ?? '') && title != 'Basket' && title != 'Completed') {
+        if(/\S/.test(title ?? '') && title != 'Basket' && title != 'Completed' && title != 'All') {
             if(taskManagerContext.state.user !== undefined) {
-                const UpdateListDTO: UpdateListDTO = {title: title, sections: props.list.sections, icon: icon, color: color, deleted: false}
+                const UpdateListDTO: UpdateListDTO = {title: title, sections: props.list.sections, icon: icon, color: color}
                 taskManagerContext.actions.updateList(props.list.id, UpdateListDTO)
                 props.setActiveEditForm(false)
                 return true

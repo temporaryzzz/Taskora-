@@ -119,4 +119,20 @@ const updateListOnServer = async (listId: number, updates: UpdateListDTO): Promi
   }
 }
 
-export {  updateTaskOnServer, updateListOnServer, fetchTasks, fetchLists, createListOnServer, createTaskOnServer};
+const deleteTaskOnServer = async (taskId: number): Promise<void> => {
+  const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {method: 'DELETE',});
+
+  if (!response.ok) {
+    throw new CustomError(`Failed to update task: ${response.statusText}`, response.status);
+  }
+}
+
+const deleteListOnServer = async (listId: number): Promise<void> => {
+  const response = await fetch(`${SERVER_ADDRES__LISTS}${listId}`, {method: 'DELETE',});
+
+  if (!response.ok) {
+    throw new CustomError(`Failed to update task: ${response.statusText}`, response.status);
+  }
+}
+
+export {  updateTaskOnServer, updateListOnServer, fetchTasks, fetchLists, createListOnServer, createTaskOnServer, deleteListOnServer, deleteTaskOnServer};
