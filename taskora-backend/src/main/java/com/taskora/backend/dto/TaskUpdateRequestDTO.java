@@ -2,6 +2,8 @@ package com.taskora.backend.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Max;
@@ -18,24 +20,29 @@ public class TaskUpdateRequestDTO {
     @Max(255)
     String description;
 
+    @JsonProperty("deadline")
     @Schema(description = "Дедлайн задачи")
     LocalDateTime due_date;
 
     @Schema(description = "Приоритет задачи", example = "DEFAULT")
     @Enumerated
-    Priority priority = Priority.DEFAULT;
+    String priority = "DEFAULT";
 
     @Schema(description = "Выполнена ли задача", example = "false")
     Boolean completed;
 
+    @Schema(description = "Удалена ли задача", example = "false")
+    Boolean deleted;
+
 
     public TaskUpdateRequestDTO(@Size(min = 1, max = 25) String title, @Max(255) String description,
-            LocalDateTime due_date, Priority priority, Boolean completed) {
+            LocalDateTime due_date, String priority, Boolean completed, Boolean deleted) {
         this.title = title;
         this.description = description;
         this.due_date = due_date;
         this.priority = priority;
         this.completed = completed;
+        this.deleted = deleted;
     }
 
 
@@ -63,19 +70,29 @@ public class TaskUpdateRequestDTO {
         this.due_date = due_date;
     }
 
-    public Priority getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
-
     public Boolean getCompleted() {
         return completed;
     }
 
     public void setCompleted(Boolean completed) {
         this.completed = completed;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+
+    public String getPriority() {
+        return priority;
+    }
+
+
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
 }

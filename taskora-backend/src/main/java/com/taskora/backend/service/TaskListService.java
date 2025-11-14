@@ -21,33 +21,20 @@ public class TaskListService {
     
 
     /**
-     * Создает список задач с дефолтными значениями
-     * 
-     * @param user кому принадлежит список
-     * @return {@link TaskListDTO} созданного списка
-     */
-    public TaskListDTO createDefaultTaskList(User user) {
-        TaskList taskList = new TaskList();
-        taskList.setOwner(user);
-        taskList.setTitle("Default list name");
-
-        repository.save(taskList);
-        ResponseDTO responseDTO = new ResponseDTO();
-
-        return responseDTO.fromTaskListEntityToDTO(taskList);
-    }
-
-    /**
      * Создает список задач
      * 
      * @param user кому принадлежит список
      * @param title - название создаваемого списка задач
+     * @param icon - название иконки списка
+     * @param iconColor - цвет иконки списка
      * @return {@link TaskListDTO} созданного списка
      */
-    public TaskListDTO createTaskList(User user, String title) {
+    public TaskListDTO createTaskList(User user, String title, String icon, String iconColor) {
         TaskList taskList = new TaskList();
         taskList.setOwner(user);
         taskList.setTitle(title);
+        taskList.setIcon(icon);
+        taskList.setColor(iconColor);
 
         repository.save(taskList);
 

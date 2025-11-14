@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.taskora.backend.dto.Priority;
+// import com.taskora.backend.dto.Priority;
 import com.taskora.backend.dto.TaskDTO;
 import com.taskora.backend.dto.TaskUpdateRequestDTO;
 import com.taskora.backend.entity.Task;
@@ -35,8 +35,8 @@ public class TaskService {
         if (title == null)  task.setTitle("Default task name");
         else task.setTitle(title);
         task.setDescription(null);
-        task.setDue_date(null);
-        task.setPriority(Priority.DEFAULT);
+        task.setDueDate(null);
+        task.setPriority("DEFAULT");
         task.setCompleted(false);
 
         repository.save(task);
@@ -73,10 +73,10 @@ public class TaskService {
 
         old_task.setTitle(new_taskDTO.getTitle());
         old_task.setDescription(new_taskDTO.getDescription());
-        old_task.setDue_date(new_taskDTO.getDue_date());
+        old_task.setDueDate(new_taskDTO.getDue_date());
         old_task.setPriority(new_taskDTO.getPriority());
         old_task.setCompleted(new_taskDTO.getCompleted());
-        old_task.setUpdated_at(LocalDateTime.now());
+        old_task.setUpdatedAt(LocalDateTime.now());
 
         repository.save(old_task);
 

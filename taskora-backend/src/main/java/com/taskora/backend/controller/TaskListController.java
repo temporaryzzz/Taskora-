@@ -94,7 +94,7 @@ public class TaskListController {
                 .notFound()
                 .build();
 
-        TaskListDTO taskListDTO = taskListService.createTaskList(owner, requestDTO.getTitle());
+        TaskListDTO taskListDTO = taskListService.createTaskList(owner, requestDTO.getTitle(), requestDTO.getIcon(), requestDTO.getColor());
         
         return ResponseEntity
             .status(201)

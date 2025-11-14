@@ -2,6 +2,8 @@ package com.taskora.backend.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Max;
@@ -13,6 +15,11 @@ public class TaskDTO {
     @Schema(description = "Уникальный id задачи в БД")
     Long id;
 
+    // new
+    @JsonProperty("ownerUserId")
+    Long user_id;
+
+    @JsonProperty("ownerListId")
     @Schema(description = "Id списка в котором лежит задача")
     Long taskList_id;
 
@@ -24,19 +31,25 @@ public class TaskDTO {
     @Max(255)
     String description;
 
+    String section;
+
+    @JsonProperty("deadline")
     @Schema(description = "Дедлайн задачи")
     LocalDateTime due_date;
 
     @Schema(description = "Приоритет задачи", example = "DEFAULT")
     @Enumerated
-    Priority priority = Priority.DEFAULT;
+    String priority = "DEFAULT";
 
     @Schema(description = "Выполнена ли задача", example = "false")
     Boolean completed;
 
+    @Schema(description = "Удалена ли задача", example = "false")
+    Boolean deleted;
+
 
     public TaskDTO(Long id, Long taskList_id, @Size(min = 1, max = 25) String title, @Max(255) String description,
-            LocalDateTime due_date, Priority priority, Boolean completed) {
+            LocalDateTime due_date, String priority, Boolean completed) {
         this.id = id;
         this.taskList_id = taskList_id;
         this.title = title;
@@ -46,7 +59,6 @@ public class TaskDTO {
         this.completed = completed;
     }
 
-    
     public Long getId() {
         return id;
     }
@@ -87,19 +99,43 @@ public class TaskDTO {
         this.due_date = due_date;
     }
 
-    public Priority getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
-
     public Boolean getCompleted() {
         return completed;
     }
 
     public void setCompleted(Boolean completed) {
         this.completed = completed;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Long getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
 }

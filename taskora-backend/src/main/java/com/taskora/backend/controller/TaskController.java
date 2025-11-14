@@ -58,8 +58,8 @@ public class TaskController {
             content = {}
         )
     })
-    public ResponseEntity<?> getTasks(@PathVariable Long list_id) {
-        List<TaskDTO> taskDTOs = taskService.findTasksByTaskListId(list_id);
+    public ResponseEntity<?> getTasks(@PathVariable Long taskList_id) {
+        List<TaskDTO> taskDTOs = taskService.findTasksByTaskListId(taskList_id);
         if (taskDTOs.isEmpty())
             return ResponseEntity
                 .noContent()

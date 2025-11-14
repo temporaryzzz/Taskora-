@@ -111,7 +111,7 @@ public class UserService {
         user.setUsername(requestDTO.getUsername());
         user.setEmail(requestDTO.getEmail());
         user.setPassword("{bcrypt}" + passwordEncoder.encode(requestDTO.getPassword()));
-        user.setUpdated_at(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
 
         repository.save(user);
 

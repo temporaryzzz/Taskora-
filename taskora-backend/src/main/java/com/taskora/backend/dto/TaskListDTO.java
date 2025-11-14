@@ -1,16 +1,26 @@
 package com.taskora.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class TaskListDTO {
     
     Long id;
-    Long owner_id;
-    String title;
-    
 
-    public TaskListDTO(Long id, Long owner_id, String title) {
+    @JsonProperty("ownerUserId")
+    Long owner_id;
+
+    String title;
+    // String[] sections;
+    String icon;
+    String color;
+
+
+    public TaskListDTO(Long id, Long owner_id, String title, String icon, String color) {
         this.id = id;
         this.owner_id = owner_id;
         this.title = title;
+        this.icon = icon;
+        this.color = color;
     }
 
 
@@ -36,5 +46,21 @@ public class TaskListDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+    
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String iconColor) {
+        this.color = iconColor;
     }
 }
