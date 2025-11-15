@@ -52,11 +52,47 @@ public class TaskService {
      * @return список найденных задач; пустой список, если задачи не найдены
      */
     public List<TaskDTO> findTasksByTaskListId(Long id) {
-        List<Task> tasks = new ArrayList<>();
-
-        tasks = repository.findByTaskListId(id);
+        List<Task> tasks = repository.findByTaskListId(id);
 
         ResponseDTO responseDTO = new ResponseDTO();
+        return responseDTO.fromTaskListToDTOList(tasks);
+    }
+
+    /**[fix]
+     * 
+     * @param id
+     * @return
+     */
+    public List<TaskDTO> findTasksByOwnerId(Long id) {
+        List<Task> tasks = repository.findByOwnerId(id);
+        ResponseDTO responseDTO = new ResponseDTO();
+
+        return responseDTO.fromTaskListToDTOList(tasks);
+    }
+
+    /**[fix]
+     * 
+     * @param id
+     * @return
+     */
+    public List<TaskDTO> findDeletedTasksByOwnerId(Long id) {
+        List<Task> tasks = repository.findByOwnerIdAndDeletedTrue(id);
+        ResponseDTO responseDTO = new ResponseDTO();
+
+        return responseDTO.fromTaskListToDTOList(tasks);
+    }
+
+    /**[fix]
+     * 
+     * @param id
+     * @return
+     */
+    public List<TaskDTO> findCompletedTasksByOwnerId(Long id) {
+        List<Task> tasks = new ArrayList<>();
+
+        tasks = repository.findByOwnerIdAndCompletedTrue(id);
+        ResponseDTO responseDTO = new ResponseDTO();
+
         return responseDTO.fromTaskListToDTOList(tasks);
     }
 
@@ -64,24 +100,59 @@ public class TaskService {
      * Обновляет задачу 
      * 
      * @param id обновляемой задачи
-     * @param new_taskDTO - задача с новыми занными
+     * @param newTaskDTO - задача с новыми занными
      * @return {@link TaskDTO} обновленной задачи; {@code null}, если задача не найдена
      */
-    public TaskDTO updateTask(Long id, TaskUpdateRequestDTO new_taskDTO) {
-        Task old_task = repository.findById(id)
+    public TaskDTO updateTask(Long id, TaskUpdateRequestDTO newTaskDTO) {
+        Task oldTask = repository.findById(id)
             .orElse(null);
 
-        old_task.setTitle(new_taskDTO.getTitle());
-        old_task.setDescription(new_taskDTO.getDescription());
-        old_task.setDueDate(new_taskDTO.getDue_date());
-        old_task.setPriority(new_taskDTO.getPriority());
-        old_task.setCompleted(new_taskDTO.getCompleted());
-        old_task.setUpdatedAt(LocalDateTime.now());
+        if (oldTask == null) return null;
 
-        repository.save(old_task);
+        oldTask.setTitle(newTaskDTO.getTitle());
+        oldTask.setDescription(newTaskDTO.getDescription());
+        oldTask.setDueDate(newTaskDTO.getDue_date());
+        oldTask.setPriority(newTaskDTO.getPriority());
+        oldTask.setCompleted(newTaskDTO.getCompleted());
+        oldTask.setUpdatedAt(LocalDateTime.now());
+
+        repository.save(oldTask);
 
         ResponseDTO responseDTO = new ResponseDTO();
-        return responseDTO.fromTaskEntityToDTO(old_task);
+        return responseDTO.fromTaskEntityToDTO(oldTask);
+    }
+
+    /**
+     * 
+     * @param id
+     */
+    public boolean softDeleteTaskById(Long id) {
+        Task task = repository.findById(id)
+            .orElse(null);
+        
+        if (task == null) return false;
+
+        task.setDeleted(true);
+        repository.save(task);
+
+        return true;
+    }
+
+    /**
+     * 
+     * @param id
+     */
+    public void softDeleteTasksByTaskListId(Long id) {
+        List<Task> tasks = repository.findByTaskListIdAndDeletedFalse(id);
+
+        if (tasks.isEmpty()) return;
+
+        tasks.forEach(task -> {
+            task.setDeleted(true);
+            task.setDeletedAt(LocalDateTime.now());
+        });
+        
+        repository.saveAll(tasks);
     }
 
     /**

@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import com.taskora.backend.utils.SectionsConverter;
+import org.hibernate.type.SqlTypes;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,8 +39,8 @@ public class TaskList {
     String title;
 
     @Column(columnDefinition = "jsonb")
-    @Convert(converter = SectionsConverter.class)
-    List<String> sections = new ArrayList<>();
+    @JdbcTypeCode(SqlTypes.JSON)
+    List<String> sections = new ArrayList<>(List.of("Main section"));
 
     @Column(nullable = false)
     String icon;
@@ -50,7 +49,7 @@ public class TaskList {
     String color;
 
     @Column(nullable = false)
-    String viewType = "LIST";
+    String viewType = "KANBAN";
 
     @Column(nullable = false)
     boolean deleted = false;

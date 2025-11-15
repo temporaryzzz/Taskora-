@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class TaskController {
     private TaskService taskService;
 
 
-    @GetMapping("/{taskList_id}")
+    @GetMapping("/{taskListId}")
     @Operation(description = "Получение всех задач по id списка")
     @ApiResponses(value = {
         @ApiResponse(
@@ -56,10 +57,32 @@ public class TaskController {
             responseCode = "204",
             description = "Задачи не найдены",
             content = {}
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Список не найден",
+            content = {}
         )
     })
-    public ResponseEntity<?> getTasks(@PathVariable Long taskList_id) {
-        List<TaskDTO> taskDTOs = taskService.findTasksByTaskListId(taskList_id);
+    public ResponseEntity<?> getTasks(@PathVariable Long taskListId) {
+        List<TaskDTO> taskDTOs = new ArrayList<>();
+        TaskList list = taskListService.findTaskListById(taskListId);
+
+        if (list == null)
+            return ResponseEntity
+                .notFound()
+                .build();
+
+        String title = list.getTitle();
+
+        // Лучше было бы не title проверять, а параметром получать ?all, ?completed, ?deleted
+        switch (title) {
+            // case "All" -> taskDTOs = taskService.findTasksByOwnerId(list.getOwner().getId());
+            case "Completed" -> taskDTOs = taskService.findCompletedTasksByOwnerId(list.getOwner().getId());
+            case "Basket" -> taskDTOs = taskService.findDeletedTasksByOwnerId(list.getOwner().getId());
+            default -> taskDTOs = taskService.findTasksByTaskListId(list.getId());
+        }
+        
         if (taskDTOs.isEmpty())
             return ResponseEntity
                 .noContent()
@@ -128,10 +151,35 @@ public class TaskController {
             .body(updatedTask);
     }
     
-    @DeleteMapping("/{task_id}")
+    @DeleteMapping("/{taskId}")
     @Operation(description = "Удаление задачи")
-    public ResponseEntity<?> deleteTask(@PathVariable Long task_id) {
-        taskService.deleteTaskById(task_id);
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "204",
+            description = "Задача успешно удалена",
+            content = {}
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Задача не найдена",
+            content = {}
+        )
+    })
+    public ResponseEntity<?> softDeleteTask(@PathVariable Long taskId) {
+        if (!taskService.softDeleteTaskById(taskId))
+            return ResponseEntity
+                .notFound()
+                .build();
+
+        return ResponseEntity
+            .status(204)
+            .body(null);
+    }
+
+    @DeleteMapping("/{taskId}/hard")
+    @Operation(description = "Удаление задачи (old)")
+    public ResponseEntity<?> hardDeleteTask(@PathVariable Long taskId) {
+        taskService.deleteTaskById(taskId);
 
         return ResponseEntity
             .status(204)

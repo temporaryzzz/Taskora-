@@ -1,5 +1,6 @@
 package com.taskora.backend.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,6 +81,20 @@ public class TaskListService {
         
         taskList.setTitle(new_taskList.getTitle());
 
+        repository.save(taskList);
+
+        ResponseDTO responseDTO = new ResponseDTO();
+        return responseDTO.fromTaskListEntityToDTO(taskList);
+    }
+
+    public TaskListDTO softDeleteTaskListById(Long id) {
+        TaskList taskList = repository.findById(id)
+            .orElse(null);
+
+        if (taskList == null) return null;
+
+        taskList.setDeleted(true);
+        taskList.setDeletedAt(LocalDateTime.now());
         repository.save(taskList);
 
         ResponseDTO responseDTO = new ResponseDTO();

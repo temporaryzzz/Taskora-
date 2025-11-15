@@ -17,6 +17,7 @@ import com.taskora.backend.dto.TaskListResponseDTO;
 import com.taskora.backend.dto.TaskListUpdateRequest;
 import com.taskora.backend.entity.User;
 import com.taskora.backend.service.TaskListService;
+import com.taskora.backend.service.TaskService;
 import com.taskora.backend.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,6 +41,9 @@ public class TaskListController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private TaskService taskService;
 
 
     @GetMapping("/{user_id}")
@@ -129,9 +133,40 @@ public class TaskListController {
             .body(updatedTaskList);
     }
 
-    @DeleteMapping("/{taskList_id}")
-    public ResponseEntity<?> deleteTaskList(@PathVariable Long taskList_id) {
-        taskListService.deleteTaskListById(taskList_id);
+
+    @DeleteMapping("/{taskListId}")
+    @Operation(description = "Удаление списка задач")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "204",
+            description = "Список задач удален",
+            content = @Content(
+                schema = @Schema(implementation = TaskListDTO.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Список не найден",
+            content = {}
+        )
+    })
+    public ResponseEntity<?> softDeleteTaskList(@PathVariable Long taskListId) {
+        TaskListDTO deletedTaskList = taskListService.softDeleteTaskListById(taskListId);
+        if (deletedTaskList == null)
+            return ResponseEntity
+                .notFound()
+                .build();
+
+        taskService.softDeleteTasksByTaskListId(taskListId);
+
+        return ResponseEntity
+            .status(204)
+            .body(null);
+    }
+
+    @DeleteMapping("/{taskListId}/hard")
+    public ResponseEntity<?> hardDeleteTaskList(@PathVariable Long taskListId) {
+        taskListService.deleteTaskListById(taskListId);
 
         return ResponseEntity
             .status(204)
