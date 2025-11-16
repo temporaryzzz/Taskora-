@@ -1,6 +1,6 @@
 package com.taskora.backend.entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -27,7 +27,7 @@ public class Task {
     User owner;
 
     @ManyToOne
-    @JoinColumn(name = "task_list_id", nullable = false)
+    @JoinColumn(name = "task_list_id", nullable = true) // null задачи - привязаны к системному All
     TaskList taskList;
 
     String section;
@@ -38,7 +38,7 @@ public class Task {
     String description;
 
     @Column(name = "due_date")
-    LocalDateTime dueDate;
+    Instant dueDate;
 
     @Column(nullable = false)
     String priority = "DEFAULT";
@@ -50,18 +50,15 @@ public class Task {
     boolean deleted = false;
 
     @Column(name = "deleted_at")
-    LocalDateTime deletedAt;
-
-    @Column(name = "completed_at")
-    LocalDateTime completedAt;
+    Instant deletedAt;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
-    LocalDateTime createdAt;
+    Instant createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    LocalDateTime updatedAt;
+    Instant updatedAt;
 
 
     public Long getId() {
@@ -112,11 +109,11 @@ public class Task {
         this.description = description;
     }
 
-    public LocalDateTime getDueDate() {
+    public Instant getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(LocalDateTime dueDate) {
+    public void setDueDate(Instant dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -144,35 +141,27 @@ public class Task {
         this.deleted = deleted;
     }
 
-    public LocalDateTime getDeletedAt() {
+    public Instant getDeletedAt() {
         return deletedAt;
     }
 
-    public void setDeletedAt(LocalDateTime deletedAt) {
+    public void setDeletedAt(Instant deletedAt) {
         this.deletedAt = deletedAt;
     }
 
-    public LocalDateTime getCompletedAt() {
-        return completedAt;
-    }
-
-    public void setCompletedAt(LocalDateTime completedAt) {
-        this.completedAt = completedAt;
-    }
-
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

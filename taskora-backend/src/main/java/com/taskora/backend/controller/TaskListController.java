@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
-// [fix] сейчас любой пользователь может просто по url получать задачи других
 @RestController
 @RequestMapping("/api/tasklists")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -46,7 +45,7 @@ public class TaskListController {
     private TaskService taskService;
 
 
-    @GetMapping("/{user_id}")
+    @GetMapping("/{userId}")
     @Operation(description = "Получение списков задач")
     @ApiResponses( value = {
         @ApiResponse(
@@ -62,8 +61,10 @@ public class TaskListController {
             content = {}
         )
     })
-    public ResponseEntity<?> getTaskListsForUser(@PathVariable Long user_id) {
-        List<TaskListDTO> taskLists = taskListService.findAllTaskListsByOwnerId(user_id);
+    public ResponseEntity<?> getTaskListsForUser(@PathVariable Long userId) {
+        // [fix] Здесь пользователь может быть не найден - нужен обработчик 404
+        // сейчас он выдает 204, если пользователь не найден
+        List<TaskListDTO> taskLists = taskListService.findTaskListsByOwnerId(userId);
 
         if (taskLists.isEmpty())
             return ResponseEntity
@@ -92,20 +93,20 @@ public class TaskListController {
         )
     })
     public ResponseEntity<?> createTaskLists(@RequestBody TaskListCreateRequestDTO requestDTO) {
-        User owner = userService.findUserById(requestDTO.getOwner_id());
+        User owner = userService.findUserById(requestDTO.getOwnerId());
         if (owner == null)
             return ResponseEntity
                 .notFound()
                 .build();
 
-        TaskListDTO taskListDTO = taskListService.createTaskList(owner, requestDTO.getTitle(), requestDTO.getIcon(), requestDTO.getColor());
+        TaskListDTO taskListDTO = taskListService.createTaskList(owner, requestDTO);
         
         return ResponseEntity
             .status(201)
             .body(taskListDTO);
     }
     
-    @PutMapping("/{taskList_id}")
+    @PutMapping("/{taskListId}")
     @Operation(description = "Обновление списка задач")
     @ApiResponses(value = {
         @ApiResponse(
@@ -121,8 +122,8 @@ public class TaskListController {
             content = {}
         )
     })
-    public ResponseEntity<?> updateTaskList(@PathVariable Long taskList_id, @RequestBody TaskListUpdateRequest requestDTO) {
-        TaskListDTO updatedTaskList = taskListService.updateTaskList(taskList_id, requestDTO);
+    public ResponseEntity<?> updateTaskList(@PathVariable Long taskListId, @RequestBody TaskListUpdateRequest requestDTO) {
+        TaskListDTO updatedTaskList = taskListService.updateTaskList(taskListId, requestDTO);
         if (updatedTaskList == null)
             return ResponseEntity
                 .notFound()
@@ -140,9 +141,7 @@ public class TaskListController {
         @ApiResponse(
             responseCode = "204",
             description = "Список задач удален",
-            content = @Content(
-                schema = @Schema(implementation = TaskListDTO.class)
-            )
+            content = {}
         ),
         @ApiResponse(
             responseCode = "404",

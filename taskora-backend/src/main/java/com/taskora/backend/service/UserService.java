@@ -1,6 +1,5 @@
 package com.taskora.backend.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -86,6 +85,20 @@ public class UserService {
     }
 
     /**
+     * 
+     * @param login
+     * @return
+     */
+    public UserDTO findUserByLogin(String login) {
+        Optional<User> user = repository.findByLogin(login);
+        if (!user.isPresent())
+            return null;
+        
+        ResponseDTO responseDTO = new ResponseDTO();
+        return responseDTO.fromUserEntityToDTO(user.get());
+    }
+
+    /**
      * Находит всех пользователей
      * 
      * @return {@code List<User>} всех пользователей; пустой список, если пользователи не найдены
@@ -111,7 +124,6 @@ public class UserService {
         user.setUsername(requestDTO.getUsername());
         user.setEmail(requestDTO.getEmail());
         user.setPassword("{bcrypt}" + passwordEncoder.encode(requestDTO.getPassword()));
-        user.setUpdatedAt(LocalDateTime.now());
 
         repository.save(user);
 

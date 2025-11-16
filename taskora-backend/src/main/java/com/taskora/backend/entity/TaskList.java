@@ -1,6 +1,6 @@
 package com.taskora.backend.entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,10 +43,10 @@ public class TaskList {
     List<String> sections = new ArrayList<>(List.of("Main section"));
 
     @Column(nullable = false)
-    String icon;
+    String icon = "DEFAULT";
 
-    @Column(name = "color", nullable = false)
-    String color;
+    @Column(nullable = false)
+    String color = "DEFAULT";
 
     @Column(nullable = false)
     String viewType = "KANBAN";
@@ -55,15 +55,15 @@ public class TaskList {
     boolean deleted = false;
 
     @Column(name = "deleted_at")
-    LocalDateTime deletedAt;
+    Instant deletedAt;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
-    LocalDateTime createdAt;
+    Instant createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    LocalDateTime updatedAt;
+    Instant updatedAt;
 
 
     public Long getId() {
@@ -138,27 +138,27 @@ public class TaskList {
         this.deleted = deleted;
     }
 
-    public LocalDateTime getDeletedAt() {
+    public Instant getDeletedAt() {
         return deletedAt;
     }
 
-    public void setDeletedAt(LocalDateTime deletedAt) {
+    public void setDeletedAt(Instant deletedAt) {
         this.deletedAt = deletedAt;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

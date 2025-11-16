@@ -3,21 +3,16 @@ package com.taskora.backend.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Size;
 
 @Schema(description = "Запрос на создание списка задач")
 public class TaskListCreateRequestDTO {
 
     @JsonProperty("ownerUserId")
     @Schema(description = "Id пользователя")
-    Long owner_id;
+    Long ownerId;
 
-    @Schema(description = "Название списка задач от 3 до 25 символов")
-    @Size(min = 3, max = 25)
+    @Schema(description = "Название списка задач")
     String title;
-
-    // new
-    String[] sections;
 
     @Schema(description = "Название иконки списка", example = "DEFAULT")
     String icon;
@@ -25,22 +20,25 @@ public class TaskListCreateRequestDTO {
     @Schema(description = "Цвет иконки", example = "DEFAULT")
     String color;
 
+    @Schema(description = "Тип отображения задач в списке", example = "KANBAN")
+    String viewType;
 
-    public TaskListCreateRequestDTO(Long owner_id, @Size(min = 3, max = 25) String title, String icon,
-            String iconColor) {
-        this.owner_id = owner_id;
+
+    public TaskListCreateRequestDTO(Long ownerId, String title, String icon, String color, String viewType) {
+        this.ownerId = ownerId;
         this.title = title;
         this.icon = icon;
-        this.color = iconColor;
+        this.color = color;
+        this.viewType = viewType;
     }
 
-
-    public Long getOwner_id() {
-        return owner_id;
+    
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwner_id(Long owner_id) {
-        this.owner_id = owner_id;
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
     public String getTitle() {
@@ -63,7 +61,15 @@ public class TaskListCreateRequestDTO {
         return color;
     }
 
-    public void setColor(String iconColor) {
-        this.color = iconColor;
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getViewType() {
+        return viewType;
+    }
+
+    public void setViewType(String viewType) {
+        this.viewType = viewType;
     }
 }

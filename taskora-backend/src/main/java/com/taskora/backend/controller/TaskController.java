@@ -78,9 +78,9 @@ public class TaskController {
         // Лучше было бы не title проверять, а параметром получать ?all, ?completed, ?deleted
         switch (title) {
             // case "All" -> taskDTOs = taskService.findTasksByOwnerId(list.getOwner().getId());
-            case "Completed" -> taskDTOs = taskService.findCompletedTasksByOwnerId(list.getOwner().getId());
+            case "Completed" -> taskDTOs = taskService.findCompletedAndNotDeletedTasksByOwnerId(list.getOwner().getId());
             case "Basket" -> taskDTOs = taskService.findDeletedTasksByOwnerId(list.getOwner().getId());
-            default -> taskDTOs = taskService.findTasksByTaskListId(list.getId());
+            default -> taskDTOs = taskService.findNotDeletedTasksByTaskListId(list.getId());
         }
         
         if (taskDTOs.isEmpty())
@@ -110,20 +110,21 @@ public class TaskController {
         )
     })
     public ResponseEntity<?> createTask(@RequestBody TaskCreateRequestDTO requestDTO) {
-        TaskList taskList = taskListService.findTaskListById(requestDTO.getTaskList_id());
+        // [fix] тут 404 не только если список не найден, но и если id списка null
+        TaskList taskList = taskListService.findTaskListById(requestDTO.getTaskListId());
         if (taskList == null)
             return ResponseEntity
                 .notFound()
                 .build();
 
-        TaskDTO taskDTO = taskService.createTask(taskList, requestDTO.getTitle());
+        TaskDTO taskDTO = taskService.createTask(taskList, requestDTO);
         
         return ResponseEntity
             .status(201)
             .body(taskDTO);
     }
 
-    @PutMapping("/{task_id}")
+    @PutMapping("/{taskId}")
     @Operation(description = "Обновление задачи")
     @ApiResponses(value = {
         @ApiResponse(
@@ -139,8 +140,14 @@ public class TaskController {
             content = {}
         )
     })
-    public ResponseEntity<?> updateTask(@PathVariable Long task_id, @RequestBody TaskUpdateRequestDTO requestDTO) {
-        TaskDTO updatedTask = taskService.updateTask(task_id, requestDTO);
+    public ResponseEntity<?> updateTask(@PathVariable Long taskId, @RequestBody TaskUpdateRequestDTO requestDTO) {
+        TaskList taskList = taskListService.findTaskListById(requestDTO.getTaskListId());
+        if (taskList == null)
+            return ResponseEntity
+                .notFound()
+                .build();
+
+        TaskDTO updatedTask = taskService.updateTask(taskId, taskList, requestDTO);
         if (updatedTask == null)
             return ResponseEntity
                 .notFound()

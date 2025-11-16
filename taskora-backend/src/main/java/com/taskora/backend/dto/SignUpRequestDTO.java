@@ -10,10 +10,12 @@ import jakarta.validation.constraints.Size;
 public class SignUpRequestDTO {
     
     @Schema(description = "Никнейм пользователя должен содержать от 3 до 16 символов", example = "user123")
+    @NotBlank
     @Size(min = 3, max = 16)
     String username;
 
     @Schema(description = "Почтовый адрес пользователя должен содержать от 6 до 64 символов, также включать @ и домен", example = "email@domain.com")
+    @NotBlank
     @Size(min = 6, max = 64)
     String email;
 

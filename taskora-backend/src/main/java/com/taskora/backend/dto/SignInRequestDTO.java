@@ -9,7 +9,8 @@ import jakarta.validation.constraints.Size;
 @Schema(description = "Запрос c данными пользователя пользователя для входа")
 public class SignInRequestDTO {
 
-    @Schema(description = "Логин пользователя должен содержать от 3 до 64 символов, может быть как именем, так и почтой", example = "login@domain.com")
+    @Schema(description = "Логин пользователя должен содержать от 3 до 64 символов, может быть как именем, так и почтой", example = "email@domain.com")
+    @NotBlank
     @Size(min = 3, max = 64)
     String login;
 
@@ -20,12 +21,13 @@ public class SignInRequestDTO {
     String password;
 
 
-    public SignInRequestDTO(@Size(min = 3, max = 64) String login, @NotBlank @Size(min = 8, max = 32) String password) {
+    public SignInRequestDTO(@NotBlank @Size(min = 3, max = 64) String login,
+            @NotBlank @Size(min = 8, max = 32) String password) {
         this.login = login;
         this.password = password;
     }
 
-
+    
     public String getLogin() {
         return login;
     }

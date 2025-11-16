@@ -14,11 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.taskora.backend.dto.ErrorMessageDTO;
 import com.taskora.backend.dto.SignInRequestDTO;
+import com.taskora.backend.dto.SignInResponseDTO;
 import com.taskora.backend.dto.SignUpRequestDTO;
-import com.taskora.backend.dto.UserDTO;
-import com.taskora.backend.entity.User;
 import com.taskora.backend.security.JwtUtil;
-import com.taskora.backend.service.TaskListService;
 import com.taskora.backend.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,9 +39,6 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private TaskListService taskListService;
-
 
     @PostMapping("/signup")
     @Operation(description = "Регистрация пользователя в БД, с проверкой на занятость логина")
@@ -51,9 +46,7 @@ public class AuthenticationController {
         @ApiResponse(
             responseCode = "200",
             description = "Успешная регистрация",
-            content = @Content(
-                schema = @Schema(implementation = UserDTO.class)
-            )
+            content = {}
         ),
         @ApiResponse(
             responseCode = "409",
@@ -74,14 +67,11 @@ public class AuthenticationController {
                     .status(409)
                     .body(new ErrorMessageDTO("Пользователь с данным username уже существует"));
 
-        UserDTO userResponseDTO = userService.createUser(requestDTO);
-
-        User new_user = userService.findUserById(userResponseDTO.getId());
-        taskListService.createTaskList(new_user, "Default", "DEFAULT", "DEFAULT");
+        userService.createUser(requestDTO);
 
         return ResponseEntity
                 .ok()
-                .body(userResponseDTO);
+                .body(null);
     }
     
     
@@ -92,7 +82,7 @@ public class AuthenticationController {
             responseCode = "200",
             description = "Успешный вход",
             content = @Content(
-                schema = @Schema(implementation = UserDTO.class)
+                schema = @Schema(implementation = SignInResponseDTO.class)
             )
         ),
         @ApiResponse(
@@ -111,15 +101,18 @@ public class AuthenticationController {
                     requestDTO.getPassword())
             );
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            
+            // [fix] стоит добавить проверку если вдруг (хотя после верхних действий это невозможно) null проверку
+            SignInResponseDTO responseDTO = new SignInResponseDTO(
+                jwtUtil.generateToken(userDetails.getUsername())
+            );
+
             return ResponseEntity
                 .ok()
-                .body(jwtUtil.generateToken(userDetails.getUsername()));
+                .body(responseDTO);
         } catch (Exception e) {
             System.err.println("Ошибка при попытке авторизации: " + e);
         }
         
-        // Если логин или пароль неверны
         return ResponseEntity
             .badRequest()
             .body(new ErrorMessageDTO("Неверный логин или пароль"));

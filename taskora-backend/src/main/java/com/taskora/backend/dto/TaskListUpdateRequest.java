@@ -1,35 +1,58 @@
 package com.taskora.backend.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Size;
+import java.util.List;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+
+// [fix] сейчас при обновлении фронт отправляет абсолютно все поля, что повышает нагрузку
 @Schema(description = "Запрос на обновление списка задач")
 public class TaskListUpdateRequest {
     
-    @Schema(description = "Название списка задач от 3 до 25 символов")
-    @Size(min = 3, max = 25)
+    @Schema(description = "Название списка задач")
     String title;
+
+    @Schema(description = "Список названий секций", example = "[\"Main section\", \"Until Mon\"]")
+    @Column(columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
+    List<String> sections;
 
     @Schema(description = "Название иконки списка", example = "DEFAULT")
     String icon;
 
     @Schema(description = "Цвет иконки", example = "DEFAULT")
-    String iconColor;
+    String color;
+
+    @Schema(description = "Тип отображения задач в списке", example = "KANBAN")
+    String viewType;
 
 
-    public TaskListUpdateRequest(@Size(min = 3, max = 25) String title, String icon, String iconColor) {
+    public TaskListUpdateRequest(String title, List<String> sections, String icon, String color, String viewType) {
         this.title = title;
+        this.sections = sections;
         this.icon = icon;
-        this.iconColor = iconColor;
+        this.color = color;
+        this.viewType = viewType;
     }
 
-    
+
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<String> getSections() {
+        return sections;
+    }
+
+    public void setSections(List<String> sections) {
+        this.sections = sections;
     }
 
     public String getIcon() {
@@ -40,11 +63,19 @@ public class TaskListUpdateRequest {
         this.icon = icon;
     }
 
-    public String getIconColor() {
-        return iconColor;
+    public String getColor() {
+        return color;
     }
 
-    public void setIconColor(String iconColor) {
-        this.iconColor = iconColor;
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getViewType() {
+        return viewType;
+    }
+
+    public void setViewType(String viewType) {
+        this.viewType = viewType;
     }
 }

@@ -1,12 +1,12 @@
 package com.taskora.backend.service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.taskora.backend.dto.TaskListCreateRequestDTO;
 import com.taskora.backend.dto.TaskListDTO;
 import com.taskora.backend.dto.TaskListUpdateRequest;
 import com.taskora.backend.entity.TaskList;
@@ -24,18 +24,18 @@ public class TaskListService {
     /**
      * Создает список задач
      * 
-     * @param user кому принадлежит список
-     * @param title - название создаваемого списка задач
-     * @param icon - название иконки списка
-     * @param iconColor - цвет иконки списка
+     * @param owner кому принадлежит список
+     * @param data - информация о создаваемом списке задач
      * @return {@link TaskListDTO} созданного списка
      */
-    public TaskListDTO createTaskList(User user, String title, String icon, String iconColor) {
+    public TaskListDTO createTaskList(User owner, TaskListCreateRequestDTO data) {
         TaskList taskList = new TaskList();
-        taskList.setOwner(user);
-        taskList.setTitle(title);
-        taskList.setIcon(icon);
-        taskList.setColor(iconColor);
+
+        taskList.setOwner(owner);
+        taskList.setTitle(data.getTitle());
+        taskList.setIcon(data.getIcon());
+        taskList.setColor(data.getColor());
+        taskList.setViewType(data.getViewType());
 
         repository.save(taskList);
 
@@ -50,19 +50,19 @@ public class TaskListService {
      * @return найденный {@link TaskList}; {@code null}, если список не найден
      */
     public TaskList findTaskListById(Long id) {
+        if (id == null) return null;
+
         return repository.findById(id).orElse(null);
     }
 
     /**
-     * Находит все списки задач по {@code id} пользователя
+     * Находит неудаленные списки задач по {@code id} пользователя
      * 
-     * @param user_id - {@code id} пользователя
+     * @param userId - {@code id} пользователя
      * @return найденные списки задач; пустой список, если списки не найдены
      */
-    public List<TaskListDTO> findAllTaskListsByOwnerId(Long user_id) {
-        List<TaskList> taskLists = new ArrayList<>();
-        
-        taskLists = repository.findByOwnerId(user_id);
+    public List<TaskListDTO> findTaskListsByOwnerId(Long userId) {        
+        List<TaskList> taskLists = repository.findByOwnerIdAndDeletedFalse(userId);
 
         ResponseDTO responseDTO = new ResponseDTO();
         return responseDTO.fromTaskListsToDTOList(taskLists);
@@ -72,14 +72,19 @@ public class TaskListService {
      * Обновляет список задач
      * 
      * @param id изменяемого списка
-     * @param new_taskList - {@code DTO} с новыми данными
+     * @param newTaskList - {@code DTO} с новыми данными
      * @return {@link TaskListDTO} обновленной задачи; {@code null}, если список не найден
      */
-    public TaskListDTO updateTaskList(Long id, TaskListUpdateRequest new_taskList) {
+    public TaskListDTO updateTaskList(Long id, TaskListUpdateRequest newTaskList) {
         TaskList taskList = repository.findById(id)
             .orElse(null);
+        if (taskList == null) return null;
         
-        taskList.setTitle(new_taskList.getTitle());
+        taskList.setTitle(newTaskList.getTitle());
+        taskList.setSections(newTaskList.getSections());
+        taskList.setIcon(newTaskList.getIcon());
+        taskList.setColor(newTaskList.getColor());
+        taskList.setViewType(newTaskList.getViewType());
 
         repository.save(taskList);
 
@@ -94,7 +99,7 @@ public class TaskListService {
         if (taskList == null) return null;
 
         taskList.setDeleted(true);
-        taskList.setDeletedAt(LocalDateTime.now());
+        taskList.setDeletedAt(Instant.now());
         repository.save(taskList);
 
         ResponseDTO responseDTO = new ResponseDTO();

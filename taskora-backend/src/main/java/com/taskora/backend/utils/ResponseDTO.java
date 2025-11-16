@@ -27,7 +27,7 @@ public class ResponseDTO {
     }
 
     public TaskListDTO fromTaskListEntityToDTO(TaskList taskList) {
-        return new TaskListDTO(taskList.getId(), taskList.getOwner().getId(), taskList.getTitle(), taskList.getIcon(), taskList.getColor());
+        return new TaskListDTO(taskList.getId(), taskList.getTitle(), taskList.getSections(), taskList.getIcon(), taskList.getColor(), taskList.getViewType());
     }
 
     public List<TaskListDTO> fromTaskListsToDTOList(List<TaskList> taskLists) {
@@ -37,7 +37,7 @@ public class ResponseDTO {
     }
 
     public TaskDTO fromTaskEntityToDTO(Task task) {
-        return new TaskDTO(task.getId(), task.getTaskList().getId(), task.getTitle(), task.getDescription(), task.getDueDate(), task.getPriority(), task.isCompleted());
+        return new TaskDTO(task.getId(), task.getTaskList().getId(), task.getSection(), task.getTitle(), task.getDescription(), task.getDueDate(), task.getPriority(), task.isCompleted());
     }
 
     public List<TaskDTO> fromTaskListToDTOList(List<Task> tasks) {
