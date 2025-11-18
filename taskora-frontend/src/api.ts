@@ -20,7 +20,18 @@ export class CustomError extends Error {
 
 
 const fetchTasks = async (listId: number): Promise<Array<Task>> => {
-  const response = await fetch(`${SERVER_ADDRES__TASKS}${listId}`, {
+  let fetchString = `${SERVER_ADDRES__TASKS}${listId}`
+  if(listId == -1) {
+     fetchString = `${SERVER_ADDRES__TASKS}$?system=completed`
+  } else if(listId == -2) {
+    fetchString = `${SERVER_ADDRES__TASKS}$?system=deleted`
+  } else if(listId == -3) {
+    fetchString = `${SERVER_ADDRES__TASKS}$?system=all`
+  } else if(listId == -4) {
+    fetchString = `${SERVER_ADDRES__TASKS}$?system=today`
+  }
+  
+  const response = await fetch(fetchString, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -32,13 +43,14 @@ const fetchTasks = async (listId: number): Promise<Array<Task>> => {
     throw new CustomError(`Failed to fetch tasks for list ${listId}: ${response.status}`, response.status);
   }
 
-  const tasks: Array<Task> = await response.json();
+  const data = await response.json();
+  const tasks: Array<Task> = data.taskDTOs;
 
   return tasks;
 }
 
-const fetchLists = async (userId: number): Promise<Array<List>> => {
-  const response = await fetch(`${SERVER_ADDRES__LISTS}${userId}`, {
+const fetchLists = async (): Promise<Array<List>> => {
+  const response = await fetch(`${SERVER_ADDRES__LISTS_NO_SLASH}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -47,15 +59,15 @@ const fetchLists = async (userId: number): Promise<Array<List>> => {
   });
 
   if (!response.ok) {
-    throw new CustomError(`Failed to fetch lists for user: ${userId}: ${response.status}`, response.status);
+    throw new CustomError(`Failed to fetch lists for user: ${response.status}`, response.status);
   }
-
-  const lists: Array<List> = await response.json();
+  const data = await response.json();
+  const lists: Array<List> = data.taskLists;
   
   return lists;
 }
 
-const createListOnServer = async (userId: number, create: CreateListDTO): Promise<List> => {
+const createListOnServer = async (create: CreateListDTO): Promise<List> => {
     const response = await fetch(`${SERVER_ADDRES__LISTS_NO_SLASH}`, {
     method: 'POST',
     headers: {
@@ -63,7 +75,7 @@ const createListOnServer = async (userId: number, create: CreateListDTO): Promis
       'Content-Type': 'application/json',
       'Authorization' : `Bearer ${getCookie('token')}`,
     },
-    body: JSON.stringify({...create, ownerUserId: userId})
+    body: JSON.stringify({...create})
   });
 
   if (!response.ok) {
@@ -95,7 +107,7 @@ const createTaskOnServer = async (create: CreateTaskDTO): Promise<Task> => {
   return task;
 }
 
-const updateTaskOnServer = async (taskId: number, updates: UpdateTaskDTO): Promise<void> => {
+const updateTaskOnServer = async (taskId: number, updates: UpdateTaskDTO): Promise<Task> => {
   const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {
     method: 'PUT',
     headers: {'Content-Type': 'application/json', 'Authorization' : `Bearer ${getCookie('token')}`,},
@@ -105,9 +117,13 @@ const updateTaskOnServer = async (taskId: number, updates: UpdateTaskDTO): Promi
   if (!response.ok) {
     throw new CustomError(`Failed to update task: ${response.status} ${response.statusText}`, response.status);
   }
+
+  const task: Task = await response.json();
+
+  return task;
 }
 
-const updateListOnServer = async (listId: number, updates: UpdateListDTO): Promise<void> => {
+const updateListOnServer = async (listId: number, updates: UpdateListDTO): Promise<List> => {
   const response = await fetch(`${SERVER_ADDRES__LISTS}${listId}`, {
     method: 'PUT',
     headers: {'Content-Type': 'application/json', 'Authorization' : `Bearer ${getCookie('token')}`,},
@@ -117,6 +133,10 @@ const updateListOnServer = async (listId: number, updates: UpdateListDTO): Promi
   if (!response.ok) {
     throw new CustomError(`Failed to update task: ${response.status} ${response.statusText}`, response.status);
   }
+
+  const list: List = await response.json();
+
+  return list;
 }
 
 const deleteTaskOnServer = async (taskId: number): Promise<void> => {

@@ -121,7 +121,7 @@ function SideBarButton(props: SideBarButtonProps) {
         InitializationColorIndicator()
     }, [props.list.color])
 
-    if(props.list.title == 'Basket' || props.list.title == 'Completed' || props.list.title == 'All') {
+    if(props.list.id < 0) {
         return (
             <li 
                 className="side-bar__item" 

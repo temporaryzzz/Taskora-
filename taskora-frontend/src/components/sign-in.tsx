@@ -1,8 +1,6 @@
-import { useContext, useRef, type Dispatch, type FormEvent, type SetStateAction, } from "react";
+import { useEffect, useRef, type FormEvent } from "react";
 import { useNavigate } from 'react-router';
 import { SERVER_ADDRES, FRONTEND_ADDRES } from "../api";
-import { TaskManagerContext } from "../App";
-import type { User } from "../interfaces";
 import '../styles/main.scss'
 import { getCookie, setCookie } from "../cookies";
 
@@ -10,15 +8,12 @@ function SignIn() {
     const navigate = useNavigate();
 	const usernameInput = useRef<HTMLInputElement>(null);
 	const passwordInput = useRef<HTMLInputElement>(null);
-    const taskManagerContext = useContext(TaskManagerContext)
 
-    if(!!(getCookie('token'))) {
-        navigate('main', {replace: true})
-    }
-
-    let setUser: Dispatch<SetStateAction<User | undefined>>
-    if(taskManagerContext)
-        setUser = taskManagerContext?.actions.setUser
+    useEffect(() => {
+        if(!!(getCookie('token'))) {
+            navigate('main', {replace: true})
+        }
+    }, [])
     
 	const handleSubmit = (event: FormEvent) => {
 		event.preventDefault();
@@ -43,7 +38,7 @@ function SignIn() {
 			fetch(`${SERVER_ADDRES}/auth/signin`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`, },
-				body: JSON.stringify({ дщпшт: username, password: password }),
+				body: JSON.stringify({ login: username, password: password }),
 			})
 				.then((response) => {
 					if (!response.ok) {
@@ -52,9 +47,7 @@ function SignIn() {
 					return response.json();
 				})
 				.then((data) => {
-					setUser({ username: data.username, id: data.id, email: data.email });
 					setCookie("token", data.Authorization)
-					setCookie("userId", data.id)
 					navigate('main', { replace: true });
 				})
 				.catch((error) => {
@@ -77,7 +70,7 @@ function SignIn() {
                         id="login"
                         name="login"
                         minLength={2}
-                        maxLength={16}
+                        maxLength={50}
                         aria-errormessage="login-errors"
                         data-login
                         required

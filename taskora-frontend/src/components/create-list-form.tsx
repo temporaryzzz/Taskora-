@@ -25,7 +25,7 @@ export function CreateListForm(props: CreateListFormnProps) {
     const createList = () => {
         if(/\S/.test(title ?? '') && title != 'Basket' && title != 'Completed' && title != 'All') { //Добавить предупреждение пользователю, что нельзя так называть списки
             if(taskManagerContext.state.user !== undefined) {
-                const CreateListDTO: CreateListDTO = {title: title, ownerUserId: taskManagerContext.state.user.id, sections: ['main'], icon: icon, color: color}
+                const CreateListDTO: CreateListDTO = {title: title, ownerUserId: taskManagerContext.state.user.id, viewType: 'KANBAN', icon: icon, color: color}
                 taskManagerContext.actions.createList(CreateListDTO)
                 props.setActiveCreateForm(false)
                 return true

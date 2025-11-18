@@ -10,17 +10,20 @@ import { fetchTasks, fetchLists, updateTaskOnServer, updateListOnServer, createL
 import './styles/main.scss'
 import MainPage from './components/main-page';
 import { useAuthWrapper } from './hooks';
+import { getCookie, setCookie } from './cookies';
 
 export const TaskManagerContext = createContext<{state: AppState; actions: AppActions} | undefined>(undefined);
 
 function App() {
   const navigate = useNavigate()
   const { wrapWithAuth } = useAuthWrapper(navigate)
-  const [user, setUser] = useState<User | undefined>({username: 'admin', id: 0, email: 'admin@bk.ru'})
-  const [lists, setLists] = useState<Array<List>>([{title: 'Completed', id: 0, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "COMPLETED", color: "NONE"},
-    {title: 'Basket', id: 1, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "BASKET", color: "NONE"},
-    {title: 'All', id: 2, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "DEFAULT", color: "NONE"},
-    {title: 'Custom List', id: 3, ownerUserId: 0, sections: ['Main section'], deleted: false, icon: "DEFAULT", color: "YELLOW"},])
+  const [token] = useState<string | undefined>(getCookie('token'))
+  const [user, setUser] = useState<User | undefined>({username: 'admin', email: 'admin@bk.ru'})
+  //КОСТЫЛЬ - отрицаетльные id, чтобы они не совпали с id созданных листов
+  const [lists, setLists] = useState<Array<List>>([{title: 'Completed', id: -1, sections: ['Main section'], viewType: 'LIST', icon: "COMPLETED", color: "NONE"},
+          {title: 'Basket', id: -2, sections: ['Main section'], viewType: 'LIST', icon: "BASKET", color: "NONE"},
+          {title: 'All', id: -3,  sections: ['Main section'], viewType: 'LIST', icon: "DEFAULT", color: "NONE"},
+          {title: 'Custom', id: 0,  sections: ['Main section'], viewType: 'KANBAN', icon: "DEFAULT", color: "YELLOW"}])
   const [tasks, setTasks] = useState<Array<Task>>([])
   const [currentListId, setCurrentListId] = useState<number | null>(null)
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
@@ -30,16 +33,15 @@ function App() {
       setSelectedTaskId(taskId)
   })
 
-  const updateTask = wrapWithAuth((updates: UpdateTaskDTO) => {
-    const updatedTasks = tasks?.map(task =>
-      task.id === selectedTaskId ? { ...task, ...updates } : task
-    );
-
-    setTasks(updatedTasks);
-
+  const updateTask = wrapWithAuth(async (updates: UpdateTaskDTO) => {
     try {
-      if(selectedTaskId)
-        updateTaskOnServer(selectedTaskId, updates)
+      if(selectedTaskId) {
+        const updatedTask = await updateTaskOnServer(selectedTaskId, updates)
+        const updatedTasks = tasks?.map(task =>
+        task.id === updatedTask.id ? { ...task, ...updatedTask } : task);
+
+        setTasks(updatedTasks);
+      }
     }catch(error) {
       if (error instanceof CustomError) {
         console.log(error.message)
@@ -54,15 +56,13 @@ function App() {
     }
   })
 
-  const updateList = wrapWithAuth((listId: number, updates: UpdateListDTO) => {
-    const updatedLists = lists?.map(list =>
-      list.id === listId ? { ...list, ...updates } : list
-    );
-
-    setLists(updatedLists);
-
+  const updateList = wrapWithAuth(async (listId: number, updates: UpdateListDTO) => {
     try {
-      updateListOnServer(listId, updates)
+      const updatedList = await updateListOnServer(listId, updates)
+      const updatedLists = lists?.map(list =>
+      list.id === updatedList.id ? { ...list, ...updatedList } : list);
+
+      setLists(updatedLists);
     }catch(error) {
       if (error instanceof CustomError) {
         console.log(error.message)
@@ -82,6 +82,7 @@ function App() {
     setSelectedTaskId(null);
     
     try {
+      setCookie(`lastOpenListId`, `${listId}`)
       const loadedTasks = await fetchTasks(listId)
       setTasks(loadedTasks)
     }catch(error) {
@@ -91,7 +92,7 @@ function App() {
           navigate('', {replace: true})
         }
         else {
-          console.error(error.message);
+          console.error('custom', error.message);
           setError(true)
         }
       }
@@ -101,8 +102,8 @@ function App() {
   const loadLists = wrapWithAuth(async () => {
     try {
       if(user) {
-        const loadedLists = await fetchLists(user.id)
-        setLists(loadedLists)
+        const loadedLists = await fetchLists()
+        setLists([...lists, ...loadedLists])
       }
     }catch(error) {
       if (error instanceof CustomError) {
@@ -121,7 +122,7 @@ function App() {
   const createList = wrapWithAuth(async (list: CreateListDTO) => {
     try {
       if(user) {
-        const newList = await createListOnServer(user.id, list)
+        const newList = await createListOnServer(list)
         setLists(lists => [...lists, newList]);
       }
     }catch(error) {
@@ -158,7 +159,7 @@ function App() {
     }
   })
 
-  const deleteList = async (listId: number) => {
+  const deleteList = wrapWithAuth((listId: number) => {
     try{ 
       deleteListOnServer(listId)
       setLists(lists => lists.filter(list => list.id !== listId))
@@ -176,9 +177,9 @@ function App() {
         }
       }
     }
-  }
+  })
 
-  const deleteTask = async (taskId: number) => {
+  const deleteTask = wrapWithAuth((taskId: number) => {
     try{ 
       deleteTaskOnServer(taskId)
       setTasks(tasks => tasks.filter(task => task.id !== taskId))
@@ -196,18 +197,25 @@ function App() {
         }
       }
     }
-  }
+  })
 
   useEffect(() => {
-    loadLists()
-  }, [user])
+    //loadUser() - email, username, settings
+    if(token) {
+      loadLists()
+    }
+  }, [])
 
   useEffect(() => {
     if(lists.length > 0) {
-      //При первом входе открывать 2й список - All
-      switchList(2)
+      const lastOpenListId = Number(getCookie(`lastOpenListId`))
+      if(!isNaN(lastOpenListId) && lastOpenListId != null) {
+        switchList(lastOpenListId)
+      }
+      else {
+        switchList(2)
+      }
     }
-    //Усли в куках есть последний открытый список - то открывать его
   }, [lists])
 
   //⁡⁢⁣⁣CONTEXT⁡
