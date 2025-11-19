@@ -1,7 +1,7 @@
 @use "../helpers" as *;
 
 .three-dots-menu {
-    --size: #{rem(18)};
+    --size: #{rem(16)};
 
     @include square(var(--size));
 
@@ -14,5 +14,9 @@
 
     @include laptop {
         --size: #{rem(16)};            
+    }
+
+    &--active {
+        display: inline-flex;
     }
 }

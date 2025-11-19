@@ -106,12 +106,12 @@ function SideBarButton(props: SideBarButtonProps) {
 	};
 
 	useEffect(() => {
-		if (taskManagerContext.state.currentListId == props.list.id) {
+		if (taskManagerContext.state.currentList?.id == props.list.id) {
 			setActiveButton(true);
 		} else {
 			setActiveButton(false);
 		}
-	}, [taskManagerContext.state.currentListId]);
+	}, [taskManagerContext.state.currentList]);
 
     useEffect(() => {
         InitializationButtonIcon()

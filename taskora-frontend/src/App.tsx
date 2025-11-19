@@ -20,12 +20,12 @@ function App() {
   const [token] = useState<string | undefined>(getCookie('token'))
   const [user, setUser] = useState<User | undefined>({username: 'admin', email: 'admin@bk.ru'})
   //КОСТЫЛЬ - отрицаетльные id, чтобы они не совпали с id созданных листов
-  const [lists, setLists] = useState<Array<List>>([{title: 'Completed', id: -1, sections: ['Main section'], viewType: 'LIST', icon: "COMPLETED", color: "NONE"},
-          {title: 'Basket', id: -2, sections: ['Main section'], viewType: 'LIST', icon: "BASKET", color: "NONE"},
-          {title: 'All', id: -3,  sections: ['Main section'], viewType: 'LIST', icon: "DEFAULT", color: "NONE"},
-          {title: 'Custom', id: 0,  sections: ['Main section'], viewType: 'KANBAN', icon: "DEFAULT", color: "YELLOW"}])
+  const [lists, setLists] = useState<Array<List>>([{title: 'Completed', id: -1, sections: ['Main Completed section'], viewType: 'LIST', icon: "COMPLETED", color: "NONE"},
+          {title: 'Basket', id: -2, sections: ['Main Basket section'], viewType: 'LIST', icon: "BASKET", color: "NONE"},
+          {title: 'All', id: -3,  sections: ['Main All section'], viewType: 'LIST', icon: "DEFAULT", color: "NONE"},
+          {title: 'Custom', id: 0,  sections: ['Main section', 'Frontend'], viewType: 'KANBAN', icon: "DEFAULT", color: "YELLOW"}])
   const [tasks, setTasks] = useState<Array<Task>>([])
-  const [currentListId, setCurrentListId] = useState<number | null>(null)
+  const [currentList, setCurrentList] = useState<List | undefined>(undefined)
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
   const [error, setError] = useState<boolean>(false)
 
@@ -78,7 +78,7 @@ function App() {
   })
 
   const switchList = wrapWithAuth(async (listId: number) => {
-    setCurrentListId(listId)
+    setCurrentList(lists.find((list) => list.id == listId))
     setSelectedTaskId(null);
     
     try {
@@ -141,7 +141,7 @@ function App() {
 
   const createTask = wrapWithAuth(async (task: CreateTaskDTO) => {
     try {
-      if(currentListId) {
+      if(currentList) {
         const newTask = await createTaskOnServer(task)
         setTasks(tasks => [...tasks, newTask]);
       }
@@ -225,7 +225,7 @@ function App() {
       lists,
       tasks,
       selectedTaskId,
-      currentListId,
+      currentList,
       error,
     };
 
@@ -243,7 +243,7 @@ function App() {
     };
 
     return { state, actions };
-  }, [user, lists, tasks, selectedTaskId, currentListId]);
+  }, [user, lists, tasks, selectedTaskId, currentList]);
 
   return(
       <TaskManagerContext.Provider value={contextValue}>

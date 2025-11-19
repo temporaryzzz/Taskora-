@@ -29,7 +29,7 @@ export interface AppState {
     user: User | undefined;
     lists: Array<List>;
     tasks: Array<Task>;
-    currentListId: number | null;
+    currentList: List | undefined;
     selectedTaskId: number | null;
     error: boolean;
 }
