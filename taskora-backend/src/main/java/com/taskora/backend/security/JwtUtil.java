@@ -34,16 +34,16 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String username) {
+    public String generateToken(Long id) {
         return Jwts.builder()
-            .setSubject(username)
+            .setSubject(String.valueOf(id))
             .setIssuedAt(new Date())
             .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
             .signWith(key, SignatureAlgorithm.HS256)
             .compact();
     }
 
-    public String getUsernameFromToken(String token) {
+    public String getIdFromToken(String token) {
         return Jwts.parserBuilder()
             .setSigningKey(key).build()
             .parseClaimsJws(token)

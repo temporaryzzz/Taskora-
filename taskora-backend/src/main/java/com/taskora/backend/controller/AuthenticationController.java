@@ -5,13 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.taskora.backend.dto.CustomUserDetails;
 import com.taskora.backend.dto.ErrorMessageDTO;
 import com.taskora.backend.dto.SignInRequestDTO;
 import com.taskora.backend.dto.SignInResponseDTO;
@@ -100,10 +100,10 @@ public class AuthenticationController {
                     requestDTO.getLogin(),
                     requestDTO.getPassword())
             );
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            // [fix] стоит добавить проверку если вдруг (хотя после верхних действий это невозможно) null проверку
+            
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             SignInResponseDTO responseDTO = new SignInResponseDTO(
-                jwtUtil.generateToken(userDetails.getUsername())
+                jwtUtil.generateToken(userDetails.getId())
             );
 
             return ResponseEntity
