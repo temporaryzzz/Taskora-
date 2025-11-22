@@ -34,4 +34,31 @@
             color: var(--main-accent);
         }
     }
+
+    &--add {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        column-gap: rem(10);
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        padding: rem(4) rem(8);
+        border-radius: rem(10);
+        border: rem(1) solid transparent; 
+
+        &::after {
+            @include square(#{fluid(16, 14)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/plus-violet-icon.svg');
+        }
+
+        @include hover {
+            color: var(--main-accent);
+            background-color: var(--color-dark-25);
+        }
+    }
 }

@@ -57,30 +57,39 @@
             font-size: rem(16);
         }
 
-        &-title {
+        &-button-plus {
+            @include square(#{fluid(16, 14)});
+
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/plus-icon.svg');
+
+            @include hover {
+                background-color: var(--color-dark-25);
+            }
+        }
+
+        &-input {
             display: inline-flex;
             background-color: transparent;
+            align-items: center;
+            column-gap: rem(10);
             color: inherit;
             font-size: inherit;
             font-family: var(--font-famaly-accent);
             padding: rem(4) rem(8);
             border-radius: rem(10);
-
+            border: rem(1) solid transparent; 
+            text-overflow: ellipsis;
+            
             @include hover {
                 background-color: var(--color-dark-25);
             }
 
-            &--plus {
-                @include square(#{fluid(16, 14)});
-
-                background-position: center;
-                background-size: contain;
-                background-repeat: no-repeat;
-                background-image: url('../../assets/icons/plus-icon.svg');
-
-                @include hover {
-                    background-color: var(--color-dark-25);
-                }
+            &:focus-visible {
+                border: rem(1) solid var(--main-accent); 
+                outline: none;
             }
         }
 

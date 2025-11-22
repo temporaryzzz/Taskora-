@@ -59,8 +59,7 @@ function App() {
   const updateList = wrapWithAuth(async (listId: number, updates: UpdateListDTO) => {
     try {
       const updatedList = await updateListOnServer(listId, updates)
-      const updatedLists = lists?.map(list =>
-      list.id === updatedList.id ? { ...list, ...updatedList } : list);
+      const updatedLists = lists?.map(list => list.id === updatedList.id ? { ...list, ...updatedList } : list);
 
       setLists(updatedLists);
     }catch(error) {
