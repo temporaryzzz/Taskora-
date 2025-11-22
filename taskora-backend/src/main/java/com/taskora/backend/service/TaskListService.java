@@ -11,6 +11,8 @@ import com.taskora.backend.dto.TaskListDTO;
 import com.taskora.backend.dto.TaskListUpdateRequest;
 import com.taskora.backend.entity.TaskList;
 import com.taskora.backend.entity.User;
+import com.taskora.backend.exception.ForbiddenException;
+import com.taskora.backend.exception.NotFoundException;
 import com.taskora.backend.repository.TaskListRepository;
 import com.taskora.backend.utils.ResponseDTO;
 
@@ -22,7 +24,7 @@ public class TaskListService {
     
 
     /**
-     * Создает список задач
+     * Создает список задач.
      * 
      * @param owner кому принадлежит список
      * @param data - информация о создаваемом списке задач
@@ -44,19 +46,27 @@ public class TaskListService {
     }
 
     /**
-     * Находит список задач по {@code id}
+     * Находит список задач по {@code id}, и проверяет его принадлежность 
+     * пользователю.
      * 
-     * @param id списка задач
-     * @return найденный {@link TaskList}; {@code null}, если список не найден
+     * @param listId - {@code id} искомого списка задач
+     * @param userId - {@code id} пользователя, который запрашивает список
+     * @return найденный {@link TaskList}
+     * @throws NotFoundException если список не найден
+     * @throws ForbiddenException если задача не принадлежит пользователю
      */
-    public TaskList findTaskListById(Long id) {
-        if (id == null) return null;
+    public TaskList findTaskListById(Long listId, Long userId) {
+        TaskList list = repository.findById(listId)
+            .orElseThrow(() -> new NotFoundException());
 
-        return repository.findById(id).orElse(null);
+        if (!list.getOwner().getId().equals(userId))
+            throw new ForbiddenException("Нет доступа к списку");
+
+        return list;
     }
 
     /**
-     * Находит неудаленные списки задач по {@code id} пользователя
+     * Находит неудаленные списки задач по {@code id} пользователя.
      * 
      * @param userId - {@code id} пользователя
      * @return найденные списки задач; пустой список, если списки не найдены
@@ -71,39 +81,38 @@ public class TaskListService {
     /**
      * Обновляет список задач
      * 
-     * @param id изменяемого списка
+     * @param listId - {@code id} изменяемого списка
      * @param newTaskList - {@code DTO} с новыми данными
-     * @return {@link TaskListDTO} обновленной задачи; {@code null}, если список не найден
+     * @param userId - {@code id} пользователя, запросившего изменения
+     * @return {@link TaskListDTO} обновленной задачи
      */
-    public TaskListDTO updateTaskList(Long id, TaskListUpdateRequest newTaskList) {
-        TaskList taskList = repository.findById(id)
-            .orElse(null);
-        if (taskList == null) return null;
+    public TaskListDTO updateTaskList(Long listId, TaskListUpdateRequest newTaskList, Long userId) {
+        TaskList list = findTaskListById(listId, userId);
         
-        taskList.setTitle(newTaskList.getTitle());
-        taskList.setSections(newTaskList.getSections());
-        taskList.setIcon(newTaskList.getIcon());
-        taskList.setColor(newTaskList.getColor());
-        taskList.setViewType(newTaskList.getViewType());
+        list.setTitle(newTaskList.getTitle());
+        list.setSections(newTaskList.getSections());
+        list.setIcon(newTaskList.getIcon());
+        list.setColor(newTaskList.getColor());
+        list.setViewType(newTaskList.getViewType());
 
-        repository.save(taskList);
+        repository.save(list);
 
         ResponseDTO responseDTO = new ResponseDTO();
-        return responseDTO.fromTaskListEntityToDTO(taskList);
+        return responseDTO.fromTaskListEntityToDTO(list);
     }
 
-    public TaskListDTO softDeleteTaskListById(Long id) {
-        TaskList taskList = repository.findById(id)
-            .orElse(null);
-
-        if (taskList == null) return null;
+    /**
+     * Выполняет мягкое удаление задачи.
+     * 
+     * @param listId - {@code id} списка задач 
+     * @param userId - {@code id} пользователя, запросившего удаление
+     */
+    public void softDeleteTaskListById(Long listId, Long userId) {
+        TaskList taskList = findTaskListById(listId, userId);
 
         taskList.setDeleted(true);
         taskList.setDeletedAt(Instant.now());
         repository.save(taskList);
-
-        ResponseDTO responseDTO = new ResponseDTO();
-        return responseDTO.fromTaskListEntityToDTO(taskList);
     }
 
     /**

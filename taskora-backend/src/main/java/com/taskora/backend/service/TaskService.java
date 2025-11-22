@@ -1,18 +1,18 @@
 package com.taskora.backend.service;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.taskora.backend.dto.TaskCreateRequestDTO;
-// import com.taskora.backend.dto.Priority;
 import com.taskora.backend.dto.TaskDTO;
 import com.taskora.backend.dto.TaskUpdateRequestDTO;
 import com.taskora.backend.entity.Task;
 import com.taskora.backend.entity.TaskList;
+import com.taskora.backend.exception.ForbiddenException;
+import com.taskora.backend.exception.NotFoundException;
 import com.taskora.backend.repository.TaskRepository;
 import com.taskora.backend.utils.ResponseDTO;
 
@@ -24,7 +24,7 @@ public class TaskService {
 
 
     /**
-     * Создает задачу с дефолтными значениями
+     * Создает задачу.
      * 
      * @param taskList которой принадлежит задача
      * @param data - информация о создаваемой задачи
@@ -42,8 +42,8 @@ public class TaskService {
         task.setPriority(data.getPriority());
 
         repository.save(task);
-        ResponseDTO responseDTO = new ResponseDTO();
 
+        ResponseDTO responseDTO = new ResponseDTO();
         return responseDTO.fromTaskEntityToDTO(task);
     }
 
@@ -65,10 +65,10 @@ public class TaskService {
      * @param id
      * @return
      */
-    public List<TaskDTO> findTasksByOwnerId(Long id) {
-        List<Task> tasks = repository.findByOwnerId(id);
-        ResponseDTO responseDTO = new ResponseDTO();
+    public List<TaskDTO> findNonDeletedTasksByOwnerId(Long id) {
+        List<Task> tasks = repository.findByOwnerIdAndDeletedFalse(id);
 
+        ResponseDTO responseDTO = new ResponseDTO();
         return responseDTO.fromTaskListToDTOList(tasks);
     }
 
@@ -90,27 +90,44 @@ public class TaskService {
      * @return
      */
     public List<TaskDTO> findCompletedAndNotDeletedTasksByOwnerId(Long id) {
-        List<Task> tasks = new ArrayList<>();
+        List<Task> tasks = repository.findByOwnerIdAndCompletedTrueAndDeletedFalse(id);
 
-        tasks = repository.findByOwnerIdAndCompletedTrueAndDeletedFalse(id);
         ResponseDTO responseDTO = new ResponseDTO();
-
         return responseDTO.fromTaskListToDTOList(tasks);
     }
 
     /**
-     * Обновляет задачу 
+     * [fix]
+     * 
+     * @param taskId
+     * @param userId
+     * @return
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     */
+    public Task findTaskById(Long taskId, Long userId) {
+        Task task = repository.findById(taskId)
+            .orElseThrow(() -> new NotFoundException());
+
+        if (!task.getOwner().getId().equals(userId))
+            throw new ForbiddenException("Нет доступа к задаче");
+
+        return task;
+    };
+
+    /**
+     * Обновляет задачу, изменяя все поля задачи из БД на новые.
      * 
      * @param id обновляемой задачи
      * @param taskList [fix]
      * @param newTaskDTO - задача с новыми занными
      * @return {@link TaskDTO} обновленной задачи; {@code null}, если задача не найдена
+     * @throws NotFoundException если изменяемая задача не найдена
      */
     public TaskDTO updateTask(Long id, TaskList taskList, TaskUpdateRequestDTO newTaskDTO) {
         Task task = repository.findById(id)
-            .orElse(null);
-        if (task == null) return null;
-
+            .orElseThrow(() -> new NotFoundException());
+        
         task.setTaskList(taskList);
         task.setSection(newTaskDTO.getSection());
         task.setTitle(newTaskDTO.getTitle());
@@ -128,25 +145,21 @@ public class TaskService {
     /**
      * [fix]
      * 
-     * @param id
+     * @param taskId
+     * @param userId
      */
-    public boolean softDeleteTaskById(Long id) {
-        Task task = repository.findById(id)
-            .orElse(null);
+    public void softDeleteTaskById(Long taskId, Long userId) {
+        Task task = findTaskById(taskId, userId);
         
-        if (task == null) return false;
-
         task.setDeleted(true);
         task.setDeletedAt(Instant.now());
         repository.save(task);
-
-        return true;
     }
 
     /**
-     * [fix]
+     * Выполняет мягкое удаление всех задач привязанных к {@link TaskList}.
      * 
-     * @param id
+     * @param id списка задач
      */
     public void softDeleteTasksByTaskListId(Long id) {
         List<Task> tasks = repository.findByTaskListIdAndDeletedFalse(id);

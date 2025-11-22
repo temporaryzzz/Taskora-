@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.taskora.backend.dto.SignUpRequestDTO;
 import com.taskora.backend.dto.UserDTO;
 import com.taskora.backend.entity.User;
+import com.taskora.backend.exception.AlreadyExistsException;
 import com.taskora.backend.repository.UserRepository;
 import com.taskora.backend.utils.ResponseDTO;
 
@@ -26,20 +27,27 @@ public class UserService {
 
 
     /**
-     * Создает пользователя
+     * Создает пользователя.
      * 
      * @param requestDTO - {@code username}, {@code email}, {@code password}
      * @return {@link UserDTO} созданного пользователя
+     * 
+     * @throws AlreadyExistsException если пользователь с таким {@code username} или {@code email} существует
      */
     public UserDTO createUser(SignUpRequestDTO requestDTO) {
+        if (isUserExistsByUsername(requestDTO.getUsername()))
+            throw new AlreadyExistsException("Пользователь с данным username уже существует");
+        if (isUserExistsByEmail(requestDTO.getEmail()))
+            throw new AlreadyExistsException("Пользователь с данным email уже существует");
+
         User user = new User();
         user.setUsername(requestDTO.getUsername());
         user.setEmail(requestDTO.getEmail());
         user.setPassword("{bcrypt}" + passwordEncoder.encode(requestDTO.getPassword()));
 
         repository.save(user);
+
         ResponseDTO responseDTO = new ResponseDTO();
-        
         return responseDTO.fromUserEntityToDTO(user);
     }
 
@@ -136,16 +144,10 @@ public class UserService {
     }
 
     public boolean isUserExistsByEmail(String email) {
-        if (repository.existsByEmail(email)) 
-            return true;
-
-        return false;
+        return repository.existsByEmail(email);
     }
 
     public boolean isUserExistsByUsername(String username) {
-        if (repository.existsByUsername(username))
-            return true;
-
-        return false;
+        return repository.existsByUsername(username);
     }
 }

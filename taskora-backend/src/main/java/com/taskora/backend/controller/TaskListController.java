@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.taskora.backend.dto.ErrorMessageDTO;
 import com.taskora.backend.dto.TaskListCreateRequestDTO;
 import com.taskora.backend.dto.TaskListDTO;
 import com.taskora.backend.dto.TaskListResponseDTO;
@@ -19,6 +20,7 @@ import com.taskora.backend.entity.User;
 import com.taskora.backend.service.TaskListService;
 import com.taskora.backend.service.TaskService;
 import com.taskora.backend.service.UserService;
+import com.taskora.backend.utils.SecurityUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -45,7 +47,7 @@ public class TaskListController {
     private TaskService taskService;
 
 
-    @GetMapping("/{userId}")
+    @GetMapping("")
     @Operation(description = "Получение списков задач")
     @ApiResponses( value = {
         @ApiResponse(
@@ -61,10 +63,8 @@ public class TaskListController {
             content = {}
         )
     })
-    public ResponseEntity<?> getTaskListsForUser(@PathVariable Long userId) {
-        // [fix] Здесь пользователь может быть не найден - нужен обработчик 404
-        // сейчас он выдает 204, если пользователь не найден
-        List<TaskListDTO> taskLists = taskListService.findTaskListsByOwnerId(userId);
+    public ResponseEntity<?> getTaskListsForUser() {
+        List<TaskListDTO> taskLists = taskListService.findTaskListsByOwnerId(SecurityUtils.getCurrentUserId());
 
         if (taskLists.isEmpty())
             return ResponseEntity
@@ -85,20 +85,10 @@ public class TaskListController {
             content = @Content(
                 schema = @Schema(implementation = TaskListDTO.class)
             )
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Пользователь не найден",
-            content = {}
         )
     })
     public ResponseEntity<?> createTaskLists(@RequestBody TaskListCreateRequestDTO requestDTO) {
-        User owner = userService.findUserById(requestDTO.getOwnerId());
-        if (owner == null)
-            return ResponseEntity
-                .notFound()
-                .build();
-
+        User owner = userService.findUserById(SecurityUtils.getCurrentUserId());
         TaskListDTO taskListDTO = taskListService.createTaskList(owner, requestDTO);
         
         return ResponseEntity
@@ -117,17 +107,20 @@ public class TaskListController {
             )
         ),
         @ApiResponse(
+            responseCode = "403",
+            description = "Доступ запрещен",
+            content = @Content(
+                schema = @Schema(implementation = ErrorMessageDTO.class)
+            )
+        ),
+        @ApiResponse(
             responseCode = "404",
             description = "Список не найден",
             content = {}
         )
     })
     public ResponseEntity<?> updateTaskList(@PathVariable Long taskListId, @RequestBody TaskListUpdateRequest requestDTO) {
-        TaskListDTO updatedTaskList = taskListService.updateTaskList(taskListId, requestDTO);
-        if (updatedTaskList == null)
-            return ResponseEntity
-                .notFound()
-                .build();
+        TaskListDTO updatedTaskList = taskListService.updateTaskList(taskListId, requestDTO, SecurityUtils.getCurrentUserId());
 
         return ResponseEntity
             .ok()
@@ -144,17 +137,20 @@ public class TaskListController {
             content = {}
         ),
         @ApiResponse(
+            responseCode = "403",
+            description = "Доступ запрещен",
+            content = @Content(
+                schema = @Schema(implementation = ErrorMessageDTO.class)
+            )
+        ),
+        @ApiResponse(
             responseCode = "404",
             description = "Список не найден",
             content = {}
         )
     })
     public ResponseEntity<?> softDeleteTaskList(@PathVariable Long taskListId) {
-        TaskListDTO deletedTaskList = taskListService.softDeleteTaskListById(taskListId);
-        if (deletedTaskList == null)
-            return ResponseEntity
-                .notFound()
-                .build();
+        taskListService.softDeleteTaskListById(taskListId, SecurityUtils.getCurrentUserId());
 
         taskService.softDeleteTasksByTaskListId(taskListId);
 
@@ -163,12 +159,12 @@ public class TaskListController {
             .body(null);
     }
 
-    @DeleteMapping("/{taskListId}/hard")
-    public ResponseEntity<?> hardDeleteTaskList(@PathVariable Long taskListId) {
-        taskListService.deleteTaskListById(taskListId);
+    // @DeleteMapping("/{taskListId}/hard")
+    // public ResponseEntity<?> hardDeleteTaskList(@PathVariable Long taskListId) {
+    //     taskListService.deleteTaskListById(taskListId);
 
-        return ResponseEntity
-            .status(204)
-            .body(null);
-    }
+    //     return ResponseEntity
+    //         .status(204)
+    //         .body(null);
+    // }
 }

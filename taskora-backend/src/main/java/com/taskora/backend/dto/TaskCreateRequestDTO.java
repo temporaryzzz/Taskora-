@@ -12,7 +12,7 @@ public class TaskCreateRequestDTO {
     
     @JsonProperty("ownerListId")
     @Schema(description = "Id списка в котором лежит задача")
-    @NotBlank
+    // @NotBlank
     Long taskListId;
 
     @Schema(description = "Назавние секции, в которой лежит задача")

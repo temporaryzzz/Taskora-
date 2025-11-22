@@ -57,21 +57,11 @@ public class AuthenticationController {
         )
     })
     public ResponseEntity<?> signUp(@RequestBody SignUpRequestDTO requestDTO) {
-        if (userService.isUserExistsByEmail(requestDTO.getEmail()))
-            return ResponseEntity
-                    .status(409)
-                    .body(new ErrorMessageDTO("Пользователь с данным email уже существует"));
-        
-        if (userService.isUserExistsByUsername(requestDTO.getUsername()))
-            return ResponseEntity
-                    .status(409)
-                    .body(new ErrorMessageDTO("Пользователь с данным username уже существует"));
-
         userService.createUser(requestDTO);
 
         return ResponseEntity
                 .ok()
-                .body(null);
+                .build();
     }
     
     
@@ -86,7 +76,7 @@ public class AuthenticationController {
             )
         ),
         @ApiResponse(
-            responseCode = "400",
+            responseCode = "401",
             description = "Неверный логин или пароль",
             content = @Content(
                 schema = @Schema(implementation = ErrorMessageDTO.class)
@@ -114,7 +104,7 @@ public class AuthenticationController {
         }
         
         return ResponseEntity
-            .badRequest()
+            .status(401)
             .body(new ErrorMessageDTO("Неверный логин или пароль"));
     }
 }

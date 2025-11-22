@@ -1,15 +1,9 @@
 package com.taskora.backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Запрос на создание списка задач")
 public class TaskListCreateRequestDTO {
-
-    @JsonProperty("ownerUserId")
-    @Schema(description = "Id пользователя")
-    Long ownerId;
 
     @Schema(description = "Название списка задач")
     String title;
@@ -24,22 +18,13 @@ public class TaskListCreateRequestDTO {
     String viewType;
 
 
-    public TaskListCreateRequestDTO(Long ownerId, String title, String icon, String color, String viewType) {
-        this.ownerId = ownerId;
+    public TaskListCreateRequestDTO(String title, String icon, String color, String viewType) {
         this.title = title;
         this.icon = icon;
         this.color = color;
         this.viewType = viewType;
     }
 
-    
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
 
     public String getTitle() {
         return title;

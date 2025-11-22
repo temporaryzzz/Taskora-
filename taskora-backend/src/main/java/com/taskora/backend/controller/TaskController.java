@@ -1,9 +1,11 @@
 package com.taskora.backend.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import com.taskora.backend.dto.ErrorMessageDTO;
 import com.taskora.backend.dto.TaskCreateRequestDTO;
 import com.taskora.backend.dto.TaskDTO;
 import com.taskora.backend.dto.TaskResponseDTO;
@@ -11,6 +13,7 @@ import com.taskora.backend.dto.TaskUpdateRequestDTO;
 import com.taskora.backend.entity.TaskList;
 import com.taskora.backend.service.TaskListService;
 import com.taskora.backend.service.TaskService;
+import com.taskora.backend.utils.SecurityUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,7 +33,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-// [fix] сейчас любой пользователь может просто по url получать задачи других
 @RestController
 @RequestMapping("/api/tasks")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -59,6 +61,13 @@ public class TaskController {
             content = {}
         ),
         @ApiResponse(
+            responseCode = "403",
+            description = "Доступ запрещен",
+            content = @Content(
+                schema = @Schema(implementation = ErrorMessageDTO.class)
+            )
+        ),
+        @ApiResponse(
             responseCode = "404",
             description = "Список не найден",
             content = {}
@@ -66,21 +75,68 @@ public class TaskController {
     })
     public ResponseEntity<?> getTasks(@PathVariable Long taskListId) {
         List<TaskDTO> taskDTOs = new ArrayList<>();
-        TaskList list = taskListService.findTaskListById(taskListId);
 
-        if (list == null)
+        TaskList list = taskListService.findTaskListById(taskListId, SecurityUtils.getCurrentUserId());
+        taskDTOs = taskService.findNotDeletedTasksByTaskListId(list.getId());
+        
+        if (taskDTOs.isEmpty())
             return ResponseEntity
-                .notFound()
+                .noContent()
                 .build();
 
-        String title = list.getTitle();
+        return ResponseEntity
+            .ok()
+            .body(new TaskResponseDTO(taskDTOs));
+    }
 
-        // Лучше было бы не title проверять, а параметром получать ?all, ?completed, ?deleted
-        switch (title) {
-            // case "All" -> taskDTOs = taskService.findTasksByOwnerId(list.getOwner().getId());
-            case "Completed" -> taskDTOs = taskService.findCompletedAndNotDeletedTasksByOwnerId(list.getOwner().getId());
-            case "Basket" -> taskDTOs = taskService.findDeletedTasksByOwnerId(list.getOwner().getId());
-            default -> taskDTOs = taskService.findNotDeletedTasksByTaskListId(list.getId());
+    @GetMapping("")
+    @Operation(description = "Получение задач в системных списках")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Задачи найдены",
+            content = @Content(
+                schema = @Schema(implementation = TaskResponseDTO.class) 
+            )
+        ),
+        @ApiResponse(
+            responseCode = "204",
+            description = "Задачи не найдены",
+            content = {}
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Неизвестный системный список",
+            content = @Content(
+                schema = @Schema(implementation = ErrorMessageDTO.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "403",
+            description = "Доступ запрещен",
+            content = @Content(
+                schema = @Schema(implementation = ErrorMessageDTO.class)
+            )
+        )
+    })
+    public ResponseEntity<?> getTasksFromSystemList(@RequestParam String system) {
+        List<TaskDTO> taskDTOs = new ArrayList<>();
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+
+        switch (system) {
+            case "all":
+                taskDTOs = taskService.findNonDeletedTasksByOwnerId(currentUserId);
+                break;
+            case "completed":
+                taskDTOs = taskService.findCompletedAndNotDeletedTasksByOwnerId(currentUserId);
+                break;
+            case "deleted":
+                taskDTOs = taskService.findDeletedTasksByOwnerId(currentUserId);
+                break;
+            default:
+                return ResponseEntity
+                    .badRequest()
+                    .body(new ErrorMessageDTO("Неизвестный системный список"));
         }
         
         if (taskDTOs.isEmpty())
@@ -102,22 +158,15 @@ public class TaskController {
             content = @Content(
                 schema = @Schema(implementation = TaskDTO.class)
             )
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Список задач не найден",
-            content = {}
         )
     })
     public ResponseEntity<?> createTask(@RequestBody TaskCreateRequestDTO requestDTO) {
-        // [fix] тут 404 не только если список не найден, но и если id списка null
-        TaskList taskList = taskListService.findTaskListById(requestDTO.getTaskListId());
-        if (taskList == null)
-            return ResponseEntity
-                .notFound()
-                .build();
+        TaskList list = null;
 
-        TaskDTO taskDTO = taskService.createTask(taskList, requestDTO);
+        if (requestDTO.getTaskListId() != null)
+            list = taskListService.findTaskListById(requestDTO.getTaskListId(), SecurityUtils.getCurrentUserId());
+
+        TaskDTO taskDTO = taskService.createTask(list, requestDTO);
         
         return ResponseEntity
             .status(201)
@@ -135,23 +184,22 @@ public class TaskController {
             )
         ),
         @ApiResponse(
+            responseCode = "403",
+            description = "Доступ запрещен",
+            content = @Content(
+                schema = @Schema(implementation = ErrorMessageDTO.class)
+            )
+        ),
+        @ApiResponse(
             responseCode = "404",
-            description = "Задача не найдена",
+            description = "Задача или список не найдены",
             content = {}
         )
     })
     public ResponseEntity<?> updateTask(@PathVariable Long taskId, @RequestBody TaskUpdateRequestDTO requestDTO) {
-        TaskList taskList = taskListService.findTaskListById(requestDTO.getTaskListId());
-        if (taskList == null)
-            return ResponseEntity
-                .notFound()
-                .build();
+        TaskList taskList = taskListService.findTaskListById(requestDTO.getTaskListId(), SecurityUtils.getCurrentUserId());
 
         TaskDTO updatedTask = taskService.updateTask(taskId, taskList, requestDTO);
-        if (updatedTask == null)
-            return ResponseEntity
-                .notFound()
-                .build();
 
         return ResponseEntity
             .ok()
@@ -167,29 +215,33 @@ public class TaskController {
             content = {}
         ),
         @ApiResponse(
+            responseCode = "403",
+            description = "Доступ запрещен",
+            content = @Content(
+                schema = @Schema(implementation = ErrorMessageDTO.class)
+            )
+        ),
+        @ApiResponse(
             responseCode = "404",
             description = "Задача не найдена",
             content = {}
         )
     })
     public ResponseEntity<?> softDeleteTask(@PathVariable Long taskId) {
-        if (!taskService.softDeleteTaskById(taskId))
-            return ResponseEntity
-                .notFound()
-                .build();
+        taskService.softDeleteTaskById(taskId, SecurityUtils.getCurrentUserId());
 
         return ResponseEntity
             .status(204)
             .body(null);
     }
 
-    @DeleteMapping("/{taskId}/hard")
-    @Operation(description = "Удаление задачи (old)")
-    public ResponseEntity<?> hardDeleteTask(@PathVariable Long taskId) {
-        taskService.deleteTaskById(taskId);
+    // @DeleteMapping("/{taskId}/hard")
+    // @Operation(description = "Удаление задачи (old)")
+    // public ResponseEntity<?> hardDeleteTask(@PathVariable Long taskId) {
+    //     taskService.deleteTaskById(taskId);
 
-        return ResponseEntity
-            .status(204)
-            .body(null);
-    }
+    //     return ResponseEntity
+    //         .status(204)
+    //         .body(null);
+    // }
 }
