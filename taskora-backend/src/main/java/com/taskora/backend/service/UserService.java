@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -56,12 +57,25 @@ public class UserService {
      * 
      * @param id пользователя
      * @return {@link User} найденного пользователя; {@code null}, если пользователь не найден
+     * @throws UsernameNotFoundException если пользователь с данным {@code id} не найден
      */
     public User findUserById(Long id) {
         User user = repository.findById(id)
-            .orElse(null);
+            .orElseThrow(() -> new UsernameNotFoundException("Пользователь с id: " + id + " не найден"));
         
         return user;
+    }
+
+    /**[fix]
+     * 
+     * @param id
+     * @return
+     */
+    public UserDTO findUserDetailsById(Long id) {
+        User user = findUserById(id);
+
+        ResponseDTO response = new ResponseDTO();
+        return response.fromUserEntityToDTO(user);
     }
 
     /**

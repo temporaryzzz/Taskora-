@@ -6,9 +6,6 @@ import jakarta.validation.constraints.Size;
 
 @Schema(description = "Пользователь")
 public class UserDTO {
-    
-    @Schema(description = "Уникальный id пользователя в БД")
-    Long id;
 
     @Schema(description = "Никнейм пользователя должен содержать от 3 до 16 символов", example = "user123")
     @NotBlank
@@ -21,21 +18,12 @@ public class UserDTO {
     String email;
 
 
-    public UserDTO(Long id, @NotBlank @Size(min = 3, max = 16) String username,
+    public UserDTO(@NotBlank @Size(min = 3, max = 16) String username,
             @NotBlank @Size(min = 6, max = 64) String email) {
-        this.id = id;
         this.username = username;
         this.email = email;
     }
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;

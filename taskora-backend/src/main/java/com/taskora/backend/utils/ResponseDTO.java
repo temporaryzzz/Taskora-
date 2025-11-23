@@ -17,7 +17,7 @@ import com.taskora.backend.entity.User;
 public class ResponseDTO {
     
     public UserDTO fromUserEntityToDTO(User user) {
-        return new UserDTO(user.getId(), user.getUsername(), user.getEmail());
+        return new UserDTO(user.getUsername(), user.getEmail());
     }
 
     public List<UserDTO> fromUserEntityListToDTOList(List<User> users) {
