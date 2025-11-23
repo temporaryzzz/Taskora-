@@ -18,7 +18,7 @@ export function Header() {
                     </div>
                     <h1 className="header__title h3">{
                         taskManagerContext.state.lists.map((list) => {
-                            if(list.id == taskManagerContext.state.currentListId) {
+                            if(list.id == taskManagerContext.state.currentList?.id) {
                                 return(list.title)
                             }
                         })
