@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState, type FormEvent } from "react";
 import { TaskManagerContext } from "../App";
 import { TaskComponent } from "./task";
 import type { Task } from "../interfaces";
@@ -10,8 +10,14 @@ export function TaskListSection(props: TaskListSectionProps) {
     if(taskManagerContext == undefined) {
         return
     }
+    
+    const formAddTaskRef = useRef<HTMLFormElement>(null)
+    const inputAddTaskRef = useRef<HTMLInputElement>(null)
     const [sectionTitle, setSectionTitle] = useState<string>(props.section)
     const [completedTasks] = useState<Task[]>(taskManagerContext.state.tasks.filter((task) => task.completed == true && task.section == sectionTitle))
+    const stateClasses = {
+        hidden: 'visually-hidden',
+    }
 
     const handleBlur = () => {
         if(taskManagerContext?.state.currentList) {
@@ -19,6 +25,26 @@ export function TaskListSection(props: TaskListSectionProps) {
             const updatedSections = list.sections?.map(section => section === props.section ? section = sectionTitle : section);
             taskManagerContext.actions.updateList(list.id, 
                 {title: list.title, icon: list.icon, color: list.color, sections: updatedSections, viewType: list.viewType})
+        }
+    }
+
+    const showAddTaskForm = () => {
+        if(formAddTaskRef.current && formAddTaskRef.current.classList.contains(stateClasses.hidden)) {
+            formAddTaskRef.current.classList.remove(stateClasses.hidden)
+            inputAddTaskRef.current?.focus()
+        }
+    }
+
+    const createTask = (event: FormEvent) => {
+        event.preventDefault()
+        if(inputAddTaskRef.current && /\S/.test(inputAddTaskRef.current.value ?? '') && taskManagerContext.state.currentList) {
+            taskManagerContext.actions.createTask({title: inputAddTaskRef.current.value, ownerListId: taskManagerContext.state.currentList.id,
+                description: '', deadline: null, section: sectionTitle, priority: 'DEFAULT'})
+        }
+
+        if(formAddTaskRef.current) {
+            formAddTaskRef.current.classList.add(stateClasses.hidden)
+            inputAddTaskRef.current?.blur()
         }
     }
 
@@ -31,12 +57,24 @@ export function TaskListSection(props: TaskListSectionProps) {
                     onBlur={handleBlur}/>
                 <span>
                     <div className="task-list__section-button-wrapper">
-                        <button className="task-list__section-button-plus button button--add"></button>
+                        <button className="task-list__section-button-plus button button--add" 
+                            onClick={showAddTaskForm}>
+                        </button>
                     </div>
                     <div className="task-list__section-button-wrapper">
                         <span className="three-dots-menu three-dots-menu--active"></span>
                     </div>
                 </span>
+                <form ref={formAddTaskRef} 
+                    onSubmit={(e) => createTask(e)}
+                    className="task-list__section-title-wrapper task-list__section-title-wrapper--full-width visually-hidden">
+                    <input type="text" 
+                        className="task-list__section-input task-list__section-input--full-width" 
+                        id='add-task'
+                        placeholder="New task"
+                        ref={inputAddTaskRef}
+                        onBlur={(e) => createTask(e)}/>
+                </form>
             </div>
             <div className="task-list__section-body">
                 <ul className="task-list__section-active-tasks">

@@ -23,6 +23,8 @@
     }
 
     &__section {
+        display: flex;
+        flex-direction: column;
         width: rem(270);
         flex-shrink: 0;
         row-gap: rem(10);
@@ -59,7 +61,8 @@
         }
 
         &-title-wrapper {
-            display: inline-flex;
+            display: grid;
+            grid-template-columns: 25% 25% 25% 25%;
             justify-content: space-between;
             align-items: center;
             white-space: nowrap;
@@ -67,6 +70,15 @@
             text-overflow: ellipsis;
             font-family: var(--font-famaly-accent);
             font-size: rem(16);
+
+            &--full-width {
+                grid-column: 1/5;
+                width: 100%;
+            }
+        }
+
+        &-button {
+            grid-column: 1/3;
         }
 
         &-button-plus {
@@ -83,6 +95,7 @@
         }
 
         &-input {
+            grid-column: 1/4;
             display: inline-flex;
             background-color: transparent;
             align-items: center;
@@ -102,6 +115,11 @@
             &:focus-visible {
                 border: rem(1) solid var(--main-accent); 
                 outline: none;
+            }
+
+            &--full-width {
+                grid-column: 1/5;
+                width: 100%;
             }
         }
 

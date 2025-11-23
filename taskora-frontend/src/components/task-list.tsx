@@ -49,7 +49,7 @@ function AddSectionButton() {
         if(addInputRef.current && /\S/.test(addInputRef.current.value ?? '') && taskManagerContext.state.currentList) {
             const list = taskManagerContext.state.currentList
             taskManagerContext.actions.updateList(list.id, 
-                {title: list.title, icon: list.icon, color: list.color, sections: [...list.sections, addInputRef.current.value], viewType: list.viewType})
+                {...list, sections: [...list.sections, addInputRef.current.value]})
             addInputRef.current.value = ''
             switchInput(false)
         }
@@ -66,6 +66,7 @@ function AddSectionButton() {
                     </button>
                     <input type="text" ref={addInputRef} 
                         className="task-list__section-input visually-hidden" 
+                        id='add-section'
                         placeholder="New section"
                         onBlur={() => switchInput(false)}/>
                 </form>
