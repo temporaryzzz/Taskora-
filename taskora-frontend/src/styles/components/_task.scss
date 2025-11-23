@@ -1,0 +1,84 @@
+@use "../helpers" as *;
+
+.task {
+    display: flex;
+    flex-direction: column;
+    row-gap: rem(5);
+    background-color: var(--color-dark-15);
+    border-radius: rem(10);
+    padding: rem(10);
+
+    &--completed {
+        color: var(--color-dark-40);
+
+        .task__date {
+            color: var(--color-dark-40);
+        }
+    }
+
+    &__date {
+        font-size: rem(14);
+        color: var(--color-blue);
+        margin-left: rem(37);
+    }
+
+    &__body {
+        display: inline-flex;
+        column-gap: rem(10);
+        align-items: center;
+        color: inherit;
+    }
+
+    &__title {
+        font-weight: 400;
+        font-family: var(--font-famaly-accent);
+        font-size: rem(16);
+        color: inherit;
+    }
+
+    &__checkbox {
+        --size: #{rem(20)};
+
+        @include square(var(--size));
+
+        display: flex;
+        border-radius: 3px;
+        border: 2px solid var(--color-dark-40);
+        appearance: none;
+        -webkit-appearance: none;
+        outline: none;
+        cursor: pointer;
+
+        &::after {
+            content: '\2713';
+            color: var(--color-dark-15);
+            width: 0px;
+            height: 0px;
+            display: none;
+        }
+
+        &:checked {
+            border: 2px solid transparent;
+            background-color: var(--color-dark-40);
+
+            &::after {
+                width: rem(12);
+                height: rem(12);
+                display: block;
+                margin-top: rem(-4);
+            }
+        }
+
+        &--high {
+            border-color: var(--color-yellow);
+        }
+
+        &--highest {
+            border-color: var(--color-red);
+        }
+
+        &--middle {
+            border-color: var(--color-blue);
+        }
+    }
+}

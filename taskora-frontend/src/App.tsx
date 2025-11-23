@@ -24,7 +24,10 @@ function App() {
           {title: 'Basket', id: -2, sections: ['Main Basket section'], viewType: 'LIST', icon: "BASKET", color: "NONE"},
           {title: 'All', id: -3,  sections: ['Main All section'], viewType: 'LIST', icon: "DEFAULT", color: "NONE"},
           {title: 'Custom', id: 0,  sections: ['Main section', 'Frontend'], viewType: 'KANBAN', icon: "DEFAULT", color: "YELLOW"}])
-  const [tasks, setTasks] = useState<Array<Task>>([])
+  const [tasks, setTasks] = useState<Array<Task>>([{id: 0, title: 'task', description: 'description', ownerListId: 0, deadline: '2025-11-26T12:30Z', section: 'Frontend', completed: false, priority: 'MIDDLE'},
+    {id: 1, title: 'completed task', description: 'description', ownerListId: 0, deadline: '2025-12-21T15:30Z', section: 'Frontend', completed: true, priority: 'DEFAULT'},
+    {id: 2, title: 'task number 2', description: 'description', ownerListId: 0, deadline: '2025-12-20T16:30Z', section: 'Frontend', completed: false, priority: 'HIGHEST'},
+  ])
   const [currentList, setCurrentList] = useState<List | undefined>(undefined)
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
   const [error, setError] = useState<boolean>(false)
