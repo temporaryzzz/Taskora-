@@ -1,6 +1,7 @@
 package com.taskora.backend.security;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +14,7 @@ import com.taskora.backend.service.CustomUserDetailsService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -52,11 +54,21 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
     
     private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
-        if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
-        }
-        
-        return null;
+        // String headerAuth = request.getHeader("Authorization");
+        // if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
+        //     return headerAuth.substring(7);
+        // }
+
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies == null) 
+            return null;
+
+        return Arrays.stream(cookies)
+            .filter(cookie -> "token".equals(cookie.getName()))
+            .map(Cookie::getValue)
+            .map(value -> value.startsWith("Bearer ") ? value.substring(7) : value)
+            .findFirst()
+            .orElse(null);
     }
 }
