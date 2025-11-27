@@ -5,8 +5,17 @@
     flex-direction: column;
     row-gap: rem(5);
     background-color: var(--color-dark-15);
+    fill-opacity: 60%;
     border-radius: rem(10);
     padding: rem(10);
+
+    @include hover {
+        background-color: var(--color-dark-20);
+    }
+
+    &--active {
+        background-color: var(--color-dark-25);
+    }
 
     &--completed {
         color: var(--color-dark-40);
@@ -18,7 +27,7 @@
 
     &__date {
         font-size: rem(14);
-        color: var(--color-blue);
+        color: var(--main-accent);
         margin-left: rem(37);
     }
 

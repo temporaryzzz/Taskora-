@@ -56,10 +56,9 @@ export function TaskListSection(props: TaskListSectionProps) {
                     onChange={(e) => setSectionTitle(e.target.value)}
                     onBlur={handleBlur}/>
                 <span>
-                    <div className="task-list__section-button-wrapper">
-                        <button className="task-list__section-button-plus button button--add" 
-                            onClick={showAddTaskForm}>
-                        </button>
+                    <div className="task-list__section-button-wrapper" onClick={showAddTaskForm}>
+                        <span className="task-list__section-button-plus button button--add" >
+                        </span>
                     </div>
                     <div className="task-list__section-button-wrapper">
                         <span className="three-dots-menu three-dots-menu--active"></span>

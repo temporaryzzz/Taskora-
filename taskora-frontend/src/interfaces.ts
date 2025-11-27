@@ -31,6 +31,7 @@ export interface AppState {
     tasks: Array<Task>;
     currentList: List | undefined;
     selectedTaskId: number | null;
+    tempTaskTitle: string;
     error: boolean;
 }
 
@@ -43,6 +44,7 @@ export type UpdateListDTO = Pick<List, 'title' | 'icon' | 'color' | 'sections' |
 export interface AppActions {
     setUser: Dispatch<SetStateAction<User | undefined>>;
     setSelectedTask: (taskId: number) => void;
+    setTempTaskTitle: Dispatch<SetStateAction<string>>;
     updateTask: (updates: UpdateTaskDTO) => void;
     updateList: (listId: number, updates: UpdateListDTO) => void;
     //Загрузка задач из списка на котороый переключился юзер

@@ -20,7 +20,8 @@ export function TaskComponent(props: TaskProps) {
         DEFAULT: '',
         MIDDLE: 'task__checkbox--middle',
         HIGH: 'task__checkbox--high',
-        HIGHEST: 'task__checkbox--highest'
+        HIGHEST: 'task__checkbox--highest',
+        active: 'task--active',
     }
     const monthState = [
 		'янв.',
@@ -69,16 +70,17 @@ export function TaskComponent(props: TaskProps) {
     }
 
     useEffect(() => {
+        InitializationCheckbox()
         if(props.task.completed == true && !taskElementRef.current?.classList.contains('task--completed')) {
             taskElementRef.current?.classList.add('task--completed')
             if(checkboxElementRef.current) {
                 checkboxElementRef.current.checked = true
             }
         }
-        InitializationCheckbox()
         if (props.task.deadline == null) {
 			setDateMessage('');
-		} else {
+		} 
+        else {
 			const date = new Date(props.task.deadline).getDate();
 			const month = new Date(props.task.deadline).getMonth();
 			let hours = new Date(props.task.deadline).getHours() - 3;
@@ -99,11 +101,22 @@ export function TaskComponent(props: TaskProps) {
         }
     }, [props.task])
 
+    useEffect(() => {
+        if(taskManagerContext.state.selectedTaskId == props.task.id) {
+            taskElementRef.current?.classList.add(stateClasses.active)
+        }
+        else {
+            if(taskElementRef.current?.classList.contains(stateClasses.active)) {
+                taskElementRef.current?.classList.remove(stateClasses.active)
+            }
+        }
+    }, [taskManagerContext.state.selectedTaskId])
+
     return(
-        <li className="task" ref={taskElementRef}>
+        <li className="task" ref={taskElementRef} onClick={() => taskManagerContext.actions.setSelectedTask(props.task.id)}>
             <div className="task__body">
                 <input type="checkbox" className="task__checkbox" onChange={toggleCompleted} ref={checkboxElementRef}/>
-                <h3 className="task__title h5">{props.task.title}</h3>
+                <h3 className="task__title h5">{props.task.id == taskManagerContext.state.selectedTaskId ? taskManagerContext.state.tempTaskTitle : props.task.title}</h3>
             </div>
             <div className="task__extra">
                 <p className="task__date">{dateMessage}</p>

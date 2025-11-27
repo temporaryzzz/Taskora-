@@ -30,11 +30,16 @@ function App() {
   ])
   const [currentList, setCurrentList] = useState<List | undefined>(undefined)
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
+  const [tempTaskTitle, setTempTaskTitle] = useState<string>('');
   const [error, setError] = useState<boolean>(false)
 
-  const setSelectedTask = wrapWithAuth((taskId: number) => {
+  const setSelectedTask = (taskId: number) => {
       setSelectedTaskId(taskId)
-  })
+      let title = tasks.find(task => task.id == taskId)?.title
+      if(title) {
+        setTempTaskTitle(title);
+      }
+  }
 
   const updateTask = wrapWithAuth(async (updates: UpdateTaskDTO) => {
     try {
@@ -227,6 +232,7 @@ function App() {
       lists,
       tasks,
       selectedTaskId,
+      tempTaskTitle,
       currentList,
       error,
     };
@@ -234,6 +240,7 @@ function App() {
     const actions: AppActions = {
       setUser,
       setSelectedTask,
+      setTempTaskTitle,
       updateTask,
       updateList,
       switchList,
@@ -245,7 +252,7 @@ function App() {
     };
 
     return { state, actions };
-  }, [user, lists, tasks, selectedTaskId, currentList]);
+  }, [user, lists, tasks, selectedTaskId, currentList, tempTaskTitle]);
 
   return(
       <TaskManagerContext.Provider value={contextValue}>
