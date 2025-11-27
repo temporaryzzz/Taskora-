@@ -1,43 +1,70 @@
 package com.taskora.backend.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
 
 @Schema(description = "Запрос на обновление задачи")
 public class TaskUpdateRequestDTO {
     
-    @Schema(description = "Название задачи, от 1 до 25 символов", example = "task 1")
-    @Size(min = 1, max = 25)
+    @JsonProperty("ownerListId")
+    @Schema(description = "Id списка в котором лежит задача")
+    // @NotBlank
+    Long taskListId;
+
+    @Schema(description = "Назавние секции, в которой лежит задача")
+    String section;
+
+    @Schema(description = "Название задачи", example = "task 1")
+    @NotBlank
     String title;
 
-    @Schema(description = "Описание задачи, до 255 символов", example = "Создать task 2.")
-    @Max(255)
+    @Schema(description = "Описание задачи", example = "Создать task 2.")
     String description;
 
+    @JsonProperty("deadline")
     @Schema(description = "Дедлайн задачи")
-    LocalDateTime due_date;
+    Instant dueDate;
 
     @Schema(description = "Приоритет задачи", example = "DEFAULT")
-    @Enumerated
-    Priority priority = Priority.DEFAULT;
+    @NotBlank
+    String priority = "DEFAULT";
 
     @Schema(description = "Выполнена ли задача", example = "false")
-    Boolean completed;
+    @NotBlank
+    boolean completed;
 
 
-    public TaskUpdateRequestDTO(@Size(min = 1, max = 25) String title, @Max(255) String description,
-            LocalDateTime due_date, Priority priority, Boolean completed) {
+    public TaskUpdateRequestDTO(@NotBlank Long taskListId, String section, @NotBlank String title, String description,
+            Instant dueDate, @NotBlank String priority, @NotBlank boolean completed) {
+        this.taskListId = taskListId;
+        this.section = section;
         this.title = title;
         this.description = description;
-        this.due_date = due_date;
+        this.dueDate = dueDate;
         this.priority = priority;
         this.completed = completed;
     }
 
+
+    public Long getTaskListId() {
+        return taskListId;
+    }
+
+    public void setTaskListId(Long taskListId) {
+        this.taskListId = taskListId;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
 
     public String getTitle() {
         return title;
@@ -55,27 +82,27 @@ public class TaskUpdateRequestDTO {
         this.description = description;
     }
 
-    public LocalDateTime getDue_date() {
-        return due_date;
+    public Instant getDueDate() {
+        return dueDate;
     }
 
-    public void setDue_date(LocalDateTime due_date) {
-        this.due_date = due_date;
+    public void setDueDate(Instant dueDate) {
+        this.dueDate = dueDate;
     }
 
-    public Priority getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(Priority priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 
-    public Boolean getCompleted() {
+    public boolean isCompleted() {
         return completed;
     }
 
-    public void setCompleted(Boolean completed) {
+    public void setCompleted(boolean completed) {
         this.completed = completed;
     }
 }

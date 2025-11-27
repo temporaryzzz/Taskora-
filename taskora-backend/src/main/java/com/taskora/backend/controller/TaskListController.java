@@ -2,6 +2,7 @@ package com.taskora.backend.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,102 +11,160 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.taskora.backend.dto.ErrorMessageDTO;
 import com.taskora.backend.dto.TaskListCreateRequestDTO;
 import com.taskora.backend.dto.TaskListDTO;
 import com.taskora.backend.dto.TaskListResponseDTO;
 import com.taskora.backend.dto.TaskListUpdateRequest;
 import com.taskora.backend.entity.User;
 import com.taskora.backend.service.TaskListService;
+import com.taskora.backend.service.TaskService;
 import com.taskora.backend.service.UserService;
+import com.taskora.backend.utils.SecurityUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-
-// [fix] сейчас любой пользователь может просто по url получать задачи других
 @RestController
 @RequestMapping("/api/tasklists")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class TaskListController {
     
-    TaskListService taskListService;
-    UserService userService;
-    
+    @Autowired
+    private TaskListService taskListService;
 
-    public TaskListController(TaskListService taskListService, UserService userService) {
-        this.taskListService = taskListService;
-        this.userService = userService;
-    }
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private TaskService taskService;
 
 
-    // [fix] написать доки и добавить проверки
-    @GetMapping("/{user_id}")
+    @GetMapping("")
     @Operation(description = "Получение списков задач")
-    @ApiResponse(
-        responseCode = "200",
-        description = "Списки задач найдены",
-        content = @Content(
-            schema = @Schema(implementation = TaskListResponseDTO.class)
+    @ApiResponses( value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Списки задач найдены",
+            content = @Content(
+                schema = @Schema(implementation = TaskListResponseDTO.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "204",
+            description = "Списки задач отсутствуют",
+            content = {}
         )
-    )
-    public ResponseEntity<?> getTaskListsForUser(@PathVariable Long user_id) {
-        List<TaskListDTO> taskLists = taskListService.findAllTaskListsByOwnerId(user_id);
+    })
+    public ResponseEntity<?> getTaskListsForUser() {
+        List<TaskListDTO> taskLists = taskListService.findTaskListsByOwnerId(SecurityUtils.getCurrentUserId());
+
+        if (taskLists.isEmpty())
+            return ResponseEntity
+                .noContent()
+                .build();
 
         return ResponseEntity
             .ok()
             .body(new TaskListResponseDTO(taskLists));
     }
     
-    // [fix] написать доки и добавить проверки
     @PostMapping("")
     @Operation(description = "Создание списка задач")
-    @ApiResponse(
-        responseCode = "201",
-        description = "Список задач создан",
-        content = @Content(
-            schema = @Schema(implementation = TaskListDTO.class)
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "201",
+            description = "Список задач создан",
+            content = @Content(
+                schema = @Schema(implementation = TaskListDTO.class)
+            )
         )
-    )
+    })
     public ResponseEntity<?> createTaskLists(@RequestBody TaskListCreateRequestDTO requestDTO) {
-        User owner = userService.findUserById(requestDTO.getOwner_id());
-        TaskListDTO taskListDTO = taskListService.createTaskList(owner, requestDTO.getTitle());
+        User owner = userService.findUserById(SecurityUtils.getCurrentUserId());
+        TaskListDTO taskListDTO = taskListService.createTaskList(owner, requestDTO);
         
         return ResponseEntity
             .status(201)
             .body(taskListDTO);
     }
     
-    // [fix] написать доки и добавить проверки
-    @PutMapping("/{taskList_id}")
+    @PutMapping("/{taskListId}")
     @Operation(description = "Обновление списка задач")
-    @ApiResponse(
-        responseCode = "200",
-        description = "Список задач обновлен",
-        content = @Content(
-            schema = @Schema(implementation = TaskListDTO.class)
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Список задач обновлен",
+            content = @Content(
+                schema = @Schema(implementation = TaskListDTO.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "403",
+            description = "Доступ запрещен",
+            content = @Content(
+                schema = @Schema(implementation = ErrorMessageDTO.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Список не найден",
+            content = {}
         )
-    )
-    public ResponseEntity<?> updateTaskList(@PathVariable Long taskList_id, @RequestBody TaskListUpdateRequest requestDTO) {
-        TaskListDTO updatedTaskList = taskListService.updateTaskList(taskList_id, requestDTO);
+    })
+    public ResponseEntity<?> updateTaskList(@PathVariable Long taskListId, @RequestBody TaskListUpdateRequest requestDTO) {
+        TaskListDTO updatedTaskList = taskListService.updateTaskList(taskListId, requestDTO, SecurityUtils.getCurrentUserId());
 
         return ResponseEntity
             .ok()
             .body(updatedTaskList);
     }
 
-    // [fix] написать доки и добавить проверки
-    @DeleteMapping("/{taskList_id}")
-    public ResponseEntity<?> deleteTaskList(@PathVariable Long taskList_id) {
-        taskListService.deleteTaskListById(taskList_id);
+
+    @DeleteMapping("/{taskListId}")
+    @Operation(description = "Удаление списка задач")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "204",
+            description = "Список задач удален",
+            content = {}
+        ),
+        @ApiResponse(
+            responseCode = "403",
+            description = "Доступ запрещен",
+            content = @Content(
+                schema = @Schema(implementation = ErrorMessageDTO.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Список не найден",
+            content = {}
+        )
+    })
+    public ResponseEntity<?> softDeleteTaskList(@PathVariable Long taskListId) {
+        taskListService.softDeleteTaskListById(taskListId, SecurityUtils.getCurrentUserId());
+
+        taskService.softDeleteTasksByTaskListId(taskListId);
 
         return ResponseEntity
             .status(204)
             .body(null);
     }
+
+    // @DeleteMapping("/{taskListId}/hard")
+    // public ResponseEntity<?> hardDeleteTaskList(@PathVariable Long taskListId) {
+    //     taskListService.deleteTaskListById(taskListId);
+
+    //     return ResponseEntity
+    //         .status(204)
+    //         .body(null);
+    // }
 }

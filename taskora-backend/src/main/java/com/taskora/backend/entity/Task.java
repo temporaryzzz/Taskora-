@@ -1,22 +1,21 @@
 package com.taskora.backend.entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.hibernate.annotations.CreationTimestamp;
-
-import com.taskora.backend.dto.Priority;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "tasks")
 public class Task {
 
     @Id
@@ -24,31 +23,44 @@ public class Task {
     Long id;
 
     @ManyToOne
-    @JoinColumn(name = "list_id", nullable = false)
+    @JoinColumn(name = "owner_id", nullable = false)
+    User owner;
+
+    @ManyToOne
+    @JoinColumn(name = "task_list_id", nullable = true) // null задачи - привязаны к системному All
     TaskList taskList;
 
-    @Column(nullable = false, length = 25)
+    String section;
+
+    @Column(nullable = false)
     String title;
 
     String description;
 
-    LocalDateTime due_date;
+    @Column(name = "due_date")
+    Instant dueDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 8, nullable = false)
-    Priority priority = Priority.DEFAULT;
+    @Column(nullable = false)
+    String priority = "DEFAULT";
 
-    @Column(columnDefinition = "BOOLEAN DEFAULT false")
-    Boolean completed;
+    @Column(nullable = false)
+    boolean completed = false;
+
+    @Column(nullable = false)
+    boolean deleted = false;
+
+    @Column(name = "deleted_at")
+    Instant deletedAt;
 
     @CreationTimestamp
-    @Column(updatable = false)
-    LocalDateTime created_at;
+    @Column(name = "created_at", updatable = false)
+    Instant createdAt;
 
-    @CreationTimestamp
-    LocalDateTime updated_at;
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    Instant updatedAt;
 
-    
+
     public Long getId() {
         return id;
     }
@@ -57,12 +69,28 @@ public class Task {
         this.id = id;
     }
 
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
     public TaskList getTaskList() {
         return taskList;
     }
 
     public void setTaskList(TaskList taskList) {
         this.taskList = taskList;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
     }
 
     public String getTitle() {
@@ -81,43 +109,59 @@ public class Task {
         this.description = description;
     }
 
-    public LocalDateTime getDue_date() {
-        return due_date;
+    public Instant getDueDate() {
+        return dueDate;
     }
 
-    public void setDue_date(LocalDateTime due_date) {
-        this.due_date = due_date;
-    } 
+    public void setDueDate(Instant dueDate) {
+        this.dueDate = dueDate;
+    }
 
-    public Priority getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(Priority priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 
-    public Boolean getCompleted() {
+    public boolean isCompleted() {
         return completed;
     }
 
-    public void setCompleted(Boolean completed) {
+    public void setCompleted(boolean completed) {
         this.completed = completed;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public boolean isDeleted() {
+        return deleted;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
-    public LocalDateTime getUpdated_at() {
-        return updated_at;
+    public Instant getDeletedAt() {
+        return deletedAt;
     }
 
-    public void setUpdated_at(LocalDateTime updated_at) {
-        this.updated_at = updated_at;
+    public void setDeletedAt(Instant deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

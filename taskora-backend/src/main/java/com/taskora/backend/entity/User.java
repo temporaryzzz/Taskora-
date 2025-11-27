@@ -1,10 +1,11 @@
 package com.taskora.backend.entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -32,62 +33,71 @@ public class User {
     @Column(nullable = false, length = 64, unique = true)
     String email;
 
-    @Column(length = 32, nullable = false)
+    @Column(length = 80, nullable = false)
     String password;
 
     @CreationTimestamp
-    @Column(updatable = false)
-    LocalDateTime created_at;
+    @Column(name = "created_at", updatable = false)
+    Instant createdAt;
 
-    @CreationTimestamp
-    LocalDateTime updated_at;
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    Instant updatedAt;
 
-    
+
     public Long getId() {
         return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
+    public List<TaskList> getTaskLists() {
+        return taskLists;
+    }
+
+    public void setTaskLists(List<TaskList> taskLists) {
+        this.taskLists = taskLists;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdated_at() {
-        return updated_at;
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdated_at(LocalDateTime updated_at) {
-        this.updated_at = updated_at;
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
