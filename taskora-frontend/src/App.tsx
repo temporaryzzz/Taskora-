@@ -49,7 +49,7 @@ function App() {
         task.id === updatedTask.id ? { ...task, ...updatedTask } : task);
 
         setTasks(updatedTasks);
-      }
+      } 
     }catch(error) {
       if (error instanceof CustomError) {
         console.log(error.message)

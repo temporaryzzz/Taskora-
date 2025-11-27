@@ -35,8 +35,8 @@ const fetchTasks = async (listId: number): Promise<Array<Task>> => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization' : `Bearer ${getCookie('token')}`,
-    }
+    },
+    credentials: 'include',
   });
 
   if (!response.ok) {
@@ -54,8 +54,8 @@ const fetchLists = async (): Promise<Array<List>> => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization' : `Bearer ${getCookie('token')}`,
-    }
+    },
+    credentials: 'include',
   });
 
   if (!response.ok) {
@@ -73,8 +73,8 @@ const createListOnServer = async (create: CreateListDTO): Promise<List> => {
     headers: {
       'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
       'Content-Type': 'application/json',
-      'Authorization' : `Bearer ${getCookie('token')}`,
     },
+    credentials: 'include',
     body: JSON.stringify({...create})
   });
 
@@ -110,7 +110,8 @@ const createTaskOnServer = async (create: CreateTaskDTO): Promise<Task> => {
 const updateTaskOnServer = async (taskId: number, updates: UpdateTaskDTO): Promise<Task> => {
   const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {
     method: 'PUT',
-    headers: {'Content-Type': 'application/json', 'Authorization' : `Bearer ${getCookie('token')}`,},
+    headers: {'Content-Type': 'application/json',},
+    credentials: 'include',
     body: JSON.stringify(updates)
   });
 
@@ -126,7 +127,8 @@ const updateTaskOnServer = async (taskId: number, updates: UpdateTaskDTO): Promi
 const updateListOnServer = async (listId: number, updates: UpdateListDTO): Promise<List> => {
   const response = await fetch(`${SERVER_ADDRES__LISTS}${listId}`, {
     method: 'PUT',
-    headers: {'Content-Type': 'application/json', 'Authorization' : `Bearer ${getCookie('token')}`,},
+    headers: {'Content-Type': 'application/json'},
+    credentials: 'include',
     body: JSON.stringify(updates)
   });
 
@@ -140,7 +142,7 @@ const updateListOnServer = async (listId: number, updates: UpdateListDTO): Promi
 }
 
 const deleteTaskOnServer = async (taskId: number): Promise<void> => {
-  const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {method: 'DELETE',});
+  const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {method: 'DELETE', credentials: 'include',});
 
   if (!response.ok) {
     throw new CustomError(`Failed to update task: ${response.statusText}`, response.status);
@@ -148,7 +150,7 @@ const deleteTaskOnServer = async (taskId: number): Promise<void> => {
 }
 
 const deleteListOnServer = async (listId: number): Promise<void> => {
-  const response = await fetch(`${SERVER_ADDRES__LISTS}${listId}`, {method: 'DELETE',});
+  const response = await fetch(`${SERVER_ADDRES__LISTS}${listId}`, {method: 'DELETE', credentials: 'include',});
 
   if (!response.ok) {
     throw new CustomError(`Failed to update task: ${response.statusText}`, response.status);

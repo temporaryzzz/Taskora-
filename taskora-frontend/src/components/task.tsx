@@ -115,7 +115,12 @@ export function TaskComponent(props: TaskProps) {
     return(
         <li className="task" ref={taskElementRef} onClick={() => taskManagerContext.actions.setSelectedTask(props.task.id)}>
             <div className="task__body">
-                <input type="checkbox" className="task__checkbox" onChange={toggleCompleted} ref={checkboxElementRef}/>
+                <input type="checkbox" className="task__checkbox" 
+                    onChange={() => {
+                        toggleCompleted()
+                        taskManagerContext.actions.setSelectedTask(props.task.id)
+                    }} 
+                    ref={checkboxElementRef}/>
                 <h3 className="task__title h5">{props.task.id == taskManagerContext.state.selectedTaskId ? taskManagerContext.state.tempTaskTitle : props.task.title}</h3>
             </div>
             <div className="task__extra">

@@ -47,7 +47,7 @@ function SignIn() {
 					return response.json();
 				})
 				.then((data) => {
-					setCookie("token", data.Authorization)
+					setCookie("token", `Bearer ${data.Authorization}; HttpOnly`)
 					navigate('main', { replace: true });
 				})
 				.catch((error) => {
