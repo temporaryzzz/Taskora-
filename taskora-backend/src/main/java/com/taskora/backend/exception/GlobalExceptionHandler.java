@@ -9,6 +9,13 @@ import com.taskora.backend.dto.ErrorMessageDTO;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<?> handleBadRequest(BadRequestException ex) {
+        return ResponseEntity
+            .badRequest()
+            .body(new ErrorMessageDTO(ex.getMessage()));
+    }
+
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<?> handleForbidden(ForbiddenException ex) {
         return ResponseEntity

@@ -158,13 +158,34 @@ public class TaskController {
             content = @Content(
                 schema = @Schema(implementation = TaskDTO.class)
             )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Задача не может быть создана в удаленном списке",
+            content = @Content(
+                schema = @Schema(implementation = ErrorMessageDTO.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "403",
+            description = "Доступ запрещен",
+            content = @Content(
+                schema = @Schema(implementation = ErrorMessageDTO.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Список не найден",
+            content = {}
         )
     })
     public ResponseEntity<?> createTask(@RequestBody TaskCreateRequestDTO requestDTO) {
-        TaskList list = null;
+        TaskList list = taskListService.findTaskListById(requestDTO.getTaskListId(), SecurityUtils.getCurrentUserId());
 
-        if (requestDTO.getTaskListId() != null)
-            list = taskListService.findTaskListById(requestDTO.getTaskListId(), SecurityUtils.getCurrentUserId());
+        if (list.isDeleted())
+            return ResponseEntity
+                .badRequest()
+                .body(new ErrorMessageDTO("Задача не может быть создана в удаленном списке"));
 
         TaskDTO taskDTO = taskService.createTask(list, requestDTO);
         
