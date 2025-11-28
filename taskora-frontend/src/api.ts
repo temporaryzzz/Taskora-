@@ -1,4 +1,3 @@
-import { getCookie } from "./cookies";
 import type { UpdateTaskDTO, UpdateListDTO, Task, List, CreateListDTO, CreateTaskDTO } from "./interfaces";
 
 export const SERVER_ADDRES = 'http://localhost:8080/api';
@@ -22,18 +21,19 @@ export class CustomError extends Error {
 const fetchTasks = async (listId: number): Promise<Array<Task>> => {
   let fetchString = `${SERVER_ADDRES__TASKS}${listId}`
   if(listId == -1) {
-     fetchString = `${SERVER_ADDRES__TASKS}$?system=completed`
+     fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=completed`
   } else if(listId == -2) {
-    fetchString = `${SERVER_ADDRES__TASKS}$?system=deleted`
+    fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=deleted`
   } else if(listId == -3) {
-    fetchString = `${SERVER_ADDRES__TASKS}$?system=all`
+    fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=all`
   } else if(listId == -4) {
-    fetchString = `${SERVER_ADDRES__TASKS}$?system=today`
+    fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=today`
   }
   
   const response = await fetch(fetchString, {
     method: 'GET',
     headers: {
+      'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
       'Content-Type': 'application/json',
     },
     credentials: 'include',
@@ -53,6 +53,7 @@ const fetchLists = async (): Promise<Array<List>> => {
   const response = await fetch(`${SERVER_ADDRES__LISTS_NO_SLASH}`, {
     method: 'GET',
     headers: {
+      'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
       'Content-Type': 'application/json',
     },
     credentials: 'include',
@@ -93,8 +94,8 @@ const createTaskOnServer = async (create: CreateTaskDTO): Promise<Task> => {
     headers: {  
       'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
       'Content-Type': 'application/json',
-      'Authorization' : `Bearer ${getCookie('token')}`,
     },
+    credentials: 'include',
     body: JSON.stringify(create)
   });
 
@@ -110,7 +111,7 @@ const createTaskOnServer = async (create: CreateTaskDTO): Promise<Task> => {
 const updateTaskOnServer = async (taskId: number, updates: UpdateTaskDTO): Promise<Task> => {
   const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {
     method: 'PUT',
-    headers: {'Content-Type': 'application/json',},
+    headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,},
     credentials: 'include',
     body: JSON.stringify(updates)
   });
@@ -127,7 +128,7 @@ const updateTaskOnServer = async (taskId: number, updates: UpdateTaskDTO): Promi
 const updateListOnServer = async (listId: number, updates: UpdateListDTO): Promise<List> => {
   const response = await fetch(`${SERVER_ADDRES__LISTS}${listId}`, {
     method: 'PUT',
-    headers: {'Content-Type': 'application/json'},
+    headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,},
     credentials: 'include',
     body: JSON.stringify(updates)
   });
@@ -142,7 +143,13 @@ const updateListOnServer = async (listId: number, updates: UpdateListDTO): Promi
 }
 
 const deleteTaskOnServer = async (taskId: number): Promise<void> => {
-  const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {method: 'DELETE', credentials: 'include',});
+  const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {
+    headers: {
+      'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
+    },
+    method: 'DELETE', 
+    credentials: 'include',
+  });
 
   if (!response.ok) {
     throw new CustomError(`Failed to update task: ${response.statusText}`, response.status);
@@ -150,7 +157,13 @@ const deleteTaskOnServer = async (taskId: number): Promise<void> => {
 }
 
 const deleteListOnServer = async (listId: number): Promise<void> => {
-  const response = await fetch(`${SERVER_ADDRES__LISTS}${listId}`, {method: 'DELETE', credentials: 'include',});
+  const response = await fetch(`${SERVER_ADDRES__LISTS}${listId}`, {
+    headers: {
+      'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
+    },
+    method: 'DELETE', 
+    credentials: 'include',
+  });
 
   if (!response.ok) {
     throw new CustomError(`Failed to update task: ${response.statusText}`, response.status);

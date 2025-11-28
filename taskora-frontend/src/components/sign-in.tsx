@@ -47,7 +47,8 @@ function SignIn() {
 					return response.json();
 				})
 				.then((data) => {
-					setCookie("token", `Bearer ${data.Authorization}; HttpOnly`)
+					setCookie("token", `Bearer ${data.authorization}`)
+                    console.log(data.authorization)
 					navigate('main', { replace: true });
 				})
 				.catch((error) => {

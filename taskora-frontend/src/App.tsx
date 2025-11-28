@@ -9,25 +9,19 @@ import { fetchTasks, fetchLists, updateTaskOnServer, updateListOnServer, createL
   deleteListOnServer, deleteTaskOnServer, CustomError} from './api';
 import './styles/main.scss'
 import MainPage from './components/main-page';
-import { useAuthWrapper } from './hooks';
-import { getCookie, setCookie } from './cookies';
+import { getCookie, setCookie, deleteCookie } from './cookies';
 
 export const TaskManagerContext = createContext<{state: AppState; actions: AppActions} | undefined>(undefined);
 
 function App() {
   const navigate = useNavigate()
-  const { wrapWithAuth } = useAuthWrapper(navigate)
   const [token] = useState<string | undefined>(getCookie('token'))
   const [user, setUser] = useState<User | undefined>({username: 'admin', email: 'admin@bk.ru'})
   //КОСТЫЛЬ - отрицаетльные id, чтобы они не совпали с id созданных листов
   const [lists, setLists] = useState<Array<List>>([{title: 'Completed', id: -1, sections: ['Main Completed section'], viewType: 'LIST', icon: "COMPLETED", color: "NONE"},
           {title: 'Basket', id: -2, sections: ['Main Basket section'], viewType: 'LIST', icon: "BASKET", color: "NONE"},
-          {title: 'All', id: -3,  sections: ['Main All section'], viewType: 'LIST', icon: "DEFAULT", color: "NONE"},
-          {title: 'Custom', id: 0,  sections: ['Main section', 'Frontend'], viewType: 'KANBAN', icon: "DEFAULT", color: "YELLOW"}])
-  const [tasks, setTasks] = useState<Array<Task>>([{id: 0, title: 'task', description: 'description', ownerListId: 0, deadline: '2025-11-26T12:30Z', section: 'Frontend', completed: false, priority: 'MIDDLE'},
-    {id: 1, title: 'completed task', description: 'description', ownerListId: 0, deadline: '2025-12-21T15:30Z', section: 'Frontend', completed: true, priority: 'DEFAULT'},
-    {id: 2, title: 'task number 2', description: 'description', ownerListId: 0, deadline: '2025-12-20T16:30Z', section: 'Frontend', completed: false, priority: 'HIGHEST'},
-  ])
+          {title: 'All', id: -3,  sections: ['Main All section'], viewType: 'LIST', icon: "DEFAULT", color: "NONE"}])
+  const [tasks, setTasks] = useState<Array<Task>>([])
   const [currentList, setCurrentList] = useState<List | undefined>(undefined)
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
   const [tempTaskTitle, setTempTaskTitle] = useState<string>('');
@@ -41,7 +35,7 @@ function App() {
       }
   }
 
-  const updateTask = wrapWithAuth(async (updates: UpdateTaskDTO) => {
+  const updateTask = async (updates: UpdateTaskDTO) => {
     try {
       if(selectedTaskId) {
         const updatedTask = await updateTaskOnServer(selectedTaskId, updates)
@@ -54,6 +48,7 @@ function App() {
       if (error instanceof CustomError) {
         console.log(error.message)
         if(error.statusCode == 401) {
+          deleteCookie('token')
           navigate('', {replace: true})
         }
         else {
@@ -62,9 +57,9 @@ function App() {
         }
       }
     }
-  })
+  }
 
-  const updateList = wrapWithAuth(async (listId: number, updates: UpdateListDTO) => {
+  const updateList = async (listId: number, updates: UpdateListDTO) => {
     try {
       const updatedList = await updateListOnServer(listId, updates)
       const updatedLists = lists?.map(list => list.id === updatedList.id ? { ...list, ...updatedList } : list);
@@ -74,6 +69,7 @@ function App() {
       if (error instanceof CustomError) {
         console.log(error.message)
         if(error.statusCode == 401) {
+          deleteCookie('token')
           navigate('', {replace: true})
         }
         else {
@@ -82,9 +78,9 @@ function App() {
         }
       }
     }
-  })
+  }
 
-  const switchList = wrapWithAuth(async (listId: number) => {
+  const switchList = async (listId: number) => {
     setCurrentList(lists.find((list) => list.id == listId))
     setSelectedTaskId(null);
     
@@ -96,6 +92,7 @@ function App() {
       if (error instanceof CustomError) {
         console.log(error.message)
         if(error.statusCode == 401) {
+          deleteCookie('token')
           navigate('', {replace: true})
         }
         else {
@@ -104,9 +101,9 @@ function App() {
         }
       }
     }
-  })
+  }
 
-  const loadLists = wrapWithAuth(async () => {
+  const loadLists = async () => {
     try {
       if(user) {
         const loadedLists = await fetchLists()
@@ -115,7 +112,9 @@ function App() {
     }catch(error) {
       if (error instanceof CustomError) {
         console.log(error.message)
+        console.log('status code: ', error.statusCode)
         if(error.statusCode == 401) {
+          deleteCookie('token')
           navigate('', {replace: true})
         }
         else {
@@ -124,9 +123,9 @@ function App() {
         }
       }
     }
-  })
+  }
 
-  const createList = wrapWithAuth(async (list: CreateListDTO) => {
+  const createList = async (list: CreateListDTO) => {
     try {
       if(user) {
         const newList = await createListOnServer(list)
@@ -136,6 +135,7 @@ function App() {
       if (error instanceof CustomError) {
         console.log(error.message)
         if(error.statusCode == 401) {
+          deleteCookie('token')
           navigate('', {replace: true})
         }
         else {
@@ -144,9 +144,9 @@ function App() {
         }
       }
     }
-  })
+  }
 
-  const createTask = wrapWithAuth(async (task: CreateTaskDTO) => {
+  const createTask = async (task: CreateTaskDTO) => {
     try {
       if(currentList) {
         const newTask = await createTaskOnServer(task)
@@ -156,6 +156,7 @@ function App() {
       if (error instanceof CustomError) {
         console.error(error.message)
         if(error.statusCode == 401) {
+          deleteCookie('token')
           navigate('', {replace: true})
         }
         else {
@@ -164,9 +165,9 @@ function App() {
         }
       }
     }
-  })
+  }
 
-  const deleteList = wrapWithAuth((listId: number) => {
+  const deleteList = (listId: number) => {
     try{ 
       deleteListOnServer(listId)
       setLists(lists => lists.filter(list => list.id !== listId))
@@ -176,6 +177,7 @@ function App() {
       if (error instanceof CustomError) {
         console.error(error.message)
         if(error.statusCode == 401) {
+          deleteCookie('token')
           navigate('', {replace: true})
         }
         else {
@@ -184,9 +186,9 @@ function App() {
         }
       }
     }
-  })
+  }
 
-  const deleteTask = wrapWithAuth((taskId: number) => {
+  const deleteTask = (taskId: number) => {
     try{ 
       deleteTaskOnServer(taskId)
       setTasks(tasks => tasks.filter(task => task.id !== taskId))
@@ -196,6 +198,7 @@ function App() {
       if (error instanceof CustomError) {
         console.error(error.message)
         if(error.statusCode == 401) {
+          deleteCookie('token')
           navigate('', {replace: true})
         }
         else {
@@ -204,7 +207,7 @@ function App() {
         }
       }
     }
-  })
+  }
 
   useEffect(() => {
     //loadUser() - email, username, settings

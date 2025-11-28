@@ -33,6 +33,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         try {
             String jwt = parseJwt(request);
 
+            System.out.println("2." + jwt);
+
             if (jwt != null && jwtUtil.isTokenValid(jwt)) {
                 Long id = Long.parseLong(jwtUtil.getIdFromToken(jwt));
                 UserDetails userDetails = userDetailsService.loadUserById(id);
@@ -61,13 +63,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
         Cookie[] cookies = request.getCookies();
 
+            System.out.println("1." + cookies);
+
         if (cookies == null) 
             return null;
 
         return Arrays.stream(cookies)
             .filter(cookie -> "token".equals(cookie.getName()))
             .map(Cookie::getValue)
-            .map(value -> value.startsWith("Bearer ") ? value.substring(7) : value)
+            .map(value -> value.startsWith("Bearer%20") ? value.substring(9) : value)
             .findFirst()
             .orElse(null);
     }
