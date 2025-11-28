@@ -40,9 +40,9 @@ export function TaskComponent(props: TaskProps) {
 
     const toggleCompleted = () => {
         if(checkboxElementRef.current) {
-            taskManagerContext.actions.setSelectedTask(props.task.id)
             taskElementRef.current?.classList.toggle('task--completed')   
-            taskManagerContext.actions.updateTask({...props.task, completed: checkboxElementRef.current.checked})
+            console.log(checkboxElementRef.current.checked)
+            taskManagerContext.actions.updateTask(props.task.id, {...props.task, completed: checkboxElementRef.current.checked})
         }
     }
 

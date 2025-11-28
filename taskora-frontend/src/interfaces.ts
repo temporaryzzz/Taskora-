@@ -45,7 +45,7 @@ export interface AppActions {
     setUser: Dispatch<SetStateAction<User | undefined>>;
     setSelectedTask: (taskId: number) => void;
     setTempTaskTitle: Dispatch<SetStateAction<string>>;
-    updateTask: (updates: UpdateTaskDTO) => void;
+    updateTask: (taskId: number, updates: UpdateTaskDTO) => void;
     updateList: (listId: number, updates: UpdateListDTO) => void;
     //Загрузка задач из списка на котороый переключился юзер
     //При первом входе используем чтобы открыть последний открытый список или All List

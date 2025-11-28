@@ -35,15 +35,13 @@ function App() {
       }
   }
 
-  const updateTask = async (updates: UpdateTaskDTO) => {
+  const updateTask = async (taskId: number, updates: UpdateTaskDTO) => {
     try {
-      if(selectedTaskId) {
-          const updatedTask = await updateTaskOnServer(selectedTaskId, updates)
-          const updatedTasks = tasks.map(task =>
-          task.id === updatedTask.id ? { ...task, ...updatedTask } : task);
+      const updatedTask = await updateTaskOnServer(taskId, updates)
+      const updatedTasks = tasks.map(task =>
+      task.id === updatedTask.id ? { ...task, ...updatedTask } : task);
 
-          setTasks(updatedTasks);
-      } 
+      setTasks(updatedTasks);
     }catch(error) {
       if (error instanceof CustomError) {
         console.log(error.message)
@@ -105,9 +103,7 @@ function App() {
 
   const loadLists = async () => {
     try {
-      if(user) {
-        setLists([...lists, ...await fetchLists()])
-      }
+      setLists([...lists, ...await fetchLists()])
     }catch(error) {
       if (error instanceof CustomError) {
         console.log(error.message)
@@ -117,7 +113,7 @@ function App() {
           navigate('', {replace: true})
         }
         else {
-          console.error(error.message);
+          console.error('error loadlists:', error.message);
           setError(true)
         }
       }

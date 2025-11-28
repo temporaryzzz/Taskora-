@@ -37,7 +37,7 @@ export function TaskDetailsWindow() {
 
     const updateTask = () => {
         if(task) {
-            taskManagerContext.actions.updateTask({ownerListId: task.ownerListId, title: task.title, description: task.description,
+            taskManagerContext.actions.updateTask(task.id, {ownerListId: task.ownerListId, title: task.title, description: task.description,
                 deadline: task.deadline, priority: task.priority, completed: task.completed, section: task.section
             })
         }
