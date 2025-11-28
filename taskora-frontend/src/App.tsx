@@ -106,8 +106,7 @@ function App() {
   const loadLists = async () => {
     try {
       if(user) {
-        const loadedLists = await fetchLists()
-        setLists([...lists, ...loadedLists])
+        setLists([...lists, ...await fetchLists()])
       }
     }catch(error) {
       if (error instanceof CustomError) {
