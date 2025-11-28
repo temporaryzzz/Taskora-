@@ -33,8 +33,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         try {
             String jwt = parseJwt(request);
 
-            System.out.println("2." + jwt);
-
             if (jwt != null && jwtUtil.isTokenValid(jwt)) {
                 Long id = Long.parseLong(jwtUtil.getIdFromToken(jwt));
                 UserDetails userDetails = userDetailsService.loadUserById(id);
@@ -56,15 +54,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
     
     private String parseJwt(HttpServletRequest request) {
-        // String headerAuth = request.getHeader("Authorization");
-        // if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
-        //     return headerAuth.substring(7);
-        // }
+        // [fix] Для тестов через Postman
+        String headerAuth = request.getHeader("Authorization");
+        if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7);
+        }
 
         Cookie[] cookies = request.getCookies();
-
-            System.out.println("1." + cookies);
-
+        
         if (cookies == null) 
             return null;
 
