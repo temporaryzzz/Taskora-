@@ -9,7 +9,6 @@ export function TaskDetailsWindow() {
     const taskDetailsRef = useRef<HTMLDivElement>(null)
     const taskDetailsTitleRef = useRef<HTMLTextAreaElement>(null)
     const taskDetailsDescriptionRef = useRef<HTMLTextAreaElement>(null)
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     if(taskManagerContext == undefined) {
         return
@@ -29,17 +28,10 @@ export function TaskDetailsWindow() {
     }
 
     const updateTitle = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        if(timeoutId !== null) {
-            clearTimeout(timeoutId)
-        }
         if(taskDetailsTitleRef.current && task) {
             let title = e.target.value
             setTask({...task, title})
             taskManagerContext.actions.setTempTaskTitle(title)
-
-            timeoutId = setTimeout(() => {
-                updateTask()
-            }, 3000)
         }
     }
 

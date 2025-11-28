@@ -38,11 +38,11 @@ function App() {
   const updateTask = async (updates: UpdateTaskDTO) => {
     try {
       if(selectedTaskId) {
-        const updatedTask = await updateTaskOnServer(selectedTaskId, updates)
-        const updatedTasks = tasks?.map(task =>
-        task.id === updatedTask.id ? { ...task, ...updatedTask } : task);
+          const updatedTask = await updateTaskOnServer(selectedTaskId, updates)
+          const updatedTasks = tasks.map(task =>
+          task.id === updatedTask.id ? { ...task, ...updatedTask } : task);
 
-        setTasks(updatedTasks);
+          setTasks(updatedTasks);
       } 
     }catch(error) {
       if (error instanceof CustomError) {
@@ -83,11 +83,11 @@ function App() {
   const switchList = async (listId: number) => {
     setCurrentList(lists.find((list) => list.id == listId))
     setSelectedTaskId(null);
+    setTasks([])
     
     try {
       setCookie(`lastOpenListId`, `${listId}`)
-      const loadedTasks = await fetchTasks(listId)
-      setTasks(loadedTasks)
+      setTasks(await fetchTasks(listId))
     }catch(error) {
       if (error instanceof CustomError) {
         console.log(error.message)

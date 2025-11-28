@@ -39,8 +39,11 @@ export function TaskComponent(props: TaskProps) {
 	];
 
     const toggleCompleted = () => {
+        taskManagerContext.actions.setSelectedTask(props.task.id)
+
         if(props.task.completed == false) {
-            taskElementRef.current?.classList.add('task--completed')    
+            taskElementRef.current?.classList.add('task--completed')   
+            console.log({...props.task, completed: true}) 
             taskManagerContext.actions.updateTask({...props.task, completed: true})
         }
         else {
@@ -67,16 +70,22 @@ export function TaskComponent(props: TaskProps) {
                 break
             }
         }
-    }
 
-    useEffect(() => {
-        InitializationCheckbox()
-        if(props.task.completed == true && !taskElementRef.current?.classList.contains('task--completed')) {
+        if(props.task.completed) {
             taskElementRef.current?.classList.add('task--completed')
             if(checkboxElementRef.current) {
                 checkboxElementRef.current.checked = true
             }
         }
+        else {
+            if(checkboxElementRef.current) {
+                checkboxElementRef.current.checked = false
+            }
+        }
+    }
+
+    useEffect(() => {
+        InitializationCheckbox()
         if (props.task.deadline == null) {
 			setDateMessage('');
 		} 
@@ -116,10 +125,7 @@ export function TaskComponent(props: TaskProps) {
         <li className="task" ref={taskElementRef} onClick={() => taskManagerContext.actions.setSelectedTask(props.task.id)}>
             <div className="task__body">
                 <input type="checkbox" className="task__checkbox" 
-                    onChange={() => {
-                        toggleCompleted()
-                        taskManagerContext.actions.setSelectedTask(props.task.id)
-                    }} 
+                    onChange={() => toggleCompleted()} 
                     ref={checkboxElementRef}/>
                 <h3 className="task__title h5">{props.task.id == taskManagerContext.state.selectedTaskId ? taskManagerContext.state.tempTaskTitle : props.task.title}</h3>
             </div>

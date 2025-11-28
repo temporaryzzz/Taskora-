@@ -1,4 +1,4 @@
-import { useContext, useRef, useState, type FormEvent } from "react";
+import { useContext, useEffect, useRef, useState, type FormEvent } from "react";
 import { TaskManagerContext } from "../App";
 import { TaskComponent } from "./task";
 import type { Task } from "../interfaces";
@@ -14,7 +14,8 @@ export function TaskListSection(props: TaskListSectionProps) {
     const formAddTaskRef = useRef<HTMLFormElement>(null)
     const inputAddTaskRef = useRef<HTMLInputElement>(null)
     const [sectionTitle, setSectionTitle] = useState<string>(props.section)
-    const [completedTasks] = useState<Task[]>(taskManagerContext.state.tasks.filter((task) => task.completed == true && task.section == sectionTitle))
+    const [completedTasks, setCompletedTasks] = useState<Task[]>(taskManagerContext.state.tasks.filter((task) => task.completed == true && task.section == sectionTitle))
+    const [activeTasks, setActiveTasks] = useState<Task[]>(taskManagerContext.state.tasks.filter((task) => task.completed == false && task.section == sectionTitle))
     const stateClasses = {
         hidden: 'visually-hidden',
     }
@@ -35,18 +36,25 @@ export function TaskListSection(props: TaskListSectionProps) {
         }
     }
 
-    const createTask = (event: FormEvent) => {
+    const handleCreateTask = (event: FormEvent) => {
         event.preventDefault()
         if(inputAddTaskRef.current && /\S/.test(inputAddTaskRef.current.value ?? '') && taskManagerContext.state.currentList) {
             taskManagerContext.actions.createTask({title: inputAddTaskRef.current.value, ownerListId: taskManagerContext.state.currentList.id,
                 description: '', deadline: null, section: sectionTitle, priority: 'DEFAULT'})
         }
 
-        if(formAddTaskRef.current) {
+        if(formAddTaskRef.current && inputAddTaskRef.current) {
             formAddTaskRef.current.classList.add(stateClasses.hidden)
-            inputAddTaskRef.current?.blur()
+            inputAddTaskRef.current.blur()
+            inputAddTaskRef.current.value = '' 
         }
     }
+
+    useEffect(() => {
+        setSectionTitle(props.section)
+        setCompletedTasks(taskManagerContext.state.tasks.filter((task) => task.completed == true && task.section == sectionTitle))
+        setActiveTasks(taskManagerContext.state.tasks.filter((task) => task.completed == false && task.section == sectionTitle))
+    }, [props])
 
     return(
         <section className="task-list__section">
@@ -65,20 +73,25 @@ export function TaskListSection(props: TaskListSectionProps) {
                     </div>
                 </span>
                 <form ref={formAddTaskRef} 
-                    onSubmit={(e) => createTask(e)}
+                    onSubmit={(e) => handleCreateTask(e)}
                     className="task-list__section-title-wrapper task-list__section-title-wrapper--full-width visually-hidden">
                     <input type="text" 
                         className="task-list__section-input task-list__section-input--full-width" 
                         id='add-task'
                         placeholder="New task"
                         ref={inputAddTaskRef}
-                        onBlur={(e) => createTask(e)}/>
+                        onBlur={() => {
+                            if(formAddTaskRef.current) {
+                                formAddTaskRef.current.classList.add(stateClasses.hidden)
+                                inputAddTaskRef.current?.blur()
+                            }
+                        }}/>
                 </form>
             </div>
             <div className="task-list__section-body">
                 <ul className="task-list__section-active-tasks">
-                    {taskManagerContext?.state.tasks.map((task) => {
-                        if(task.section == sectionTitle && task.completed == false) {
+                    {activeTasks.map((task) => {
+                        if(task.section == sectionTitle) {
                             return <TaskComponent task={task} key={task.id}/>
                         }
                     })}
@@ -86,7 +99,7 @@ export function TaskListSection(props: TaskListSectionProps) {
                 <ul className="task-list__section-completed-tasks">
                     <p className="task-list__section-body-title" style={{'display' : completedTasks.length > 0 ? 'block' : 'none'}}>Completed</p>
                     {completedTasks.map((task) => {
-                        if(task.section == sectionTitle && task.completed == true) {
+                        if(task.section == sectionTitle) {
                             return <TaskComponent task={task} key={task.id}/>
                         }
                     })}
