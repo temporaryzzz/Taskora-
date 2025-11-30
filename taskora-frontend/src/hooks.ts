@@ -1,22 +1,23 @@
-import { useCallback } from 'react';
-import { getCookie } from './cookies';
+import { useEffect, type RefObject } from 'react';
 
-export const useAuthWrapper = (navigate: (path: string) => void) => {
-  const wrapWithAuth = useCallback(
-    <FunctionType extends (...args: any[]) => any>(fn: FunctionType): FunctionType => {
-      return ((...args: any[]) => {
-        const token = getCookie('token')
+export function useOnClickOutside<T extends HTMLElement | null>(
+  ref: RefObject<T>,
+  handler: (event: MouseEvent | TouchEvent) => void
+) {
+  useEffect(() => {
+    const listener = (event: MouseEvent | TouchEvent) => {
+      if (!ref.current || ref.current.contains(event.target as Node)) {
+        return;
+      }
+      handler(event);
+    };
 
-        if (!token) {
-          navigate('');
-          return Promise.resolve();
-        }
+    document.addEventListener('mousedown', listener);
+    document.addEventListener('touchstart', listener);
 
-        return fn(...args);
-      }) as FunctionType;
-    },
-    [navigate]
-  );
-
-  return { wrapWithAuth };
-};
+    return () => {
+      document.removeEventListener('mousedown', listener);
+      document.removeEventListener('touchstart', listener);
+    };
+  }, [ref, handler]);
+}

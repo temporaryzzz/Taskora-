@@ -1,0 +1,55 @@
+@use "../helpers" as *;
+
+.context-menu {
+    display: none;
+    flex-direction: column;
+    row-gap: rem(10);
+    padding: rem(10);
+    background-color: var(--color-dark-15);
+    width: fit-content;
+    border-radius: rem(6);
+    border: rem(1) solid var(--color-dark-25);
+    position: absolute;
+    left: 0;
+    top: rem(35);
+
+    &--active {
+        display: flex;
+    }
+
+    &__items {
+        display: flex;
+        flex-direction: column;
+        padding-bottom: rem(10);
+
+        &--horizontal {
+            flex-direction: row;
+            justify-content: space-around;
+            column-gap: rem(8);
+        }
+    }
+
+    &__item {
+        display: flex;
+        justify-content: start;
+        padding: rem(4);
+        border-radius: rem(5);
+
+        @include hover {
+            background-color: var(--color-dark-25);
+        }
+
+        &--active {
+            background-color: var(--muted-hover-accent);
+        }
+    }
+
+    &__border {
+        border-bottom: rem(1) solid var(--color-dark-25);
+    }
+
+    label {
+        color: var(--color-gray-60);
+        font-size: rem(14);
+    }
+}

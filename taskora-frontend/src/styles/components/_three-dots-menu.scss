@@ -12,6 +12,10 @@
     background-repeat: no-repeat;
     background-image: url('../../assets/icons/dots-menu-icon.svg');
 
+    @include hover {
+        cursor: pointer;
+    }
+
     @include laptop {
         --size: #{rem(16)};            
     }

@@ -61,4 +61,88 @@
             background-color: var(--color-dark-25);
         }
     }
+
+    &--white-add {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        column-gap: rem(10);
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        padding: rem(6) rem(6);
+        border-radius: rem(6);
+        border: rem(1) solid transparent; 
+
+        &::after {
+            @include square(#{fluid(16, 14)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/plus-icon.svg');
+        }
+
+        @include hover {
+            color: var(--main-accent);
+            background-color: var(--color-dark-25);
+            cursor: pointer;
+        }
+    }
+
+    &--options {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        column-gap: rem(10);
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        padding: rem(6) rem(6);
+        border-radius: rem(6);
+        border: rem(1) solid transparent; 
+
+        &::after {
+            @include square(#{fluid(16, 12)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/down-arrow-icon.svg');
+        }
+
+        @include hover {
+            color: var(--main-accent);
+            background-color: var(--color-dark-15);
+            cursor: pointer;
+        }
+    }
+
+    &--date {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        column-gap: rem(10);
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        padding: rem(6) rem(6);
+        border-radius: rem(6);
+        border: rem(1) solid transparent; 
+
+        &::after {
+            @include square(#{fluid(16, 12)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/calendar-icon.svg');
+        }
+
+        @include hover {
+            color: var(--main-accent);
+            background-color: var(--color-dark-15);
+            cursor: pointer;
+        }
+    }
 }
