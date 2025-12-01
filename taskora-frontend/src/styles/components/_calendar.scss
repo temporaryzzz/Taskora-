@@ -1,0 +1,83 @@
+@use "../helpers" as *;
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+    row-gap: rem(12);
+    padding: rem(15);
+    width: fit-content;
+    background-color: var(--color-dark-15);
+    border-radius: rem(8);
+    border: rem(1) solid var(--color-dark-25);
+
+    &__container {
+        display: flex;
+        column-gap: rem(8);
+        justify-content: center;
+
+        &--buttons {
+            justify-content: space-around;
+            margin-right: rem(-5);
+            margin-left: rem(-5);
+            margin-top: rem(10);
+        }
+    }
+
+    &__date {
+        @include square(#{rem(25)});
+
+        display: flex;
+        font-size: rem(14);
+        font-weight: 400;
+        justify-content: center;
+        align-items: center;
+        border-radius: 100%;
+        color: var(--color-light);
+        flex-shrink: 0;
+
+        @include hover {
+            background-color: var(--color-dark-25);
+            cursor: pointer;
+        }
+
+        &--not-included {
+            color: var(--color-gray-50)
+        }
+
+        &--today {
+            border: rem(1) solid var(--main-accent-light);
+            color: var(--main-accent-light);
+        }
+
+        &--target {
+            background-color: var(--main-accent-light);
+            color: var(--color-light);
+        }
+    }
+
+    &__day {
+        @include square(#{rem(25)});
+
+        display: flex;
+        font-size: rem(14);
+        font-weight: 500;
+        color: var(--color-gray-60);
+        justify-content: center;
+        align-items: center;
+        border-radius: 100%;
+        flex-shrink: 0;
+    }
+
+    &__button {
+        font-size: rem(14);
+        font-weight: 500;
+        padding: rem(5) rem(20);
+        border-radius: rem(9);
+        flex-grow: 1;
+    }
+
+    &__title {
+        font-weight: 400;
+        color: var(--color-light);
+    }
+}

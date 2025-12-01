@@ -80,6 +80,10 @@
 
         &-button {
             grid-column: 1/3;
+
+            &--active {
+                background-color: var(--color-dark-15);
+            }
         }
 
         &-button--small {

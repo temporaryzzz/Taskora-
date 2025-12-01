@@ -86,7 +86,7 @@ export function TaskComponent(props: TaskProps) {
         else {
 			const date = new Date(props.task.deadline).getDate();
 			const month = new Date(props.task.deadline).getMonth();
-			let hours = new Date(props.task.deadline).getHours() - 3;
+			let hours = new Date(props.task.deadline).getHours();
 			let minutes = new Date(props.task.deadline).getMinutes(); 
 
             if (minutes != 59) {

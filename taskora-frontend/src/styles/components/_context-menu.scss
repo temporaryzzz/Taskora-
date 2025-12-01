@@ -17,6 +17,12 @@
         display: flex;
     }
 
+    &--wrapper {
+        padding: 0px;
+        border: none;
+        background-color: transparent;
+    }
+
     &__items {
         display: flex;
         flex-direction: column;
