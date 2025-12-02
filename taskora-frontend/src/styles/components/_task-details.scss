@@ -38,4 +38,29 @@
     &__subtasks {
         flex-grow: 1;
     }
+
+    &__button {
+        @include fluid-text(16, 14);
+
+        background-color: transparent;
+        border-radius: rem(8);
+        justify-content: start;
+        font-weight: 400;
+        padding: rem(5) rem(10);
+
+        @include hover {
+            background-color: var(--color-dark-25);
+            color: var(--main-accent);
+        }
+    }
+
+    &__date-wrapper {
+        position: relative;
+        height: fit-content;
+    }
+
+    &__calendar {
+        position:absolute;
+        bottom: rem(50);
+    }
 }

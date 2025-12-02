@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 
 
 type CalendarProps = {
     date: string | null;
+    timeSelectClass: string;
     setDate: (date: string | null) => void;
     toggleShowCalendar: () => void;
 }
@@ -132,6 +133,9 @@ export function Calendar(props: CalendarProps) {
 
     useEffect(() => {
         setRenderDate(props.date == null?new Date():new Date(props.date))
+        setDeadlineDate(props.date)
+        setMinutes(props.date == null?59:new Date(props.date).getMinutes())
+        setHours(props.date == null?0:new Date(props.date).getHours())
     }, [props])
 
     useEffect(() => {
@@ -254,14 +258,17 @@ export function Calendar(props: CalendarProps) {
                         <p>{timeMessage}</p>
                     </div>
                 </button>
-                <ul className="dropdown-menu__items" ref={dropdownItemsRef}>
+                <ul className={props.timeSelectClass} ref={dropdownItemsRef}>
                     {timeState.map((time, index) => {
                         return <RenderTimeButton time={time} currentTime={[hours, minutes]} setHours={setHours} setMinutes={setMinutes} key={index}/>
                     })}
                 </ul>
             </div>
             <div className="calendar__container calendar__container--buttons">
-                <button type="button" className="calendar__button button button--not-accent" onClick={clear}>Очистить</button>
+                <button type="button" className="calendar__button button button--not-accent" onClick={() => {
+                    clear(); 
+                    props.setDate(null);
+                }}>Очистить</button>
                 <button type="button" className="calendar__button button button--inverse" onClick={setDeadline}>Ок</button>
             </div>
         </div>
@@ -412,7 +419,6 @@ function DateButton(props: DateButtonProps) {
         }
         if(dateButton) {
             setTargetDate(dateButton.toISOString())
-            console.log('date:', date)
         }
     }
 

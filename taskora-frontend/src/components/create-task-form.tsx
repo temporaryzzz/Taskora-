@@ -148,7 +148,7 @@ export function CreateTaskForm(props: CreateTaskFormProps) {
                     </span>
                     <span className="task-list__section-button button button--date" ref={calendarButtonRef} onClick={toggleShowCalendar}>
                         <div className="context-menu context-menu--wrapper" ref={calendarRef}>
-                            <Calendar date={taskBeingCreated.deadline} setDate={setDateDeadline} toggleShowCalendar={toggleShowCalendar}/>
+                            <Calendar date={taskBeingCreated.deadline} setDate={setDateDeadline} toggleShowCalendar={toggleShowCalendar} timeSelectClass="dropdown-menu__items"/>
                         </div>
                     </span>
                 </span>

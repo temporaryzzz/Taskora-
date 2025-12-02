@@ -1,19 +1,72 @@
 import { useContext, useEffect, useRef, useState } from "react"
 import type { Task } from "../interfaces"
 import { TaskManagerContext } from "../App"
+import { Calendar } from "./calendar"
 
 
 export function TaskDetailsWindow() {
     const [task, setTask] = useState<Task>()
+    const [deadlineMessage, setDeadlineMessage] = useState<string>('Установите дату')
+    const [taskDeadline, setTaskDeadline] = useState<string |null>(null)
     const taskManagerContext = useContext(TaskManagerContext)
     const taskDetailsRef = useRef<HTMLDivElement>(null)
+    const calendarRef = useRef<HTMLDivElement>(null)
     const taskDetailsTitleRef = useRef<HTMLTextAreaElement>(null)
     const taskDetailsDescriptionRef = useRef<HTMLTextAreaElement>(null)
+
+    const stateClasses = {
+        hidden: 'visually-hidden',
+    }
+
+    const monthState = [
+		'янв.',
+		'фев.',
+		'мар.',
+		'апр.',
+		'мая',
+		'июня',
+		'июля',
+		'авг.',
+		'сент.',
+		'окт.',
+		'ноя.',
+		'дек.',
+	];
 
     if(taskManagerContext == undefined) {
         return
     }
-    
+
+    const InitializationDeadlineMessage = () => {
+        if(task && task.deadline !== null) {
+            const date = new Date(task.deadline)
+            let hours = ', ' + String(date.getHours())
+            let minutes = ':' + String(date.getMinutes())
+            let dateNumber = String(date.getDate())
+            let month = monthState[date.getMonth()]
+            let year = ''
+
+            if(date.getHours() < 10) {
+                hours = ' 0' + String(date.getHours())
+            }
+            if(date.getMinutes() !== 30) {
+                minutes = ':0' + String(date.getMinutes())
+            }
+            if(date.getMinutes() == 59) {
+                hours = ''
+                minutes = ''
+            }
+            if(date.getFullYear() !== new Date().getFullYear()) {
+                year = String(date.getFullYear()) + ' '
+            }
+
+
+            setDeadlineMessage(year + dateNumber + ' ' + month + hours + minutes)
+        }
+        else {
+            setDeadlineMessage('Установите дату')
+        }
+    }
 
     const InitializationTask = () => {
         if(taskManagerContext.state.selectedTaskId !== null && taskDetailsRef.current) {
@@ -27,6 +80,24 @@ export function TaskDetailsWindow() {
         }
     }
 
+    const setDeadline = (date: string | null) => {
+        if(task) {
+            console.log(date)
+            setTaskDeadline(date)
+            setTask({...task, deadline: date})
+            taskManagerContext.actions.updateTask(task.id, {ownerListId: task.ownerListId, title: task.title, description: task.description,
+                deadline: date, priority: task.priority, completed: task.completed, section: task.section
+            })
+        }
+    }
+
+    const toggleShowCalendar = () => {
+        calendarRef.current?.classList.toggle(stateClasses.hidden)
+        if(task) {
+            setTaskDeadline(task.deadline)
+        }
+    }
+
     const updateTitle = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if(taskDetailsTitleRef.current && task) {
             let title = e.target.value
@@ -37,8 +108,9 @@ export function TaskDetailsWindow() {
 
     const updateTask = () => {
         if(task) {
+            console.log(taskDeadline)
             taskManagerContext.actions.updateTask(task.id, {ownerListId: task.ownerListId, title: task.title, description: task.description,
-                deadline: task.deadline, priority: task.priority, completed: task.completed, section: task.section
+                deadline: taskDeadline, priority: task.priority, completed: task.completed, section: task.section
             })
         }
     }
@@ -52,6 +124,7 @@ export function TaskDetailsWindow() {
             taskDetailsTitleRef.current.value = task?.title??''
             taskDetailsDescriptionRef.current.value = task?.description??''
         }
+        InitializationDeadlineMessage()
     }, [task])
 
     return(
@@ -68,8 +141,13 @@ export function TaskDetailsWindow() {
                 <button className="task-details__button button button--add">Add a subtask</button>
                 <li className="task-details__subtask"></li>
             </ul>
-            <div className="task-details__buttons-wrapper">
-                <button className="task-details__button button" id="date"></button>
+            <div className="task-details__date-wrapper">
+                <div className="task-details__calendar visually-hidden" ref={calendarRef}>
+                    <Calendar date={taskDeadline} setDate={setDeadline} toggleShowCalendar={toggleShowCalendar} timeSelectClass="dropdown-menu__items dropdown-menu__items--top"/>
+                </div>
+                <button className="task-details__button button" id="date" onClick={toggleShowCalendar}>
+                    {deadlineMessage}
+                </button>
             </div>
         </div>
     )
