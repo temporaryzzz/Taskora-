@@ -10,6 +10,7 @@ import com.taskora.backend.dto.TaskCreateRequestDTO;
 import com.taskora.backend.dto.TaskDTO;
 import com.taskora.backend.dto.TaskResponseDTO;
 import com.taskora.backend.dto.TaskUpdateRequestDTO;
+import com.taskora.backend.entity.Task;
 import com.taskora.backend.entity.TaskList;
 import com.taskora.backend.service.TaskListService;
 import com.taskora.backend.service.TaskService;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,12 +39,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/tasks")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class TaskController {
+
+    private final TaskListController taskListController;
     
     @Autowired
     private TaskListService taskListService;
     
     @Autowired
     private TaskService taskService;
+
+
+    TaskController(TaskListController taskListController) {
+        this.taskListController = taskListController;
+    }
 
 
     @GetMapping("/{taskListId}")
@@ -254,6 +263,42 @@ public class TaskController {
         return ResponseEntity
             .status(204)
             .body(null);
+    }
+
+    // [fix] Сейчас при успешном восстановлении возвращается только 200, без контента
+    @PatchMapping("/{taskId}")
+    @Operation(description = "Восстановление задачи из корзины")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Задача успешно восстановлена",
+            content = {}
+        ),
+        @ApiResponse(
+            responseCode = "403",
+            description = "Доступ запрещен",
+            content = @Content(
+                schema = @Schema(implementation = ErrorMessageDTO.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Задача не найдена",
+            content = {}
+        )
+    })
+    public ResponseEntity<?> restoreTask(@PathVariable Long taskId) {
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        Task task = taskService.findTaskById(taskId, currentUserId);
+        TaskList taskList = task.getTaskList();
+
+        if (taskList.isDeleted()) 
+            taskListService.restoreTaskListById(taskList.getId(), currentUserId);
+
+        taskService.restoreTaskById(taskId, currentUserId);
+
+        return ResponseEntity
+            .ok(null);
     }
 
     // @DeleteMapping("/{taskId}/hard")

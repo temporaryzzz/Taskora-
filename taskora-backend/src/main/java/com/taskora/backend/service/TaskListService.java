@@ -123,4 +123,18 @@ public class TaskListService {
     public void deleteTaskListById(Long id) {
         repository.deleteById(id);
     }
+
+    /**
+     * [fix]
+     * 
+     * @param id
+     * @param userId
+     */
+    public void restoreTaskListById(Long id, Long userId) {
+        TaskList list = findTaskListById(id, userId);
+
+        list.setDeleted(false);
+        list.setDeletedAt(null);
+        repository.save(list);
+    }
 }

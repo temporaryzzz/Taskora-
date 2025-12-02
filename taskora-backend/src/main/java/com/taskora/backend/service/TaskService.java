@@ -182,4 +182,18 @@ public class TaskService {
     public void deleteTaskById(Long id) {
         repository.deleteById(id);
     }
+
+    /**
+     * [fix]
+     * 
+     * @param id
+     * @param userId
+     */
+    public void restoreTaskById(Long id, Long userId) {
+        Task task = findTaskById(id, userId);
+
+        task.setDeleted(false);
+        task.setDeletedAt(null);
+        repository.save(task);
+    }
 }
