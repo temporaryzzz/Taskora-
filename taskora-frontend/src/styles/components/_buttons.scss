@@ -159,22 +159,52 @@
     }
 
     &--next {
-        --size: #{rem(18)};
-
-        @include square(var(--size));
+        --size: #{rem(10)};
 
         border-radius: 100%;
-        padding: rem(9);
+        border: rem(1) solid var(--color-dark-40);
+        background-color: transparent;
+        padding: rem(5);
         align-self: center;
+
+        &::after {
+            @include square(var(--size));
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/right-arrow-icon.svg');
+        }
+
+        @include hover {
+            background-color: var(--color-dark-40);
+            cursor: pointer;
+        }
     }
 
     &--prev {
-        --size: #{rem(18)};
-
-        @include square(var(--size));
+        --size: #{rem(10)};
 
         border-radius: 100%;
-        padding: rem(9);
+        border: rem(1) solid var(--color-dark-40);
+        background-color: transparent;
+        padding: rem(5);
         align-self: center;
+
+        &::after {
+            @include square(var(--size));
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/left-arrow-icon.svg');
+        }
+
+        @include hover {
+            background-color: var(--color-dark-40);
+            cursor: pointer;
+        }
     }
 }

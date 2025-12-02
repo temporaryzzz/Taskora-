@@ -1,8 +1,9 @@
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 
 type CalendarProps = {
     date: string | null;
     setDate: (date: string | null) => void;
+    toggleShowCalendar: () => void;
 }
 
 type DateButtonProps = {
@@ -12,6 +13,13 @@ type DateButtonProps = {
     fullDate: Date;
 	changeCurrentMonth: (direction: '+' | '-') => void;
 	setTargetDate: Dispatch<SetStateAction<string | null>>;
+};
+
+type RenderTimeButtonProps = {
+    time: number[];
+    currentTime: number[];
+	setHours: Dispatch<SetStateAction<number>>;
+	setMinutes: Dispatch<SetStateAction<number>>;
 };
 
 export function Calendar(props: CalendarProps) {
@@ -43,9 +51,29 @@ export function Calendar(props: CalendarProps) {
 		'Декабрь',
 	];
 
+    const timeState = [
+        [0, 0], [0, 30], [1, 0], [1, 30], [2, 0], [2, 30],
+        [3, 0], [3, 30], [4, 0], [4, 30], [5, 0], [5, 30],
+        [6, 0], [6, 30], [7, 0], [7, 30], [8, 0], [8, 30],
+        [9, 0], [9, 30], [10, 0], [10, 30], [11, 0], [11, 30],
+        [12, 0], [12, 30], [13, 0], [13, 30], [14, 0], [14, 30],
+        [15, 0], [15, 30], [16, 0], [16, 30], [17, 0], [17, 30],
+        [18, 0], [18, 30], [19, 0], [19, 30], [20, 0], [20, 30],
+        [21, 0], [21, 30], [22, 0], [22, 30], [23, 0], [23, 30],
+    ]
+
     const [renderDate, setRenderDate] = useState<Date>(props.date == null?new Date():new Date(props.date))
     const [deadlineDate, setDeadlineDate] = useState<string | null>(props.date)
     const [dates, setDates] = useState<number[]>([]);
+    const [hours, setHours] = useState<number>(props.date == null?0:new Date(props.date).getHours());
+    const [minutes, setMinutes] = useState<number>(props.date == null?59:new Date(props.date).getMinutes());
+    const [classDropdownTitle, setClassDropdownTitle] = useState<string>('dropdown-menu__title')
+    const [timeMessage, setTimeMessage] = useState<string>('Установите время')
+    const dropdownItemsRef = useRef<HTMLUListElement>(null)
+
+    const stateClasses = {
+        dropdownItemsActive: 'dropdown-menu__items--active',
+    }
 
     const InitializationTableDates = () => {
 		const newDates = [];
@@ -71,6 +99,33 @@ export function Calendar(props: CalendarProps) {
 		}
     }
 
+    const setDeadline = () => {
+        if(deadlineDate !== null) {
+            const newDate = new Date(new Date(deadlineDate))
+            newDate.setHours(hours)
+            newDate.setMinutes(minutes)
+            newDate.setSeconds(0)
+            props.setDate(newDate.toISOString())
+        } 
+        else if(deadlineDate == null && minutes !== 59) {
+            const newDate = new Date()
+            newDate.setHours(hours)
+            newDate.setMinutes(minutes)
+            newDate.setSeconds(0)
+            props.setDate(newDate.toISOString())
+            setDeadlineDate(newDate.toISOString())
+        }
+        props.toggleShowCalendar()
+        clear()
+    }
+
+    const clear = () => {
+        setRenderDate(new Date())
+        setDeadlineDate(null)
+        setHours(0)
+        setMinutes(59)
+    }
+
     useEffect(() => {
         InitializationTableDates()
     }, [renderDate])
@@ -78,6 +133,25 @@ export function Calendar(props: CalendarProps) {
     useEffect(() => {
         setRenderDate(props.date == null?new Date():new Date(props.date))
     }, [props])
+
+    useEffect(() => {
+        if(minutes !== 59) {
+            setClassDropdownTitle('dropdown-menu__title dropdown-menu__title--active')
+            let messageMinutes = String(minutes)
+            let messageHours = String(hours)
+            if(minutes < 30) {
+                messageMinutes = '0' + String(minutes)
+            }
+            if(hours < 10) {
+                messageHours = '0' + String(hours)
+            }
+            setTimeMessage(messageHours + ':' + messageMinutes)
+        }
+        else {
+            setClassDropdownTitle('dropdown-menu__title')
+            setTimeMessage('Установите время')
+        }
+    }, [minutes, hours])
 
     return (
         <div className="calendar" onClick={(e) => e.stopPropagation()}>
@@ -167,12 +241,28 @@ export function Calendar(props: CalendarProps) {
                         key={index}/>
                 })}
             </ul>
+            <div className="dropdown-menu">
+                <button className="calendar__time-menu dropdown-menu__button button" type="button" onClick={() => {
+                    dropdownItemsRef.current?.classList.toggle(stateClasses.dropdownItemsActive)
+                }}>
+                    <div className={classDropdownTitle}>
+                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="9.14999" cy="9.14999" r="8.5" stroke="#929299" strokeWidth="1.3"/>
+                            <rect x="8.58331" y="5.18333" width="1.13333" height="5.66667" rx="0.566667" fill="#929299"/>
+                            <rect x="13.1167" y="9.71666" width="1.13333" height="4.53333" rx="0.566667" transform="rotate(90 13.1167 9.71666)" fill="#929299"/>
+                        </svg>
+                        <p>{timeMessage}</p>
+                    </div>
+                </button>
+                <ul className="dropdown-menu__items" ref={dropdownItemsRef}>
+                    {timeState.map((time, index) => {
+                        return <RenderTimeButton time={time} currentTime={[hours, minutes]} setHours={setHours} setMinutes={setMinutes} key={index}/>
+                    })}
+                </ul>
+            </div>
             <div className="calendar__container calendar__container--buttons">
-                <button type="button" className="calendar__button button button--not-accent" onClick={() => {
-                    setRenderDate(new Date())
-                    props.setDate(null)
-                    }}>Очистить</button>
-                <button type="button" className="calendar__button button button--inverse" onClick={() => {props.setDate(deadlineDate)}}>Ок</button>
+                <button type="button" className="calendar__button button button--not-accent" onClick={clear}>Очистить</button>
+                <button type="button" className="calendar__button button button--inverse" onClick={setDeadline}>Ок</button>
             </div>
         </div>
     )
@@ -322,6 +412,7 @@ function DateButton(props: DateButtonProps) {
         }
         if(dateButton) {
             setTargetDate(dateButton.toISOString())
+            console.log('date:', date)
         }
     }
 
@@ -336,5 +427,43 @@ function DateButton(props: DateButtonProps) {
 
     return(
         <li className={classDateButton} onClick={setDeadlineDate}>{props.date}</li>
+    )
+}
+
+function RenderTimeButton(props: RenderTimeButtonProps) {
+
+    const [classItem, setClassItem] = useState<string>('dropdown-menu__item')
+    const [timeMessage, setTimeMessage] = useState<string>('')
+
+    const InizializationTimeMessage = () => {
+        let hours = String(props.time[0])
+        let minutes = String(props.time[1])
+        if(props.time[0] < 10) {
+            hours = '0' + String(props.time[0])
+        }
+        if(props.time[1] !== 30) {
+            minutes = '0' + String(props.time[1])
+        }
+
+        setTimeMessage(hours + ':' + minutes)
+    }
+
+    const setTime = () => {
+        props.setHours(props.time[0])
+        props.setMinutes(props.time[1])
+    }
+
+    useEffect(() => {
+        if(props.currentTime[0] == props.time[0] && props.currentTime[1] == props.time[1]) {
+            setClassItem('dropdown-menu__item dropdown-menu__item--active')
+        }
+        else {
+            setClassItem('dropdown-menu__item')
+        }
+        InizializationTimeMessage()
+    }, [props])
+
+    return (
+        <li className={classItem} onClick={setTime}>{timeMessage}</li>
     )
 }

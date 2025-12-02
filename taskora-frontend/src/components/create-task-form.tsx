@@ -60,7 +60,14 @@ export function CreateTaskForm(props: CreateTaskFormProps) {
             taskManagerContext.actions.createTask(taskBeingCreated)
             console.log(taskBeingCreated)
         }
+        clear()
+    }
 
+    const clear = () => {
+        if(taskManagerContext.state.currentList) {
+            setTaskBeingCreated({ownerListId: taskManagerContext.state.currentList.id, title: '', description: '', 
+            priority: 'DEFAULT', section: props.section, deadline: null})
+        }
         if(formAddTaskRef.current && inputAddTaskRef.current && optionsRef.current) {
             formAddTaskRef.current.classList.add(stateClasses.hidden)
             optionsRef.current.classList.remove(stateClasses.activeOptions)
@@ -141,7 +148,7 @@ export function CreateTaskForm(props: CreateTaskFormProps) {
                     </span>
                     <span className="task-list__section-button button button--date" ref={calendarButtonRef} onClick={toggleShowCalendar}>
                         <div className="context-menu context-menu--wrapper" ref={calendarRef}>
-                            <Calendar date={taskBeingCreated.deadline} setDate={setDateDeadline}/>
+                            <Calendar date={taskBeingCreated.deadline} setDate={setDateDeadline} toggleShowCalendar={toggleShowCalendar}/>
                         </div>
                     </span>
                 </span>
