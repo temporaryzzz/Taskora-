@@ -52,6 +52,10 @@
             background-color: var(--color-dark-25);
             color: var(--main-accent);
         }
+
+        &--red {
+            color: var(--color-red);
+        }
     }
 
     &__date-wrapper {

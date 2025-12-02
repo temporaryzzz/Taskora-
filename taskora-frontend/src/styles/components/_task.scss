@@ -29,6 +29,10 @@
         font-size: rem(14);
         color: var(--main-accent);
         margin-left: rem(37);
+
+        &--red {
+            color: var(--color-red);
+        }
     }
 
     &__body {

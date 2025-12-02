@@ -13,9 +13,11 @@ export function TaskDetailsWindow() {
     const calendarRef = useRef<HTMLDivElement>(null)
     const taskDetailsTitleRef = useRef<HTMLTextAreaElement>(null)
     const taskDetailsDescriptionRef = useRef<HTMLTextAreaElement>(null)
+    const taskDetailsDedlineButtonRef = useRef<HTMLButtonElement>(null)
 
     const stateClasses = {
         hidden: 'visually-hidden',
+        redButton: 'task-details__button--red',
     }
 
     const monthState = [
@@ -59,7 +61,12 @@ export function TaskDetailsWindow() {
             if(date.getFullYear() !== new Date().getFullYear()) {
                 year = String(date.getFullYear()) + ' '
             }
-
+            if(task && new Date(task.deadline) < new Date()) {
+                taskDetailsDedlineButtonRef.current?.classList.add(stateClasses.redButton)
+            }
+            else {
+                taskDetailsDedlineButtonRef.current?.classList.remove(stateClasses.redButton)
+            }
 
             setDeadlineMessage(year + dateNumber + ' ' + month + hours + minutes)
         }
@@ -145,7 +152,7 @@ export function TaskDetailsWindow() {
                 <div className="task-details__calendar visually-hidden" ref={calendarRef}>
                     <Calendar date={taskDeadline} setDate={setDeadline} toggleShowCalendar={toggleShowCalendar} timeSelectClass="dropdown-menu__items dropdown-menu__items--top"/>
                 </div>
-                <button className="task-details__button button" id="date" onClick={toggleShowCalendar}>
+                <button className="task-details__button button" id="date" ref={taskDetailsDedlineButtonRef} onClick={toggleShowCalendar}>
                     {deadlineMessage}
                 </button>
             </div>

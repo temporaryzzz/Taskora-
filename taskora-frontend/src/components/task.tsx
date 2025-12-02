@@ -14,6 +14,7 @@ export function TaskComponent(props: TaskProps) {
 
     const taskElementRef = useRef<HTMLLIElement>(null)
     const checkboxElementRef = useRef<HTMLInputElement>(null)
+    const [classTaskDate, setClassTaskDate] = useState<string>('task__date')
     const [dateMessage, setDateMessage] = useState('');
 
     const stateClasses = {
@@ -101,6 +102,13 @@ export function TaskComponent(props: TaskProps) {
 			} else {
 				setDateMessage(String(date) + ' ' + monthState[month]);
 			}
+
+            if(new Date(props.task.deadline) < new Date()) {
+                setClassTaskDate('task__date task__date--red')
+            }
+            else {
+                setClassTaskDate('task__date')
+            }
         }
     }, [props.task])
 
@@ -124,7 +132,7 @@ export function TaskComponent(props: TaskProps) {
                 <h3 className="task__title h5">{props.task.id == taskManagerContext.state.selectedTaskId ? taskManagerContext.state.tempTaskTitle : props.task.title}</h3>
             </div>
             <div className="task__extra">
-                <p className="task__date">{dateMessage}</p>
+                <p className={classTaskDate}>{dateMessage}</p>
             </div>
         </li>
     )
