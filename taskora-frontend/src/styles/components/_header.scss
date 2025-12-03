@@ -6,7 +6,7 @@
         display: flex;
         justify-content: space-between;
         width: 100vw;
-        padding: rem(15) rem(20);
+        padding: rem(12) rem(20);
         background-color: var(--color-dark-15);
         border-bottom-right-radius: rem(10);
 
@@ -23,8 +23,10 @@
     }
 
     &__overlay {
+        display: flex;
         font-family: var(--font-famaly-accent);
         font-size: rem(22);
+        align-items: center;
     }
 
     &__title {
@@ -34,7 +36,7 @@
     }
 
     &__settings {
-        @include square(#{fluid(40, 30)});
+        @include square(#{fluid(36, 28)});
 
         content: '';
         flex-shrink: 0;

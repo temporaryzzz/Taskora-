@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
+import { useOnClickOutside } from "../hooks";
 
 type CalendarProps = {
     date: string | null;
@@ -156,6 +157,10 @@ export function Calendar(props: CalendarProps) {
             setTimeMessage('Установите время')
         }
     }, [minutes, hours])
+
+    useOnClickOutside(dropdownItemsRef, () => {
+        dropdownItemsRef.current?.classList.remove(stateClasses.dropdownItemsActive)
+    })
 
     return (
         <div className="calendar" onClick={(e) => e.stopPropagation()}>
