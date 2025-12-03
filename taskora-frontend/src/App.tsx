@@ -18,9 +18,10 @@ function App() {
   const [token] = useState<string | undefined>(getCookie('token'))
   const [user, setUser] = useState<User | undefined>({username: 'admin', email: 'admin@bk.ru'})
   //КОСТЫЛЬ - отрицаетльные id, чтобы они не совпали с id созданных листов
-  const [lists, setLists] = useState<Array<List>>([{title: 'Completed', id: -1, sections: ['Main Completed section'], viewType: 'LIST', icon: "COMPLETED", color: "NONE"},
-          {title: 'Basket', id: -2, sections: ['Main Basket section'], viewType: 'LIST', icon: "BASKET", color: "NONE"},
-          {title: 'All', id: -3,  sections: ['Main All section'], viewType: 'LIST', icon: "DEFAULT", color: "NONE"}])
+  const [lists, setLists] = useState<Array<List>>([{title: 'Completed', id: -1, sections: [''], viewType: 'LIST', icon: "COMPLETED", color: "NONE"},
+          {title: 'Today', id: -2, sections: [''], viewType: 'LIST', icon: "DEFAULT", color: "NONE"},
+          {title: 'Basket', id: -3, sections: [''], viewType: 'LIST', icon: "BASKET", color: "NONE"},
+          {title: 'All', id: -4,  sections: [''], viewType: 'LIST', icon: "DEFAULT", color: "NONE"}])
   const [tasks, setTasks] = useState<Array<Task>>([])
   const [currentList, setCurrentList] = useState<List | undefined>(undefined)
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)

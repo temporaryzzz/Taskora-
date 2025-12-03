@@ -23,11 +23,11 @@ const fetchTasks = async (listId: number): Promise<Array<Task>> => {
   if(listId == -1) {
      fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=completed`
   } else if(listId == -2) {
-    fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=deleted`
-  } else if(listId == -3) {
-    fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=all`
-  } else if(listId == -4) {
     fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=today`
+  } else if(listId == -3) {
+    fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=deleted`
+  } else if(listId == -4) {
+    fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=all`
   }
   
   const response = await fetch(fetchString, {

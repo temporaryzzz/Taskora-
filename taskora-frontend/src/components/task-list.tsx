@@ -1,6 +1,8 @@
-import { useContext, useRef, type FormEvent } from "react";
+import { useContext, useState, useEffect, useRef, type FormEvent } from "react";
 import { TaskManagerContext } from "../App";
 import { TaskListSection } from "./task-list-section";
+import type { Task } from "../interfaces";
+import { TaskComponent } from "./task";
 
 export function TaskList() {
     const taskManagerContext = useContext(TaskManagerContext)
@@ -9,16 +11,43 @@ export function TaskList() {
         return
     }
 
-    return(
-        <div className="task-list">
-            <div className="task-list__sections">
-                {taskManagerContext.state.currentList?.sections.map((section: string, index: number) => {
-                    return <TaskListSection section={section} key={index}/>
-                })}
-                {<AddSectionButton />}
+    const [completedTasks, setCompletedTasks] = useState<Task[]>(taskManagerContext.state.tasks.filter((task) => task.completed == true))
+    const [activeTasks, setActiveTasks] = useState<Task[]>(taskManagerContext.state.tasks.filter((task) => task.completed == false))
+
+    useEffect(() => {
+        setCompletedTasks(taskManagerContext.state.tasks.filter((task) => task.completed == true))
+        setActiveTasks(taskManagerContext.state.tasks.filter((task) => task.completed == false))
+    }, [taskManagerContext.state.tasks])
+
+    if(taskManagerContext.state.currentList && taskManagerContext.state.currentList.viewType == 'KANBAN') {
+        return(
+            <div className="task-list">
+                <div className="task-list__sections">
+                    {taskManagerContext.state.currentList?.sections.map((section: string, index: number) => {
+                        return <TaskListSection section={section} key={index}/>
+                    })}
+                    {<AddSectionButton />}
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
+    else if(taskManagerContext.state.currentList && taskManagerContext.state.currentList.viewType == 'LIST') {
+        return(
+            <div className="task-list task-list--list-view">
+                <ul className="task-list__tasks task-list__tasks--active">
+                    {activeTasks.map((taskItem) => {
+                        return <TaskComponent task={taskItem} key={taskItem.id}/>
+                    })}
+                </ul>
+                <ul className="task-list__tasks task-list__tasks--completed">
+                    <p className="task-list__section-body-title" style={{'display' : completedTasks.length > 0 ? 'block' : 'none'}}>Completed</p>
+                    {completedTasks.map((taskItem) => {
+                        return <TaskComponent task={taskItem} key={taskItem.id}/>
+                    })}
+                </ul>
+            </div>
+        )
+    }
 }
 
 function AddSectionButton() {
