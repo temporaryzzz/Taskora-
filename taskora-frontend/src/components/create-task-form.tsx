@@ -121,26 +121,30 @@ export function CreateTaskForm(props: CreateTaskFormProps) {
                             <ul className="context-menu__items context-menu__items--horizontal">
                                 <li id="DEFAULT" className={`context-menu__item ${taskBeingCreated.priority == 'DEFAULT'?stateClasses.activeOptionsItem:''}`} 
                                     onClick={() => {setPriority('DEFAULT')}}>
-                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect x="1" y="1" width="18" height="18" rx="3" stroke="#666666" strokeWidth="2"/>
+                                    <svg width="21" height="25" viewBox="0 0 21 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="15.0028" y="4.00842" width="2.30317" height="20.9916" rx="1.15159" fill="#666666"/>
+                                        <path d="M12.8606 4.61956C13.5349 4.24337 14.3646 4.7161 14.3611 5.47446L14.3165 15.0366C14.3129 15.8017 13.4654 16.2828 12.7946 15.9006L4.33675 11.0818C3.66593 10.6996 3.67782 9.7424 4.3581 9.36289L12.8606 4.61956Z" fill="#666666"/>
                                     </svg>
                                 </li>
                                 <li id="MIDDLE" className={`context-menu__item ${taskBeingCreated.priority == 'MIDDLE'?stateClasses.activeOptionsItem:''}`} 
                                     onClick={() => {setPriority('MIDDLE')}}>
-                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect x="1" y="1" width="18" height="18" rx="3" stroke="#4B29C3" strokeWidth="2"/>
+                                    <svg width="21" height="25" viewBox="0 0 21 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="15.0028" y="4.00842" width="2.30317" height="20.9916" rx="1.15159" fill="#4B29C3"/>
+                                        <path d="M12.8606 4.61956C13.5349 4.24337 14.3646 4.7161 14.3611 5.47446L14.3165 15.0366C14.3129 15.8017 13.4654 16.2828 12.7946 15.9006L4.33675 11.0818C3.66593 10.6996 3.67782 9.7424 4.3581 9.36289L12.8606 4.61956Z" fill="#4B29C3"/>
                                     </svg>
                                 </li>
                                 <li id="HIGH" className={`context-menu__item ${taskBeingCreated.priority == 'HIGH'?stateClasses.activeOptionsItem:''}`}  
                                     onClick={() => {setPriority('HIGH')}}>
-                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect x="1" y="1" width="18" height="18" rx="3" stroke="#FFD633" strokeWidth="2"/>
+                                    <svg width="21" height="25" viewBox="0 0 21 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="15.0028" y="4.00842" width="2.30317" height="20.9916" rx="1.15159" fill="#FFD633"/>
+                                        <path d="M12.8606 4.61956C13.5349 4.24337 14.3646 4.7161 14.3611 5.47446L14.3165 15.0366C14.3129 15.8017 13.4654 16.2828 12.7946 15.9006L4.33675 11.0818C3.66593 10.6996 3.67782 9.7424 4.3581 9.36289L12.8606 4.61956Z" fill="#FFD633"/>
                                     </svg>
                                 </li>
                                 <li id="HIGHEST" className={`context-menu__item ${taskBeingCreated.priority == 'HIGHEST'?stateClasses.activeOptionsItem:''}`} 
                                     onClick={() => {setPriority('HIGHEST')}}>
-                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect x="1" y="1" width="18" height="18" rx="3" stroke="#FF5500" strokeWidth="2"/>
+                                    <svg width="21" height="25" viewBox="0 0 21 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="15.0028" y="4.00842" width="2.30317" height="20.9916" rx="1.15159" fill="#FF5500"/>
+                                        <path d="M12.8606 4.61956C13.5349 4.24337 14.3646 4.7161 14.3611 5.47446L14.3165 15.0366C14.3129 15.8017 13.4654 16.2828 12.7946 15.9006L4.33675 11.0818C3.66593 10.6996 3.67782 9.7424 4.3581 9.36289L12.8606 4.61956Z" fill="#FF5500"/>
                                     </svg>
                                 </li>
                             </ul>

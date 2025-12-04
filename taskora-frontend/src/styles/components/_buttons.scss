@@ -107,7 +107,6 @@
         background-color: transparent;
         align-items: center;
         font-weight: 400;
-        column-gap: rem(10);
         font-family: var(--font-famaly-accent);
         font-size: inherit;
         padding: rem(6) rem(6);
@@ -127,6 +126,106 @@
         @include hover {
             color: var(--main-accent);
             background-color: var(--color-dark-15);
+            cursor: pointer;
+        }
+    }
+
+    &--priority-highest {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        border-radius: rem(6);
+        padding: rem(1);
+
+        &::after {
+            @include square(#{rem(30)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/priority-highest-icon.svg');
+        }
+
+        @include hover {
+            background-color: var(--color-dark-25);
+            cursor: pointer;
+        }
+    }
+
+    &--priority-high {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        border-radius: rem(6);
+        padding: rem(1);
+
+        &::after {
+            @include square(#{rem(30)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/priority-high-icon.svg');
+        }
+
+        @include hover {
+            background-color: var(--color-dark-25);
+            cursor: pointer;
+        }
+    }
+
+    &--priority-middle {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        border-radius: rem(6);
+        padding: rem(1);
+
+        &::after {
+            @include square(#{rem(30)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/priority-middle-icon.svg');
+        }
+
+        @include hover {
+            background-color: var(--color-dark-25);
+            cursor: pointer;
+        }
+    }
+
+    &--priority-default {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        border-radius: rem(6);
+        padding: rem(1);
+
+        &::after {
+            @include square(#{rem(30)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/priority-default-icon.svg');
+        }
+
+        @include hover {
+            background-color: var(--color-dark-25);
             cursor: pointer;
         }
     }
