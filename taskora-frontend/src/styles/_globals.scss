@@ -2,9 +2,7 @@
 
 
 html {
-    &.lock {
-        overflow: hidden;
-    }
+    overflow: hidden;
 }
 
 body {
@@ -25,6 +23,7 @@ body {
 main {
     display: flex;
     flex-grow: 1;
+    overflow: hidden;
 }
 
 h1, .h1,

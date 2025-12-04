@@ -28,16 +28,16 @@ export function SideBar() {
                 <CreateListForm activeCreateForm={activeCreateForm} setActiveCreateForm={setActiveCreateForm}/>
                 <ul className="side-bar__list" id="lists">
                     {taskManagerContext.state.lists.map((list) => {
-                        if(list.title !== 'Basket' && list.title !== 'Completed') {
+                        if(list.id !== -1 && list.id !== -3) {
                             return (<SideBarButton list={list} key={list.id}/>)
                         }
                     })}
                 </ul>
             </div>
             <div className="side-bar__wrapper">
-                <ul className="side-bar__list" id="basket">
+                <ul className="side-bar__list" id="system-lists">
                     {taskManagerContext.state.lists.map((list) => {
-                        if(list.title == 'Basket' || list.title == 'Completed') {
+                        if(list.id == -1 || list.id == -3) {
                             return (<SideBarButton list={list} key={list.id}/>)
                         }
                     })}
