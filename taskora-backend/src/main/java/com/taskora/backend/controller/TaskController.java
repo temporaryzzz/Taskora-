@@ -39,19 +39,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/tasks")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class TaskController {
-
-    private final TaskListController taskListController;
     
     @Autowired
     private TaskListService taskListService;
     
     @Autowired
     private TaskService taskService;
-
-
-    TaskController(TaskListController taskListController) {
-        this.taskListController = taskListController;
-    }
 
 
     @GetMapping("/{taskListId}")
