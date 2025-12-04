@@ -1,17 +1,36 @@
-//⁡⁣⁣⁢-------------Цвета---------------⁡
-$bgColor-default: #1c1c1c;
-$bgColor-lightAccent: #242424;
-$bgColor-current: #3d444db3;
-$muted-element: #8b8989;
-$border-default: #3d444db3;
-$hover-element: #5b6068b3;
-$completed-element: #5b6068b3;
-$muted-hover-element: #a9b1c02f;
-$fgColor-default: #f0f6fc;
-$muted-blueAccent: #23478a;
-$bright-blueAccent: #1962e8;
-$greenAccent: #238636;
-$redAccent: #d52b24;
+@use "helpers" as *;
 
-//⁡⁣⁣⁡⁣⁢⁢-------------Border---------------⁡
-$border-radius-default: 6px;
+:root {
+  //⁡⁣⁣⁢COLORS⁡
+  --color-light: #ffffff;
+  --color-muted-light: #D9D9D9;
+
+  --color-dark: #141414;
+  --color-dark-10: #1a1a1a;
+  --color-dark-15: #262626;
+  --color-dark-20: #333333;
+  --color-dark-25: #444444;
+  --color-dark-40: #666666;
+
+  --color-gray-50: #7e7e81;
+  --color-gray-60: #929299;
+
+  --color-red: #ff5500;
+  --color-yellow: #ffd11a;
+  --color-blue: #491DE8;
+  --color-green: #4EC218;
+
+  --main-accent: #8212D9;
+  --main-accent-light: #9000ff;
+  --muted-hover-accent: #5c4569;
+
+  //⁡⁣⁣⁢FONTS⁡
+  --font-famaly-base: "Inter", sans-serif;
+  --font-famaly-accent: "Kumbh Sans", sans-serif;
+
+  //⁡⁣⁣⁢TRANSITION⁡
+  --transition-duration: 0.2s;
+
+  //⁡⁣⁣⁢SIZES⁡
+  --header-hieght: #{rem(60)};
+}

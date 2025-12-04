@@ -1,0 +1,81 @@
+@use "../helpers" as *;
+
+.task-details {
+    display: none;
+    position: absolute;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: rem(15);
+    row-gap: rem(20);
+    background-color: var(--color-dark-15);
+    border-top-left-radius: rem(20);
+    border-bottom-left-radius: rem(20);
+    right: 0;
+    bottom: rem(-3);
+    top: calc(var(--header-hieght) + rem(5));
+
+    &__input {
+        @include textarea-default;
+
+        width: 100%;
+        background-color: var(--color-dark);
+        border-radius: rem(10);
+        color: var(--color-light);
+        padding: rem(10);
+        outline: none;
+
+        &--title {
+            @include fluid-text(20, 16);
+
+            height: rem(50);
+            width: rem(270);
+            overflow: hidden;
+        }
+
+        &--description {
+            @include fluid-text(16, 14);
+
+            height: rem(500);
+            overflow: hidden;
+        }
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__subtasks {
+        flex-grow: 1;
+    }
+
+    &__button {
+        @include fluid-text(16, 14);
+
+        background-color: transparent;
+        border-radius: rem(8);
+        justify-content: start;
+        font-weight: 400;
+        padding: rem(5) rem(10);
+
+        @include hover {
+            background-color: var(--color-dark-25);
+            color: var(--main-accent);
+        }
+
+        &--red {
+            color: var(--color-red);
+        }
+    }
+
+    &__date-wrapper {
+        position: relative;
+        height: fit-content;
+    }
+
+    &__calendar {
+        position:absolute;
+        bottom: rem(50);
+    }
+}

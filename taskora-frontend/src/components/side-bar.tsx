@@ -1,0 +1,48 @@
+import { useContext, useState } from "react";
+import { TaskManagerContext } from "../App";
+import { CreateListForm } from './create-list-form'
+import SideBarButton from "./side-bar-button";
+
+export function SideBar() {
+    const taskManagerContext = useContext(TaskManagerContext)
+    const [activeCreateForm, setActiveCreateForm] = useState<boolean>(false)
+
+    if(taskManagerContext == undefined) {
+        return
+    }
+
+    return(
+        <div className="side-bar">
+            <div className="side-bar__wrapper">
+                <ul className="side-bar__list" id="profile">
+                    <li className="side-bar__item">
+                        <button className="side-bar__button button icon icon--profile">Profile</button>
+                    </li>
+                    <li className="side-bar__item">
+                        <button className="side-bar__button button icon icon--stats">Statistics</button>
+                    </li>
+                </ul>
+            </div>
+            <div className="side-bar__wrapper side-bar__wrapper--max-hieght">
+                <button className="side-bar__button  side-bar__button--title button" onClick={() => setActiveCreateForm(true)}>Task-lists</button>
+                <CreateListForm activeCreateForm={activeCreateForm} setActiveCreateForm={setActiveCreateForm}/>
+                <ul className="side-bar__list" id="lists">
+                    {taskManagerContext.state.lists.map((list) => {
+                        if(list.id !== -1 && list.id !== -3) {
+                            return (<SideBarButton list={list} key={list.id}/>)
+                        }
+                    })}
+                </ul>
+            </div>
+            <div className="side-bar__wrapper">
+                <ul className="side-bar__list" id="system-lists">
+                    {taskManagerContext.state.lists.map((list) => {
+                        if(list.id == -1 || list.id == -3) {
+                            return (<SideBarButton list={list} key={list.id}/>)
+                        }
+                    })}
+                </ul>
+            </div>
+        </div>
+    )
+}

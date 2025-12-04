@@ -1,52 +1,54 @@
 package com.taskora.backend.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Size;
 
-@Schema(description = "Задача")
+@Schema(description = "Данные о задаче")
 public class TaskDTO {
     
     @Schema(description = "Уникальный id задачи в БД")
     Long id;
 
+    @JsonProperty("ownerListId")
     @Schema(description = "Id списка в котором лежит задача")
-    Long taskList_id;
+    Long taskListId;
 
-    @Schema(description = "Название задачи, от 1 до 50 символов", example = "task 1")
-    @Size(min = 1, max = 50)
+    @Schema(description = "Назавние секции, в которой лежит задача")
+    String section;
+
+    @Schema(description = "Название задачи", example = "task 1")
     String title;
 
-    @Schema(description = "Описание задачи, до 255 символов", example = "Создать task 2.")
-    @Max(255)
+    @Schema(description = "Описание задачи", example = "Создать task 2.")
     String description;
 
+    @JsonProperty("deadline")
     @Schema(description = "Дедлайн задачи")
-    LocalDateTime due_date;
+    Instant dueDate;
 
     @Schema(description = "Приоритет задачи", example = "DEFAULT")
-    @Enumerated
-    Priority priority = Priority.DEFAULT;
+    String priority = "DEFAULT";
 
     @Schema(description = "Выполнена ли задача", example = "false")
-    Boolean completed;
+    boolean completed;
 
 
-    public TaskDTO(Long id, Long taskList_id, @Size(min = 1, max = 50) String title, @Max(255) String description,
-            LocalDateTime due_date, Priority priority, Boolean completed) {
+    public TaskDTO(Long id, Long taskListId, String section, String title, String description, Instant dueDate,
+            String priority, boolean completed) {
         this.id = id;
-        this.taskList_id = taskList_id;
+        this.taskListId = taskListId;
+        this.section = section;
         this.title = title;
         this.description = description;
-        this.due_date = due_date;
+        this.dueDate = dueDate;
         this.priority = priority;
         this.completed = completed;
     }
 
-    
+
     public Long getId() {
         return id;
     }
@@ -55,12 +57,20 @@ public class TaskDTO {
         this.id = id;
     }
 
-    public Long getTaskList_id() {
-        return taskList_id;
+    public Long getTaskListId() {
+        return taskListId;
     }
-    
-    public void setTaskList_id(Long taskList_id) {
-        this.taskList_id = taskList_id;
+
+    public void setTaskListId(Long taskListId) {
+        this.taskListId = taskListId;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
     }
 
     public String getTitle() {
@@ -79,19 +89,19 @@ public class TaskDTO {
         this.description = description;
     }
 
-    public LocalDateTime getDue_date() {
-        return due_date;
+    public Instant getDueDate() {
+        return dueDate;
     }
 
-    public void setDue_date(LocalDateTime due_date) {
-        this.due_date = due_date;
+    public void setDueDate(Instant dueDate) {
+        this.dueDate = dueDate;
     }
 
-    public Priority getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(Priority priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 

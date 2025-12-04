@@ -1,0 +1,309 @@
+@use "../helpers" as *;
+
+.button {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    padding: rem(8) rem(48);
+    font-size: rem(20);
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--main-accent);
+    background-color: var(--color-light);
+    border-radius: rem(15);
+    border: none;
+
+    @include laptop {
+        padding: rem(6) rem(34);
+        font-size: rem(14);
+        border-radius: rem(15);
+    }
+
+    @include hover {
+        color: var(--color-light);
+        background-color: var(--main-accent);
+    }
+
+    &--inverse {
+        background-color: var(--main-accent);
+        font-weight: 600;
+        color: var(--color-light);
+
+        @include hover {
+            background-color: var(--color-light);
+            color: var(--main-accent);
+        }
+    }
+
+    &--not-accent {
+        background-color: transparent;
+        font-weight: 600;
+        color: var(--color-gray-60);
+        border: rem(1) solid var(--color-dark-40);
+
+        @include hover {
+            background-color: transparent;
+            border-color: var(--main-accent);
+            color: var(--main-accent);
+        }
+    }
+
+    &--add {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        column-gap: rem(10);
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        padding: rem(4) rem(8);
+        border-radius: rem(10);
+        border: rem(1) solid transparent; 
+
+        &::after {
+            @include square(#{fluid(16, 14)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/plus-violet-icon.svg');
+        }
+
+        @include hover {
+            color: var(--main-accent);
+            background-color: var(--color-dark-25);
+        }
+    }
+
+    &--white-add {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        column-gap: rem(10);
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        padding: rem(6) rem(6);
+        border-radius: rem(6);
+        border: rem(1) solid transparent; 
+
+        &::after {
+            @include square(#{fluid(16, 14)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/plus-icon.svg');
+        }
+
+        @include hover {
+            color: var(--main-accent);
+            background-color: var(--color-dark-25);
+            cursor: pointer;
+        }
+    }
+
+    &--options {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        padding: rem(6) rem(6);
+        border-radius: rem(6);
+        border: rem(1) solid transparent; 
+
+        &::after {
+            @include square(#{fluid(16, 12)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/down-arrow-icon.svg');
+        }
+
+        @include hover {
+            color: var(--main-accent);
+            background-color: var(--color-dark-15);
+            cursor: pointer;
+        }
+    }
+
+    &--priority-highest {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        border-radius: rem(6);
+        padding: rem(1);
+
+        &::after {
+            @include square(#{rem(30)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/priority-highest-icon.svg');
+        }
+
+        @include hover {
+            background-color: var(--color-dark-25);
+            cursor: pointer;
+        }
+    }
+
+    &--priority-high {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        border-radius: rem(6);
+        padding: rem(1);
+
+        &::after {
+            @include square(#{rem(30)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/priority-high-icon.svg');
+        }
+
+        @include hover {
+            background-color: var(--color-dark-25);
+            cursor: pointer;
+        }
+    }
+
+    &--priority-middle {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        border-radius: rem(6);
+        padding: rem(1);
+
+        &::after {
+            @include square(#{rem(30)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/priority-middle-icon.svg');
+        }
+
+        @include hover {
+            background-color: var(--color-dark-25);
+            cursor: pointer;
+        }
+    }
+
+    &--priority-default {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        border-radius: rem(6);
+        padding: rem(1);
+
+        &::after {
+            @include square(#{rem(30)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/priority-default-icon.svg');
+        }
+
+        @include hover {
+            background-color: var(--color-dark-25);
+            cursor: pointer;
+        }
+    }
+
+    &--date {
+        background-color: transparent;
+        align-items: center;
+        font-weight: 400;
+        column-gap: rem(10);
+        font-family: var(--font-famaly-accent);
+        font-size: inherit;
+        padding: rem(6) rem(6);
+        border-radius: rem(6);
+        border: rem(1) solid transparent; 
+
+        &::after {
+            @include square(#{fluid(16, 12)});
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/calendar-icon.svg');
+        }
+
+        @include hover {
+            background-color: var(--color-dark-15);
+            cursor: pointer;
+        }
+    }
+
+    &--next {
+        --size: #{rem(10)};
+
+        border-radius: 100%;
+        border: rem(1) solid var(--color-dark-40);
+        background-color: transparent;
+        padding: rem(5);
+        align-self: center;
+
+        &::after {
+            @include square(var(--size));
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/right-arrow-icon.svg');
+        }
+
+        @include hover {
+            background-color: var(--color-dark-40);
+            cursor: pointer;
+        }
+    }
+
+    &--prev {
+        --size: #{rem(10)};
+
+        border-radius: 100%;
+        border: rem(1) solid var(--color-dark-40);
+        background-color: transparent;
+        padding: rem(5);
+        align-self: center;
+
+        &::after {
+            @include square(var(--size));
+
+            content: '';
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-image: url('../../assets/icons/left-arrow-icon.svg');
+        }
+
+        @include hover {
+            background-color: var(--color-dark-40);
+            cursor: pointer;
+        }
+    }
+}

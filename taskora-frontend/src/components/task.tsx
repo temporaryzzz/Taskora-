@@ -1,0 +1,142 @@
+import { useContext, useEffect, useRef, useState } from "react"
+import type { Task } from "../interfaces"
+import { TaskManagerContext } from "../App"
+
+type TaskProps = {
+    task: Task
+}
+
+export function TaskComponent(props: TaskProps) {
+    const taskManagerContext = useContext(TaskManagerContext)
+    if(taskManagerContext == undefined) {
+        return
+    }
+
+    const taskElementRef = useRef<HTMLLIElement>(null)
+    const checkboxElementRef = useRef<HTMLInputElement>(null)
+    const [classTaskDate, setClassTaskDate] = useState<string>('task__date')
+    const [classTaskCheckbox, setClassTaskCheckbox] = useState<string>('task__checkbox')
+    const [dateMessage, setDateMessage] = useState('');
+
+    const stateClasses = {
+        DEFAULT: 'task__checkbox',
+        MIDDLE: 'task__checkbox task__checkbox--middle',
+        HIGH: 'task__checkbox task__checkbox--high',
+        HIGHEST: 'task__checkbox task__checkbox--highest',
+        active: 'task--active',
+    }
+
+    const monthState = [
+		'янв.',
+		'фев.',
+		'мар.',
+		'апр.',
+		'мая',
+		'июня',
+		'июля',
+		'авг.',
+		'сен.',
+		'окт.',
+		'ноя.',
+		'дек.',
+	];
+
+    const toggleCompleted = () => {
+        if(checkboxElementRef.current) {
+            taskElementRef.current?.classList.toggle('task--completed')   
+            console.log(checkboxElementRef.current.checked)
+            taskManagerContext.actions.updateTask(props.task.id, {...props.task, completed: checkboxElementRef.current.checked})
+        }
+    }
+
+    const InitializationCheckbox = () => {
+        switch(props.task.priority) {
+            case('DEFAULT'): {
+                setClassTaskCheckbox(stateClasses.DEFAULT)
+                break
+            }
+            case('MIDDLE'): {
+                setClassTaskCheckbox(stateClasses.MIDDLE)
+                break
+            }
+            case('HIGH'): {
+                setClassTaskCheckbox(stateClasses.HIGH)
+                break
+            }
+            case('HIGHEST'): {
+                setClassTaskCheckbox(stateClasses.HIGHEST)
+                break
+            }
+        }
+
+        if(props.task.completed) {
+            taskElementRef.current?.classList.add('task--completed')
+            if(checkboxElementRef.current) {
+                checkboxElementRef.current.checked = true
+            }
+        }
+        else {
+            if(checkboxElementRef.current) {
+                checkboxElementRef.current.checked = false
+            }
+        }
+    }
+
+    useEffect(() => {
+        InitializationCheckbox()
+        if (props.task.deadline == null) {
+			setDateMessage('');
+		} 
+        else {
+			const date = new Date(props.task.deadline).getDate();
+			const month = new Date(props.task.deadline).getMonth();
+			let hours = new Date(props.task.deadline).getHours();
+			let minutes = new Date(props.task.deadline).getMinutes(); 
+
+            if (minutes != 59) {
+				setDateMessage(
+					String(date) +
+						' ' +
+						monthState[month] +
+						'  ' +
+						String(hours < 10 ? '0' + String(hours) : hours) +
+						':' +
+						String(minutes < 10 ? '0' + String(minutes) : minutes));
+			} else {
+				setDateMessage(String(date) + ' ' + monthState[month]);
+			}
+
+            if(new Date(props.task.deadline) < new Date()) {
+                setClassTaskDate('task__date task__date--red')
+            }
+            else {
+                setClassTaskDate('task__date')
+            }
+        }
+    }, [props.task])
+
+    useEffect(() => {
+        if(taskManagerContext.state.selectedTaskId == props.task.id) {
+            taskElementRef.current?.classList.add(stateClasses.active)
+        }
+        else {
+            if(taskElementRef.current?.classList.contains(stateClasses.active)) {
+                taskElementRef.current?.classList.remove(stateClasses.active)
+            }
+        }
+    }, [taskManagerContext.state.selectedTaskId])
+
+    return(
+        <li className="task" ref={taskElementRef} onClick={() => taskManagerContext.actions.setSelectedTask(props.task.id)}>
+            <div className="task__body">
+                <input type="checkbox" className={classTaskCheckbox}
+                    onChange={() => toggleCompleted()} 
+                    ref={checkboxElementRef}/>
+                <h3 className="task__title h5">{props.task.id == taskManagerContext.state.selectedTaskId ? taskManagerContext.state.tempTaskTitle : props.task.title}</h3>
+            </div>
+            <div className="task__extra">
+                <p className={classTaskDate}>{dateMessage}</p>
+            </div>
+        </li>
+    )
+}

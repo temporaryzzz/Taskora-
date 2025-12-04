@@ -1,0 +1,30 @@
+@use "helpers" as *;
+
+.visually-hidden {
+  @include visually-hidden;
+}
+
+.hidden-mobile {
+  @include mobile {
+    display: none !important;
+  }
+}
+
+.visible-mobile {
+  @include mobile-above {
+    display: none !important;
+  }
+}
+
+.not-clickable {
+  @include abs-center();
+
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: none;
+  
+  &--active {
+      display: flex;
+  }
+}

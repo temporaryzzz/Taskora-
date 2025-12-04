@@ -1,198 +1,267 @@
 //⁡⁢⁣⁣𝗜𝗠𝗣𝗢𝗥𝗧𝗦⁡
-import { BrowserRouter, Route, Routes } from 'react-router';
-import SingInForm from './components/singIn';
-import SingUpForm from './components/singup';
-import Header from './components/header';
-import TaskPage from './components/task-manager/task-page';
-import { useEffect, useState, createContext, useMemo } from 'react';
-import ProfilePage from './components/profile/profile-page';
-import InitializeTasks, { InitializeLists, ChangeTask } from './scripts/dataTaskManager';
+import { Route, Routes, useNavigate } from 'react-router';
+import { createContext, useState, useMemo, useEffect } from 'react';
+import type { AppState, AppActions, User, List, Task, CreateListDTO, 
+              CreateTaskDTO, UpdateTaskDTO, UpdateListDTO} from './interfaces';
+import SignIn from './components/sign-in';
+import SignUp from './components/sign-up';
+import { fetchTasks, fetchLists, updateTaskOnServer, updateListOnServer, createListOnServer, createTaskOnServer, 
+  deleteListOnServer, deleteTaskOnServer, CustomError} from './api';
+import './styles/main.scss'
+import MainPage from './components/main-page';
+import { getCookie, setCookie, deleteCookie } from './cookies';
 
-export interface User {
-	username: string;
-	user_id: number;
-	email: string;
-}
-
-export interface List {
-	id: number;
-	owner_id: number;
-	title: string;
-}
-
-export interface TaskInfo {
-	id: number;
-	taskList_id: number;
-	title: string;
-	description: string;
-	due_date: string;
-	completed: boolean;
-	priority: 'HIGHEST' | 'HIGH' | 'MIDDLE' | 'DEFAULT';
-}
-
-interface TaskManager {
-	user: User | undefined;
-	currentList_id: number | undefined;
-	lists: Array<List> | undefined;
-	tasks: Array<TaskInfo> | undefined;
-	currentTaskInfo: TaskInfo | undefined;
-	setCurrentTask: (id: number) => void;
-	changeCurrentTask: (
-		title: string,
-		description: string,
-		due_date: string,
-		priority: 'HIGHEST' | 'HIGH' | 'MIDDLE' | 'DEFAULT',
-		completed: boolean
-	) => void;
-	updateTasks: (tasks: Array<TaskInfo>) => void;
-	updateLists: (lists: Array<List>) => void;
-	switchList: (list_id: number) => void;
-	LoadTasks: (list_id: number) => void;
-}
-
-export const TaskInfoContext = createContext<TaskManager | undefined>(undefined);
+export const TaskManagerContext = createContext<{state: AppState; actions: AppActions} | undefined>(undefined);
 
 function App() {
-	const [user, setUser] = useState<User | undefined>(undefined);
-	const [lists, setLists] = useState<Array<List> | undefined>([]);
-	const [currentList_id, setCurrentList_id] = useState<number | undefined>();
-	const [tasks, setTasks] = useState<Array<TaskInfo> | undefined>([]);
-	const [currentTaskInfo, setCurrentTaskInfo] = useState<TaskInfo | undefined>();
+  const navigate = useNavigate()
+  const [token] = useState<string | undefined>(getCookie('token'))
+  const [user, setUser] = useState<User | undefined>({username: 'admin', email: 'admin@bk.ru'})
+  //КОСТЫЛЬ - отрицаетльные id, чтобы они не совпали с id созданных листов
+  const [lists, setLists] = useState<Array<List>>([{title: 'Completed', id: -1, sections: [''], viewType: 'LIST', icon: "COMPLETED", color: "NONE"},
+          {title: 'Today', id: -2, sections: [''], viewType: 'LIST', icon: "DEFAULT", color: "NONE"},
+          {title: 'Basket', id: -3, sections: [''], viewType: 'LIST', icon: "BASKET", color: "NONE"},
+          {title: 'All', id: -4,  sections: [''], viewType: 'LIST', icon: "DEFAULT", color: "NONE"}])
+  const [tasks, setTasks] = useState<Array<Task>>([])
+  const [currentList, setCurrentList] = useState<List | undefined>(undefined)
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
+  const [tempTaskTitle, setTempTaskTitle] = useState<string>('');
+  const [error, setError] = useState<boolean>(false)
 
-	const LoadTasks = (list_id: number) => {
-		//taskDTOs - это хуйня с бэка
-		InitializeTasks(list_id).then((data) => {
-			setTasks(data.taskDTOs);
-			console.log('taskDTOs:', typeof data.taskDTO, data.taskDTOs);
-		});
-		setCurrentList_id(list_id);
-	};
+  const setSelectedTask = (taskId: number) => {
+      setSelectedTaskId(taskId)
+      let title = tasks.find(task => task.id == taskId)?.title
+      if(title) {
+        setTempTaskTitle(title);
+      }
+  }
 
-	//Передаем данные о задаче в фокусе
-	const setCurrentTask = (id: number) => {
-		if (tasks) {
-			const currentTaskIndex = tasks.findIndex((task) => task.id === id);
-			setCurrentTaskInfo(tasks[currentTaskIndex]);
-		}
-	};
+  const updateTask = async (taskId: number, updates: UpdateTaskDTO) => {
+    try {
+      const updatedTask = await updateTaskOnServer(taskId, updates)
+      const updatedTasks = tasks.map(task =>
+      task.id === updatedTask.id ? { ...task, ...updatedTask } : task);
 
-	const updateTasks = (tasks: Array<TaskInfo>) => {
-		setTasks([...tasks]);
-	};
+      setTasks(updatedTasks);
+    }catch(error) {
+      if (error instanceof CustomError) {
+        console.log(error.message)
+        if(error.statusCode == 401) {
+          deleteCookie('token')
+          navigate('', {replace: true})
+        }
+        else {
+          console.error(error.message);
+          setError(true)
+        }
+      }
+    }
+  }
 
-	const updateLists = (lists: Array<List>) => {
-		setLists([...lists]);
-	};
+  const updateList = async (listId: number, updates: UpdateListDTO) => {
+    try {
+      const updatedList = await updateListOnServer(listId, updates)
+      const updatedLists = lists?.map(list => list.id === updatedList.id ? { ...list, ...updatedList } : list);
 
-	const switchList = (list_id: number) => {
-		LoadTasks(list_id);
-	};
+      setLists(updatedLists);
+    }catch(error) {
+      if (error instanceof CustomError) {
+        console.log(error.message)
+        if(error.statusCode == 401) {
+          deleteCookie('token')
+          navigate('', {replace: true})
+        }
+        else {
+          console.error(error.message);
+          setError(true)
+        }
+      }
+    }
+  }
 
-	const changeCurrentTask = (
-		title: string,
-		description: string,
-		due_date: string,
-		priority: 'HIGHEST' | 'HIGH' | 'MIDDLE' | 'DEFAULT',
-		completed: boolean
-	) => {
-		if (!tasks || !currentTaskInfo) {
-			return;
-		}
+  const switchList = async (listId: number) => {
+    setCurrentList(lists.find((list) => list.id == listId))
+    setSelectedTaskId(null);
+    setTasks([])
+    
+    try {
+      setCookie(`lastOpenListId`, `${listId}`)
+      setTasks(await fetchTasks(listId))
+    }catch(error) {
+      if (error instanceof CustomError) {
+        console.log(error.message)
+        if(error.statusCode == 401) {
+          deleteCookie('token')
+          navigate('', {replace: true})
+        }
+        else {
+          console.error('custom', error.message);
+          setError(true)
+        }
+      }
+    }
+  }
 
-		const updatedTasks = tasks.map((task) =>
-			task.id === currentTaskInfo.id
-				? { ...task, title, description, due_date, priority, completed }
-				: task
-		);
+  const loadLists = async () => {
+    try {
+      setLists([...lists, ...await fetchLists()])
+    }catch(error) {
+      if (error instanceof CustomError) {
+        console.log(error.message)
+        console.log('status code: ', error.statusCode)
+        if(error.statusCode == 401) {
+          deleteCookie('token')
+          navigate('', {replace: true})
+        }
+        else {
+          console.error('error loadlists:', error.message);
+          setError(true)
+        }
+      }
+    }
+  }
 
-		setTasks(updatedTasks);
-		const updatedCurrentTask = updatedTasks.find(
-			(task) => task.id === currentTaskInfo.id
-		);
+  const createList = async (list: CreateListDTO) => {
+    try {
+      if(user) {
+        const newList = await createListOnServer(list)
+        setLists(lists => [...lists, newList]);
+      }
+    }catch(error) {
+      if (error instanceof CustomError) {
+        console.log(error.message)
+        if(error.statusCode == 401) {
+          deleteCookie('token')
+          navigate('', {replace: true})
+        }
+        else {
+          console.error(error.message);
+          setError(true)
+        }
+      }
+    }
+  }
 
-		if (updatedCurrentTask) {
-			setCurrentTaskInfo(updatedCurrentTask);
-		}
-		ChangeTask(
-			currentTaskInfo.id,
-			Number(currentList_id),
-			title,
-			description,
-			due_date,
-			priority,
-			completed
-		);
-	};
+  const createTask = async (task: CreateTaskDTO) => {
+    try {
+      if(currentList) {
+        const newTask = await createTaskOnServer(task)
+        setTasks(tasks => [...tasks, newTask]);
+      }
+    }catch(error) {
+      if (error instanceof CustomError) {
+        console.error(error.message)
+        if(error.statusCode == 401) {
+          deleteCookie('token')
+          navigate('', {replace: true})
+        }
+        else {
+          console.error("Произошла неизвестная ошибка.");
+          setError(true)
+        }
+      }
+    }
+  }
 
-	//Запрос на получение списков задач и последнего открытого списка
-	useEffect(() => {
-		if (user?.user_id) {
-			InitializeLists(user.user_id).then((data) => {
-				setLists(data.taskLists);
-				//Получение последнего открытого списка или дефолтного(единственного)
-				//⁡⁣⁣⁢Пока что получаем только дефолтный список⁡
-				//⁡⁣⁣⁢Позже добавить else где будет открываться списаок сохраненный в cookies⁡
-				if (data.taskLists) {
-					LoadTasks(data.taskLists[0].id);
-				}
-			});
-		}
-	}, [user]);
+  const deleteList = (listId: number) => {
+    try{ 
+      deleteListOnServer(listId)
+      setLists(lists => lists.filter(list => list.id !== listId))
+      switchList(2)
 
-	const contextValue = useMemo(
-		() => ({
-			user,
-			currentList_id,
-			lists,
-			tasks,
-			currentTaskInfo,
-			setCurrentTask,
-			changeCurrentTask,
-			updateTasks,
-			updateLists,
-			switchList,
-			LoadTasks,
-		}),
-		[user, currentList_id, lists, tasks, currentTaskInfo]
-	);
+    }catch(error){
+      if (error instanceof CustomError) {
+        console.error(error.message)
+        if(error.statusCode == 401) {
+          deleteCookie('token')
+          navigate('', {replace: true})
+        }
+        else {
+          console.error("Произошла неизвестная ошибка.");
+          setError(true)
+        }
+      }
+    }
+  }
 
-	return (
-		<BrowserRouter>
-			<Routes>
-				<Route path="" element={<SingInForm setUser={setUser} />} />
-				<Route path="sing-up" element={<SingUpForm />} />
-				<Route
-					path="profile"
-					element={
-						<>
-							<Header active="profile" username={user?.username} />
-							<ProfilePage />
-						</>
-					}
-				/>
-				<Route
-					path="task-lists"
-					element={
-						<>
-							<Header active="task-lists" username={user?.username} />
-							<TaskInfoContext.Provider value={contextValue}>
-								<TaskPage />
-							</TaskInfoContext.Provider>
-						</>
-					}
-				/>
-				<Route
-					path="task-board"
-					element={
-						<>
-							<Header active="task-board" username={user?.username} />
-							<div>IN DEVELOPMENT...</div>
-						</>
-					}
-				/>
-			</Routes>
-		</BrowserRouter>
-	);
+  const deleteTask = (taskId: number) => {
+    try{ 
+      deleteTaskOnServer(taskId)
+      setTasks(tasks => tasks.filter(task => task.id !== taskId))
+
+      setSelectedTaskId(null)
+    }catch(error){
+      if (error instanceof CustomError) {
+        console.error(error.message)
+        if(error.statusCode == 401) {
+          deleteCookie('token')
+          navigate('', {replace: true})
+        }
+        else {
+          console.error("Произошла неизвестная ошибка.");
+          setError(true)
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    //loadUser() - email, username, settings
+    if(token) {
+      loadLists()
+    }
+  }, [])
+
+  useEffect(() => {
+    if(lists.length > 0) {
+      const lastOpenListId = Number(getCookie(`lastOpenListId`))
+      if(!isNaN(lastOpenListId) && lastOpenListId != null) {
+        switchList(lastOpenListId)
+      }
+      else {
+        switchList(2)
+      }
+    }
+  }, [lists])
+
+  //⁡⁢⁣⁣CONTEXT⁡
+  const contextValue = useMemo(() => {
+    const state: AppState = {
+      user,
+      lists,
+      tasks,
+      selectedTaskId,
+      tempTaskTitle,
+      currentList,
+      error,
+    };
+
+    const actions: AppActions = {
+      setUser,
+      setSelectedTask,
+      setTempTaskTitle,
+      updateTask,
+      updateList,
+      switchList,
+      loadLists,
+      createList,
+      createTask,
+      deleteList,
+      deleteTask,
+    };
+
+    return { state, actions };
+  }, [user, lists, tasks, selectedTaskId, currentList, tempTaskTitle]);
+
+  return(
+      <TaskManagerContext.Provider value={contextValue}>
+        <Routes>
+          <Route path="" element={<SignIn />} />
+          <Route path="sign-up" element={<SignUp />} />
+          <Route path='main' element={<MainPage />} />
+        </Routes>
+      </TaskManagerContext.Provider>
+)
 }
 
-export default App;
+export default App
