@@ -30,6 +30,10 @@
         background-color: transparent;
     }
 
+    label {
+        text-align: start;
+    }
+
     &__items {
         display: flex;
         flex-direction: column;

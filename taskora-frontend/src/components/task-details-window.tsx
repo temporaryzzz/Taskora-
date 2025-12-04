@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react"
 import type { Task } from "../interfaces"
 import { TaskManagerContext } from "../App"
 import { Calendar } from "./calendar"
+import { useOnClickOutside } from "../hooks"
 
 
 export function TaskDetailsWindow() {
@@ -178,6 +179,12 @@ export function TaskDetailsWindow() {
         InitializationDeadlineMessage()
         InitializationPriorityButton()
     }, [task])
+
+    useOnClickOutside(priorityMenuRef, () => {
+        if(priorityMenuRef.current && priorityMenuRef.current.classList.contains(stateClasses.activeOptions)) {
+             priorityMenuRef.current.classList.remove(stateClasses.activeOptions)
+        }
+    })
 
     return(
         <div className="task-details" ref={taskDetailsRef}>
