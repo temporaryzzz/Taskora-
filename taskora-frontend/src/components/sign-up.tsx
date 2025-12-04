@@ -11,7 +11,7 @@ function SignUp() {
 	const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 
-	if(!!(getCookie('token'))) {
+	if(getCookie('token') !== undefined) {
 		navigate('../main', {replace: true})
 	}
 

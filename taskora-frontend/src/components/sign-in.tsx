@@ -98,7 +98,7 @@ function SignIn() {
                     <button className="button button--inverse" type="submit">
                         Sign-in
                     </button>
-                    <button className="button" onClick={() => navigate('sign-up')}>
+                    <button className="button" type="button" onClick={() => navigate('sign-up')}>
                         Registration
                     </button>
                 </div>
