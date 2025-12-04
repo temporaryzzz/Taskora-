@@ -12,7 +12,7 @@
 	
 	<groupId>com.taskora.backend</groupId>
 	<artifactId>taskora-backend</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<name>taskora-backend</name>
 	<description>Backend for Taskora- web application</description>
 	
