@@ -41,6 +41,7 @@ export function TaskDetailsWindow() {
 
     const InitializationDeadlineMessage = () => {
         if(task && task.deadline !== null) {
+            setTaskDeadline(task.deadline)
             const date = new Date(task.deadline)
             let hours = ', ' + String(date.getHours())
             let minutes = ':' + String(date.getMinutes())
@@ -100,9 +101,6 @@ export function TaskDetailsWindow() {
 
     const toggleShowCalendar = () => {
         calendarRef.current?.classList.toggle(stateClasses.hidden)
-        if(task) {
-            setTaskDeadline(task.deadline)
-        }
     }
 
     const updateTitle = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

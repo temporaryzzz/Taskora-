@@ -2,11 +2,13 @@
 
 .task-list {
     display: flex;
+    flex-grow: 1;
     column-gap: rem(25);
     padding: rem(25);
-    max-width: 100%;
+    max-width: calc(100% - rem(500));
     max-height: calc(100vh - var(--header-hieght));
     overflow: scroll;
+    overflow-x: scroll;
 
     @include mobile {
         position: absolute;
@@ -16,7 +18,9 @@
     }
 
     &::-webkit-scrollbar {
+        height: rem(10);
         width: rem(0);
+        background: transparent;
     }
 
     &::-webkit-scrollbar-track {
@@ -25,18 +29,36 @@
 
     &::-webkit-scrollbar-thumb {
         background-color: var(--color-dark-25);
-        height: rem(25);
-        border-radius: 20px;
+        height: rem(10);
+        width: rem(25);
+        border-radius: rem(20);
     }
 
     &--list-view {
         flex-direction: column;
-        width: calc(100% - rem(280));
+        max-width: calc(100% - rem(500));
         max-height: calc(100vh - var(--header-hieght) - rem(1));
-        padding: rem(25) rem(40);
+        padding: rem(25) rem(20);
         row-gap: rem(25);
         overflow: scroll;
+        overflow-y: scroll;
         overflow-x: hidden;
+        border-right: rem(1) solid var(--color-dark-25);
+
+        &::-webkit-scrollbar {
+            width: rem(8);
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: var(--color-dark-25);
+            height: rem(20);
+            width: rem(8);
+            border-radius: rem(20);
+        }
 
         .task {
             flex-direction: row;
@@ -188,9 +210,9 @@
             row-gap: rem(30);
 
             &-title {
-                @include fluid-text(15, 13);
+                @include fluid-text(12, 10);
 
-                color: var(--color-gray-50);
+                color: var(--color-gray-60);
             }
         }
 

@@ -2,18 +2,22 @@
 
 .task-details {
     display: none;
+    position: absolute;
     flex-direction: column;
+    flex-grow: 1;
     padding: rem(15);
     row-gap: rem(20);
     background-color: var(--color-dark-15);
     border-top-left-radius: rem(20);
     border-bottom-left-radius: rem(20);
-    margin-left: auto;
+    right: 0;
+    bottom: rem(-3);
+    top: calc(var(--header-hieght) + rem(5));
 
     &__input {
         @include textarea-default;
 
-        width: rem(280);
+        width: rem(290);
         background-color: var(--color-dark);
         border-radius: rem(10);
         color: var(--color-light);
