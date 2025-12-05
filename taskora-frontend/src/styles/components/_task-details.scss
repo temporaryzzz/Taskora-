@@ -5,7 +5,7 @@
     position: absolute;
     flex-direction: column;
     flex-grow: 1;
-    padding: rem(15);
+    padding: rem(10);
     row-gap: rem(20);
     background-color: var(--color-dark-15);
     border-top-left-radius: rem(20);
@@ -17,7 +17,7 @@
     &__input {
         @include textarea-default;
 
-        width: 100%;
+        width: rem(300);
         background-color: var(--color-dark);
         border-radius: rem(10);
         color: var(--color-light);
@@ -28,7 +28,7 @@
             @include fluid-text(20, 16);
 
             height: rem(50);
-            width: rem(270);
+            width: rem(300);
             overflow: hidden;
         }
 
@@ -40,7 +40,7 @@
         }
     }
 
-    &__footer {
+    &__header {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -69,13 +69,13 @@
         }
     }
 
-    &__date-wrapper {
+    &__button-wrapper {
         position: relative;
         height: fit-content;
     }
 
     &__calendar {
         position:absolute;
-        bottom: rem(50);
+        top: rem(50);
     }
 }

@@ -13,11 +13,9 @@
     left: 0;
     top: rem(35);
 
-    &--top {
+    &--left {
         left: auto;
-        top: auto;
         right: 0;
-        bottom: rem(35);
     }
 
     &--active {

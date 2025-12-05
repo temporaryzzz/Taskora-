@@ -188,29 +188,17 @@ export function TaskDetailsWindow() {
 
     return(
         <div className="task-details" ref={taskDetailsRef}>
-            <textarea className="task-details__input task-details__input--title" 
-                        ref={taskDetailsTitleRef} 
-                        onChange={(e) => updateTitle(e)}
-                        onBlur={updateTask}></textarea>
-            <textarea className="task-details__input task-details__input--description" 
-                        ref={taskDetailsDescriptionRef}
-                        onChange={(e) => {if(task)setTask({...task, description: e.target.value})}}
-                        onBlur={updateTask}></textarea>
-            <ul className="task-details__subtasks">
-                <button className="task-details__button button button--add">Add a subtask</button>
-                <li className="task-details__subtask"></li>
-            </ul>
-            <div className="task-details__footer">
-                <div className="task-details__date-wrapper">
+            <div className="task-details__header">
+                <div className="task-details__button-wrapper">
                     <div className="task-details__calendar visually-hidden" ref={calendarRef}>
-                        <Calendar date={taskDeadline} setDate={setDeadline} toggleShowCalendar={toggleShowCalendar} timeSelectClass="dropdown-menu__items dropdown-menu__items--top"/>
+                        <Calendar date={taskDeadline} setDate={setDeadline} toggleShowCalendar={toggleShowCalendar} timeSelectClass="dropdown-menu__items"/>
                     </div>
                     <button className="task-details__button button" id="date" ref={taskDetailsDedlineButtonRef} onClick={toggleShowCalendar}>
                         {deadlineMessage}
                     </button>
                 </div>
                 <button className={classButtonPriority} onClick={toggleShowPriority}>
-                    <div className="context-menu context-menu--top" ref={priorityMenuRef}>
+                    <div className="context-menu context-menu--left" ref={priorityMenuRef}>
                             <label>Priority</label>
                             <ul className="context-menu__items context-menu__items--horizontal">
                                 <li id="DEFAULT" className={`context-menu__item ${task && task.priority == 'DEFAULT'?stateClasses.activeOptionsItem:''}`}
@@ -243,6 +231,23 @@ export function TaskDetailsWindow() {
                                 </li>
                             </ul>
                         </div>
+                </button>
+            </div>
+            <textarea className="task-details__input task-details__input--title" 
+                        ref={taskDetailsTitleRef} 
+                        onChange={(e) => updateTitle(e)}
+                        onBlur={updateTask}></textarea>
+            <textarea className="task-details__input task-details__input--description" 
+                        ref={taskDetailsDescriptionRef}
+                        onChange={(e) => {if(task)setTask({...task, description: e.target.value})}}
+                        onBlur={updateTask}></textarea>
+            <ul className="task-details__subtasks">
+                <button className="task-details__button button button--add">Add a subtask</button>
+                <li className="task-details__subtask"></li>
+            </ul>
+            <div className="task-details__button-wrapper"> 
+                <button className="task-details__button button" id="ownerList">
+                    {taskManagerContext.state.lists.map((list) => list.id == task?.ownerListId? list.title: '')}
                 </button>
             </div>
         </div>
