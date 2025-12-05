@@ -69,7 +69,7 @@ export function TaskDetailsWindow() {
                 minutes = ''
             }
             if(date.getFullYear() !== new Date().getFullYear()) {
-                year = String(date.getFullYear()) + ' '
+                year = String(date.getFullYear())
             }
             if(task && new Date(task.deadline) < new Date()) {
                 taskDetailsDedlineButtonRef.current?.classList.add(stateClasses.redButton)
@@ -78,7 +78,7 @@ export function TaskDetailsWindow() {
                 taskDetailsDedlineButtonRef.current?.classList.remove(stateClasses.redButton)
             }
 
-            setDeadlineMessage(year + dateNumber + ' ' + month + hours + minutes)
+            setDeadlineMessage(dateNumber + ' ' + month + ' ' + year + hours + minutes)
         }
         else {
             setDeadlineMessage('Установите дату')
