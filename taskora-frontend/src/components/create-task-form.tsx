@@ -30,6 +30,23 @@ export function CreateTaskForm(props: CreateTaskFormProps) {
         activeOptions: 'context-menu--active',
         activeOptionsItem: 'context-menu__item--active',
         activeButton: 'task-list__section-button--active',
+        activeOptionsButton: 'button--options-active',
+        activeDateButton: 'button--date-active',
+    }
+
+    const InizializationClassButtons = () => {
+        if(taskBeingCreated.priority !== 'DEFAULT') {
+            optionsButtonRef.current?.classList.add(stateClasses.activeOptionsButton)
+        }
+        else {
+            optionsButtonRef.current?.classList.remove(stateClasses.activeOptionsButton)
+        }
+        if(taskBeingCreated.deadline !== null) {
+            calendarButtonRef.current?.classList.add(stateClasses.activeDateButton)
+        }
+        else {
+            calendarButtonRef.current?.classList.remove(stateClasses.activeDateButton)
+        }
     }
 
     const toggleShowOptions = () => {
@@ -95,6 +112,10 @@ export function CreateTaskForm(props: CreateTaskFormProps) {
     useEffect(() => {
         showAddTaskForm()
     }, [props.showForm])
+
+    useEffect(() => {
+        InizializationClassButtons()
+    }, [taskBeingCreated])
 
     return (
         <form 

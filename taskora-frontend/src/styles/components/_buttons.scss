@@ -128,6 +128,18 @@
             background-color: var(--color-dark-15);
             cursor: pointer;
         }
+
+        &-active {
+            &::after {
+                @include square(#{fluid(16, 12)});
+
+                content: '';
+                background-position: center;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-image: url('../../assets/icons/down-arrow-active-icon.svg');
+            }
+        }
     }
 
     &--priority-highest {
@@ -254,6 +266,18 @@
         @include hover {
             background-color: var(--color-dark-15);
             cursor: pointer;
+        }
+
+        &-active {
+            &::after {
+                @include square(#{fluid(16, 12)});
+
+                content: '';
+                background-position: center;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-image: url('../../assets/icons/calendar-active-icon.svg');
+            }
         }
     }
 
