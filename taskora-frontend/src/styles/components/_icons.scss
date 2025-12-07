@@ -10,7 +10,12 @@
 
         @include square(var(--size));
 
-        content: '';
+        display: flex;
+        color: var(--main-accent);
+        content: attr(data-content);
+        justify-content: center;
+        align-items: center;
+        align-content: center;
         flex-shrink: 0;
         background-position: center;
         background-size: contain;
@@ -54,6 +59,16 @@
             --size: #{fluid(20, 16)};
 
             background-image: url('../../assets/icons/completed-icon.svg');
+        }
+    }
+
+    &--today {
+
+        &::before {
+            --size: #{fluid(20, 16)};
+
+            background-image: url('../../assets/icons/today-icon.svg');
+
         }
     }
 

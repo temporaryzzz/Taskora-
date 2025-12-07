@@ -12,6 +12,7 @@ function SideBarButton(props: SideBarButtonProps) {
     const [icon, setIcon] = useState<string>()
     const [color, setColor] = useState<string>()
     const [activeEditForm, setActiveEditForm] = useState<boolean>(false)
+    const [content, setContent] = useState('');
 
     const stateClassesIcon = {
         DEFAULT: "icon--circle-default",
@@ -58,6 +59,7 @@ function SideBarButton(props: SideBarButtonProps) {
                 break;
             case 'TODAY':
                 setIcon(stateClassesIcon.TODAY)
+                setContent(String(new Date().getDate()))
                 break;
             case 'ALL':
                 setIcon(stateClassesIcon.ALL)
@@ -129,7 +131,7 @@ function SideBarButton(props: SideBarButtonProps) {
                     taskManagerContext.actions.switchList(props.list.id)
                     setActiveButton(true)
                     }}>
-                <button className={`side-bar__button button icon ${icon}`} ref={activeRef}>
+                <button className={`side-bar__button button icon ${icon}`} ref={activeRef} data-content={content}>
                     {props.list.title}
                 </button>
             </li>

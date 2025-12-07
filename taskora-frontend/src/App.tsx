@@ -19,7 +19,7 @@ function App() {
   const [user, setUser] = useState<User | undefined>({username: 'admin', email: 'admin@bk.ru'})
   //КОСТЫЛЬ - отрицаетльные id, чтобы они не совпали с id созданных листов
   const [lists, setLists] = useState<Array<List>>([{title: 'Completed', id: -1, sections: [''], viewType: 'LIST', icon: "COMPLETED", color: "NONE"},
-          {title: 'Today', id: -2, sections: [''], viewType: 'LIST', icon: "DEFAULT", color: "NONE"},
+          {title: 'Today', id: -2, sections: [''], viewType: 'LIST', icon: "TODAY", color: "NONE"},
           {title: 'Basket', id: -3, sections: [''], viewType: 'LIST', icon: "BASKET", color: "NONE"},
           {title: 'All', id: -4,  sections: [''], viewType: 'LIST', icon: "DEFAULT", color: "NONE"}])
   const [tasks, setTasks] = useState<Array<Task>>([])
