@@ -72,6 +72,7 @@ export function Calendar(props: CalendarProps) {
     const [classDropdownTitle, setClassDropdownTitle] = useState<string>('dropdown-menu__title')
     const [timeMessage, setTimeMessage] = useState<string>('Установите время')
     const dropdownItemsRef = useRef<HTMLUListElement>(null)
+    const dropdownRef = useRef<HTMLDivElement>(null)
 
     const stateClasses = {
         dropdownItemsActive: 'dropdown-menu__items--active',
@@ -158,7 +159,7 @@ export function Calendar(props: CalendarProps) {
         }
     }, [minutes, hours])
 
-    useOnClickOutside(dropdownItemsRef, () => {
+    useOnClickOutside(dropdownRef, () => {
         dropdownItemsRef.current?.classList.remove(stateClasses.dropdownItemsActive)
     })
 
@@ -250,7 +251,7 @@ export function Calendar(props: CalendarProps) {
                         key={index}/>
                 })}
             </ul>
-            <div className="dropdown-menu">
+            <div className="dropdown-menu" ref={dropdownRef}>
                 <button className="calendar__time-menu dropdown-menu__button button" type="button" onClick={() => {
                     dropdownItemsRef.current?.classList.toggle(stateClasses.dropdownItemsActive)
                 }}>
