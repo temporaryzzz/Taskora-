@@ -18,6 +18,7 @@ export function TaskListSection(props: TaskListSectionProps) {
     const [activeTasks, setActiveTasks] = useState<Task[]>(taskManagerContext.state.tasks.filter((task) => task.completed == false && task.section == sectionTitle))
     const [showCreateTaskForm, setShowCreateTaskForm] = useState<boolean>(false)
 
+    //Надо будет отправлять запрос на обновление section у задач этой секции
     const handleBlur = () => {
         if(taskManagerContext?.state.currentList) {
             const list = taskManagerContext.state.currentList
