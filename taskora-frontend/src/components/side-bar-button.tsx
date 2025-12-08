@@ -144,8 +144,10 @@ function SideBarButton(props: SideBarButtonProps) {
             <li 
                 className="side-bar__item" 
                 onClick={() => {
-                    taskManagerContext.actions.switchList(props.list.id)
-                    setActiveButton(true)
+                        if(props.list.id !== taskManagerContext.state.currentList?.id) {
+                            taskManagerContext.actions.switchList(props.list.id)
+                            setActiveButton(true)
+                        }
                     }}>
                 <button className={`side-bar__button button icon ${icon}`} ref={activeRef} data-content={content}>
                     {props.list.title}
@@ -160,8 +162,10 @@ function SideBarButton(props: SideBarButtonProps) {
                     className="side-bar__item">
                     <button className={`side-bar__button button icon ${icon}`} ref={activeRef}
                         onClick={() => {
-                            taskManagerContext.actions.switchList(props.list.id)
-                            setActiveButton(true)
+                            if(props.list.id !== taskManagerContext.state.currentList?.id) {
+                                taskManagerContext.actions.switchList(props.list.id)
+                                setActiveButton(true)
+                            }
                         }}>
                         <p className="side-bar__button-title">{props.list.title}</p>
                         <div className="side-bar__button-indications">
