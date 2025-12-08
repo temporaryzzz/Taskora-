@@ -88,6 +88,16 @@
                 cursor: pointer;
             }
         }
+
+        &--accent {
+            padding: rem(6) rem(4);
+            color: var(--main-accent);
+
+            @include hover {
+                background-color: var(--main-opacity-accent);
+                cursor: pointer;
+            }
+        }
     }
 
     &__border {

@@ -230,9 +230,14 @@ export function TaskComponent(props: TaskProps) {
                         <p>Перенести на след. неделю</p>
                     </li>
                     <div className="context-menu__border"></div>
+                    {taskManagerContext.state.currentList?.id == -3?
+                    <li className="context-menu__item context-menu__item--accent" onClick={() => taskManagerContext.actions.taskRecovery(props.task.id)}>
+                        <p>Восстановить</p>
+                    </li>:
                     <li className="context-menu__item context-menu__item--red" onClick={() => {taskManagerContext.actions.deleteTask(props.task.id)}}>
                         <p>Удалить</p>
                     </li>
+                    }
                 </ul>
             </div>
         </li>

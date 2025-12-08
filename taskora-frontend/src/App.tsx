@@ -6,7 +6,8 @@ import type { AppState, AppActions, User, List, Task, CreateListDTO,
 import SignIn from './components/sign-in';
 import SignUp from './components/sign-up';
 import { fetchTasks, fetchLists, updateTaskOnServer, updateListOnServer, createListOnServer, createTaskOnServer, 
-  deleteListOnServer, deleteTaskOnServer, CustomError} from './api';
+  deleteListOnServer, deleteTaskOnServer, CustomError,
+  taskRecoveryOnServer} from './api';
 import './styles/main.scss'
 import MainPage from './components/main-page';
 import { getCookie, setCookie, deleteCookie } from './cookies';
@@ -205,6 +206,26 @@ function App() {
     }
   }
 
+  const taskRecovery = (taskId: number) => {
+    try {
+      taskRecoveryOnServer(taskId)
+      const updatedTasks = tasks.filter((task) => task.id !== taskId)
+      setTasks(updatedTasks)
+    }catch(error) {
+      if (error instanceof CustomError) {
+        console.log(error.message)
+        if(error.statusCode == 401) {
+          deleteCookie('token')
+          navigate('', {replace: true})
+        }
+        else {
+          console.error(error.message);
+          setError(true)
+        }
+      }
+    }
+  }
+
   useEffect(() => {
     //loadUser() - email, username, settings
     if(token) {
@@ -248,6 +269,7 @@ function App() {
       createTask,
       deleteList,
       deleteTask,
+      taskRecovery,
     };
 
     return { state, actions };

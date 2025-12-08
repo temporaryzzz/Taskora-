@@ -58,4 +58,5 @@ export interface AppActions {
     createTask: (task: CreateTaskDTO) => Promise<void>;
     deleteList: (listId: number) => void;
     deleteTask: (taskId: number) => void;
+    taskRecovery: (taskId: number) => void;
 }

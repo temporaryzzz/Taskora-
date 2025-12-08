@@ -170,4 +170,23 @@ const deleteListOnServer = async (listId: number): Promise<void> => {
   }
 }
 
-export {  updateTaskOnServer, updateListOnServer, fetchTasks, fetchLists, createListOnServer, createTaskOnServer, deleteListOnServer, deleteTaskOnServer};
+const taskRecoveryOnServer = async (taskId: number): Promise<Task> => {
+    const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {
+    headers: {
+      'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
+    },
+    method: 'PATCH', 
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new CustomError(`Failed to update task: ${response.statusText}`, response.status);
+  }
+
+  const recoveryTask: Task = await response.json();
+
+  return recoveryTask;
+}
+
+export {  updateTaskOnServer, updateListOnServer, fetchTasks, fetchLists, 
+  createListOnServer, createTaskOnServer, deleteListOnServer, deleteTaskOnServer, taskRecoveryOnServer};
