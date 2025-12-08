@@ -1,5 +1,6 @@
 package com.taskora.backend.repository;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,5 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByOwnerIdAndDeletedFalse(Long Userid);
     List<Task> findByOwnerIdAndDeletedTrue(Long Userid);
     List<Task> findByOwnerIdAndCompletedTrueAndDeletedFalse(Long Userid);
+    List<Task> findByOwnerIdAndDeletedFalseAndDueDateBetween(Long Userid, Instant start, Instant end);
 }

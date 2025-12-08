@@ -1,6 +1,8 @@
 package com.taskora.backend.service;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +69,25 @@ public class TaskService {
      */
     public List<TaskDTO> findNonDeletedTasksByOwnerId(Long id) {
         List<Task> tasks = repository.findByOwnerIdAndDeletedFalse(id);
+
+        ResponseDTO responseDTO = new ResponseDTO();
+        return responseDTO.fromTaskListToDTOList(tasks);
+    }
+
+    /**
+     * [fix]
+     * 
+     * @param id
+     * @param tz
+     * @return
+     */
+    public List<TaskDTO> findTodayTasksByOwnerId(Long id, String tz) {
+        ZoneId zone = ZoneId.of(tz);
+        LocalDate today = LocalDate.now(zone);
+        Instant start = today.atStartOfDay(zone).toInstant();
+        Instant end = today.plusDays(1).atStartOfDay(zone).toInstant();
+        
+        List<Task> tasks = repository.findByOwnerIdAndDeletedFalseAndDueDateBetween(id, start, end);
 
         ResponseDTO responseDTO = new ResponseDTO();
         return responseDTO.fromTaskListToDTOList(tasks);
