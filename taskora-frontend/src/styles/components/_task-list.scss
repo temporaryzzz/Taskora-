@@ -107,21 +107,6 @@
         flex-shrink: 0;
         row-gap: rem(10);
         max-height: 99%;
-        overflow: scroll;
-
-        &::-webkit-scrollbar {
-            width: rem(0);
-        }
-
-        &::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background-color: var(--color-dark-25);
-            width: rem(6);
-            border-radius: rem(20);
-        }
 
         @include laptop {
             width: rem(230);
@@ -225,6 +210,21 @@
             display: flex;
             flex-direction: column;
             row-gap: rem(30);
+            overflow: scroll;
+
+            &::-webkit-scrollbar {
+                width: rem(0);
+            }
+
+            &::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background-color: var(--color-dark-25);
+                width: rem(6);
+                border-radius: rem(20);
+            }
 
             &-title {
                 @include fluid-text(12, 10);
