@@ -17,19 +17,22 @@
     &__input {
         @include textarea-default;
 
-        width: rem(300);
+        width: rem(350);
         background-color: var(--color-dark);
         border-radius: rem(10);
         color: var(--color-light);
         padding: rem(10);
         outline: none;
 
+        &::-webkit-scrollbar {
+            width: rem(0);
+        }
+
         &--title {
-            @include fluid-text(20, 16);
+            @include fluid-text(18, 16);
 
             height: rem(50);
-            width: rem(300);
-            overflow: hidden;
+            overflow-y: scroll;
         }
 
         &--description {

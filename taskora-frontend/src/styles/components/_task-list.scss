@@ -5,7 +5,7 @@
     flex-grow: 1;
     column-gap: rem(25);
     padding: rem(25);
-    max-width: calc(100% - rem(500));
+    max-width: calc(100% - rem(565));
     max-height: calc(100vh - var(--header-hieght));
     overflow: scroll;
     overflow-x: scroll;
@@ -36,7 +36,7 @@
 
     &--list-view {
         flex-direction: column;
-        max-width: calc(100% - rem(500));
+        max-width: calc(100% - rem(565));
         max-height: calc(100vh - var(--header-hieght) - rem(1));
         padding: rem(25) rem(20);
         row-gap: rem(25);
