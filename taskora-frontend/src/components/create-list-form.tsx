@@ -12,6 +12,7 @@ export function CreateListForm(props: CreateListFormnProps) {
     const [title, setTitle] = useState<string>('')
     const [color, setColor] = useState<'LIGHT' | 'RED' | 'BLUE' | 'YELLOW' | 'VIOLET' | 'GREEN' | 'NONE'>('NONE')
     const [icon, setIcon] = useState<'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET' | 'FOLDER'>('DEFAULT')
+    const [viewType, setViewType] = useState<'LIST' | 'KANBAN'>('KANBAN')
     const createFormRef = useRef<HTMLDivElement>(null)
 
     if(taskManagerContext  == undefined) {
@@ -25,7 +26,7 @@ export function CreateListForm(props: CreateListFormnProps) {
     const createList = () => {
         if(/\S/.test(title ?? '') && title != 'Basket' && title != 'Completed' && title != 'All' && title != 'Today') { //Добавить предупреждение пользователю, что нельзя так называть списки
             if(taskManagerContext.state.user !== undefined) {
-                const CreateListDTO: CreateListDTO = {title: title, viewType: 'KANBAN', icon: icon, color: color}
+                const CreateListDTO: CreateListDTO = {title: title, viewType: viewType, icon: icon, color: color}
                 taskManagerContext.actions.createList(CreateListDTO)
                 props.setActiveCreateForm(false)
                 return true
@@ -48,6 +49,14 @@ export function CreateListForm(props: CreateListFormnProps) {
         const value = e.target.value as 'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET' | 'FOLDER';
         if (['DEFAULT', 'INBOX', 'ALL', 'TODAY', 'COMPLETED', 'BASKET', 'LINES', 'SHEET', 'FOLDER'].includes(value)) {
             setIcon(value);
+            e.target.checked = true
+        }
+    };
+
+    const handleSetViewType = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value as 'LIST' | 'KANBAN';
+        if (['LIST', 'KANBAN'].includes(value)) {
+            setViewType(value);
             e.target.checked = true
         }
     };
@@ -123,6 +132,19 @@ export function CreateListForm(props: CreateListFormnProps) {
                         <li className="edit-form__select-item edit-form__select-item--icon-folder">
                             <input type="radio" className="edit-form__select-radio" name="icon" id="folder" value="FOLDER" onChange={(event) => {handleIconChange(event)}}/>
                             <label htmlFor="folder"></label>
+                        </li>
+                    </ul>
+                </div>
+                <div className="edit-form__select">
+                    <label className="edit-form__select-title" aria-label="List view-type">View type</label>
+                    <ul className="edit-form__select-items edit-form__select-items--view-type" aria-labelledby="List view-type">
+                        <li className="edit-form__select-item edit-form__select-item--view-type-section">
+                            <input type="radio" className="edit-form__select-radio" name="view-type" id="kanban" value="KANBAN" onChange={(event) => {handleSetViewType(event)}}/>
+                            <label htmlFor="kanban"></label>
+                        </li>
+                        <li className="edit-form__select-item edit-form__select-item--view-type-list">
+                            <input type="radio" className="edit-form__select-radio" name="view-type" id="list" value="LIST" onChange={(event) => {handleSetViewType(event)}}/>
+                            <label htmlFor="list"></label>
                         </li>
                     </ul>
                 </div>

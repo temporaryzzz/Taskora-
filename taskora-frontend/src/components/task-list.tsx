@@ -3,6 +3,7 @@ import { TaskManagerContext } from "../App";
 import { TaskListSection } from "./task-list-section";
 import type { Task } from "../interfaces";
 import { TaskComponent } from "./task";
+import { CreateTaskForm } from "./create-task-form";
 
 export function TaskList() {
     const taskManagerContext = useContext(TaskManagerContext)
@@ -31,9 +32,27 @@ export function TaskList() {
             </div>
         )
     }
-    else if(taskManagerContext.state.currentList && taskManagerContext.state.currentList.viewType == 'LIST') {
+    else if(taskManagerContext.state.currentList && taskManagerContext.state.currentList.id < 0) {
         return(
             <div className="task-list task-list--list-view">
+                <ul className="task-list__tasks task-list__tasks--active">
+                    {activeTasks.map((taskItem) => {
+                        return <TaskComponent task={taskItem} key={taskItem.id}/>
+                    })}
+                </ul>
+                <ul className="task-list__tasks task-list__tasks--completed">
+                    <p className="task-list__section-body-title" style={{'display' : completedTasks.length > 0 ? 'block' : 'none'}}>Completed</p>
+                    {completedTasks.map((taskItem) => {
+                        return <TaskComponent task={taskItem} key={taskItem.id}/>
+                    })}
+                </ul>
+            </div>
+        )
+    }
+    else if(taskManagerContext.state.currentList && taskManagerContext.state.currentList.viewType == 'LIST' && taskManagerContext.state.currentList.id >= 0) {
+        return(
+            <div className="task-list task-list--list-view">
+                <CreateTaskForm section="Main Section" showForm={true}/>
                 <ul className="task-list__tasks task-list__tasks--active">
                     {activeTasks.map((taskItem) => {
                         return <TaskComponent task={taskItem} key={taskItem.id}/>

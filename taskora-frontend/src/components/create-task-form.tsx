@@ -7,7 +7,7 @@ import { Calendar } from "./calendar";
 type CreateTaskFormProps = {
     section: string
     showForm: boolean
-    setShowForm: Dispatch<SetStateAction<boolean>>
+    setShowForm?: Dispatch<SetStateAction<boolean>>
 }
 
 export function CreateTaskForm(props: CreateTaskFormProps) {
@@ -86,7 +86,9 @@ export function CreateTaskForm(props: CreateTaskFormProps) {
             priority: 'DEFAULT', section: props.section, deadline: null})
         }
         if(formAddTaskRef.current && inputAddTaskRef.current && optionsRef.current) {
-            formAddTaskRef.current.classList.add(stateClasses.hidden)
+            if(props.setShowForm !== undefined) {
+                formAddTaskRef.current.classList.add(stateClasses.hidden)
+            }
             optionsRef.current.classList.remove(stateClasses.activeOptions)
             inputAddTaskRef.current.blur()
             inputAddTaskRef.current.value = '' 
@@ -101,7 +103,7 @@ export function CreateTaskForm(props: CreateTaskFormProps) {
     }
 
     useOnClickOutside(formAddTaskRef, () => {
-        if (formAddTaskRef.current) {
+        if (formAddTaskRef.current && props.setShowForm !== undefined) {
             formAddTaskRef.current.classList.add(stateClasses.hidden);
             inputAddTaskRef.current?.blur();
             optionsRef.current?.classList.remove(stateClasses.activeOptions)
