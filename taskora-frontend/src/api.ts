@@ -24,6 +24,7 @@ const fetchTasks = async (listId: number): Promise<Array<Task>> => {
      fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=completed`
   } else if(listId == -2) {
     fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=today`
+    console.log(Intl.DateTimeFormat().resolvedOptions().timeZone)
   } else if(listId == -3) {
     fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=deleted`
   } else if(listId == -4) {
@@ -35,7 +36,7 @@ const fetchTasks = async (listId: number): Promise<Array<Task>> => {
     headers: {
       'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
       'Content-Type': 'application/json',
-      'User-Timezone': `${Intl.DateTimeFormat().resolvedOptions().timeZone}`
+      'X-User-Timezone': `${Intl.DateTimeFormat().resolvedOptions().timeZone}`
     },
     credentials: 'include',
   });
