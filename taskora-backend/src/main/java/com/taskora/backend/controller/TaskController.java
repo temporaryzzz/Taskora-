@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -121,13 +122,23 @@ public class TaskController {
             )
         )
     })
-    public ResponseEntity<?> getTasksFromSystemList(@RequestParam String system) {
+    public ResponseEntity<?> getTasksFromSystemList(
+            @RequestParam String system, 
+            @RequestHeader(value = "X-User-Timezone", required = false) String timezone) {
         List<TaskDTO> taskDTOs = new ArrayList<>();
         Long currentUserId = SecurityUtils.getCurrentUserId();
 
         switch (system) {
             case "all":
                 taskDTOs = taskService.findNonDeletedTasksByOwnerId(currentUserId);
+                break;
+            case "today":
+                if (timezone == null)
+                    return ResponseEntity
+                        .badRequest()
+                        .body(new ErrorMessageDTO("Неизвестный часовой пояс для сегодняшних задач"));
+
+                taskDTOs = taskService.findTodayTasksByOwnerId(currentUserId, timezone);
                 break;
             case "completed":
                 taskDTOs = taskService.findCompletedAndNotDeletedTasksByOwnerId(currentUserId);
