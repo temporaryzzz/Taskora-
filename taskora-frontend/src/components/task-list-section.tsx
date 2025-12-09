@@ -20,7 +20,7 @@ export function TaskListSection(props: TaskListSectionProps) {
 
     //Надо будет отправлять запрос на обновление section у задач этой секции
     const handleBlur = () => {
-        if(taskManagerContext?.state.currentList) {
+        if(taskManagerContext?.state.currentList && props.section !== sectionTitle) {
             const list = taskManagerContext.state.currentList
             const updatedSections = list.sections?.map(section => section === props.section ? section = sectionTitle : section);
             taskManagerContext.actions.updateList(list.id, 
