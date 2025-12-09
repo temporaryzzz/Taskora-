@@ -35,6 +35,7 @@ const fetchTasks = async (listId: number): Promise<Array<Task>> => {
     headers: {
       'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
       'Content-Type': 'application/json',
+      'User-Timezone': `${Intl.DateTimeFormat().resolvedOptions().timeZone}`
     },
     credentials: 'include',
   });
