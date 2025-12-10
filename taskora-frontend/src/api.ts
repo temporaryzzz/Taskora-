@@ -171,7 +171,7 @@ const deleteListOnServer = async (listId: number): Promise<void> => {
   }
 }
 
-const taskRecoveryOnServer = async (taskId: number): Promise<Task> => {
+const taskRecoveryOnServer = async (taskId: number): Promise<List[]> => {
     const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {
     headers: {
       'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
@@ -184,9 +184,9 @@ const taskRecoveryOnServer = async (taskId: number): Promise<Task> => {
     throw new CustomError(`Failed to update task: ${response.statusText}`, response.status);
   }
 
-  const recoveryTask: Task = await response.json();
+  const lists: List[] = await response.json();
 
-  return recoveryTask;
+  return lists;
 }
 
 export {  updateTaskOnServer, updateListOnServer, fetchTasks, fetchLists, 

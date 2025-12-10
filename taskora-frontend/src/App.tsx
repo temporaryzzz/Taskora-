@@ -206,9 +206,10 @@ function App() {
     }
   }
 
-  const taskRecovery = (taskId: number) => {
+  const taskRecovery = async (taskId: number) => {
     try {
-      taskRecoveryOnServer(taskId)
+      const updatedLists = await taskRecoveryOnServer(taskId)
+      setLists(updatedLists)
       const updatedTasks = tasks.filter((task) => task.id !== taskId)
       setTasks(updatedTasks)
     }catch(error) {
