@@ -52,7 +52,7 @@
 - Docker
 - PostgreSQL
 
-### Фронтенд
+### Запуск
 
 ```bash
 git clone https://github.com/temporaryzzz/Taskora-.git
