@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import com.taskora.backend.dto.ErrorMessageDTO;
 import com.taskora.backend.dto.TaskCreateRequestDTO;
 import com.taskora.backend.dto.TaskDTO;
+import com.taskora.backend.dto.TaskListResponseDTO;
 import com.taskora.backend.dto.TaskResponseDTO;
 import com.taskora.backend.dto.TaskUpdateRequestDTO;
 import com.taskora.backend.entity.Task;
@@ -269,14 +270,15 @@ public class TaskController {
             .body(null);
     }
 
-    // [fix] Сейчас при успешном восстановлении возвращается только 200, без контента
     @PatchMapping("/{taskId}")
     @Operation(description = "Восстановление задачи из корзины")
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
             description = "Задача успешно восстановлена",
-            content = {}
+            content = @Content(
+                schema = @Schema(implementation = TaskListResponseDTO.class)
+            )
         ),
         @ApiResponse(
             responseCode = "403",
@@ -296,13 +298,11 @@ public class TaskController {
         Task task = taskService.findTaskById(taskId, currentUserId);
         TaskList taskList = task.getTaskList();
 
-        if (taskList.isDeleted()) 
-            taskListService.restoreTaskListById(taskList.getId(), currentUserId);
-
+        taskListService.restoreTaskListById(taskList.getId(), currentUserId);
         taskService.restoreTaskById(taskId, currentUserId);
 
         return ResponseEntity
-            .ok(null);
+            .ok(taskListService.findTaskListsByOwnerId(currentUserId));
     }
 
     // @DeleteMapping("/{taskId}/hard")
