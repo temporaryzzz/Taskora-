@@ -213,6 +213,8 @@ public class TaskService {
     public void restoreTaskById(Long id, Long userId) {
         Task task = findTaskById(id, userId);
 
+        if (!task.isDeleted()) return;
+
         task.setDeleted(false);
         task.setDeletedAt(null);
         repository.save(task);

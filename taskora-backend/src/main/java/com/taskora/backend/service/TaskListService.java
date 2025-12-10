@@ -133,6 +133,8 @@ public class TaskListService {
     public void restoreTaskListById(Long id, Long userId) {
         TaskList list = findTaskListById(id, userId);
 
+        if (!list.isDeleted()) return;
+
         list.setDeleted(false);
         list.setDeletedAt(null);
         repository.save(list);
