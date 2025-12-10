@@ -16,13 +16,13 @@ export const TaskManagerContext = createContext<{state: AppState; actions: AppAc
 
 function App() {
   const navigate = useNavigate()
-  const [token] = useState<string | undefined>(getCookie('token'))
   const [user, setUser] = useState<User | undefined>({username: 'admin', email: 'admin@bk.ru'})
-  //КОСТЫЛЬ - отрицаетльные id, чтобы они не совпали с id созданных листов
-  const [lists, setLists] = useState<Array<List>>([{title: 'Completed', id: -1, sections: [''], viewType: 'LIST', icon: "COMPLETED", color: "NONE"},
+  const [systemLists] = useState<Array<List>>([{title: 'Completed', id: -1, sections: [''], viewType: 'LIST', icon: "COMPLETED", color: "NONE"},
           {title: 'Today', id: -2, sections: [''], viewType: 'LIST', icon: "TODAY", color: "NONE"},
           {title: 'Basket', id: -3, sections: [''], viewType: 'LIST', icon: "BASKET", color: "NONE"},
           {title: 'All', id: -4,  sections: [''], viewType: 'LIST', icon: "DEFAULT", color: "NONE"}])
+  //КОСТЫЛЬ - отрицаетльные id, чтобы они не совпали с id созданных листов
+  const [lists, setLists] = useState<Array<List>>([...systemLists])
   const [tasks, setTasks] = useState<Array<Task>>([])
   const [currentList, setCurrentList] = useState<List | undefined>(undefined)
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
@@ -209,7 +209,7 @@ function App() {
   const taskRecovery = async (taskId: number) => {
     try {
       const updatedLists = await taskRecoveryOnServer(taskId)
-      setLists(updatedLists)
+      setLists([...systemLists, ...updatedLists])
       const updatedTasks = tasks.filter((task) => task.id !== taskId)
       setTasks(updatedTasks)
     }catch(error) {
@@ -228,11 +228,10 @@ function App() {
   }
 
   useEffect(() => {
-    //loadUser() - email, username, settings
-    if(token) {
+    if(user) {
       loadLists()
     }
-  }, [])
+  }, [user])
 
   useEffect(() => {
     if(lists.length > 0) {

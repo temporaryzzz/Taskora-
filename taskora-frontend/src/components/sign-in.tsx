@@ -1,13 +1,15 @@
-import { useEffect, useRef, type FormEvent } from "react";
+import { useContext, useEffect, useRef, type FormEvent } from "react";
 import { useNavigate } from 'react-router';
 import { SERVER_ADDRES, FRONTEND_ADDRES } from "../api";
 import '../styles/main.scss'
 import { getCookie, setCookie } from "../cookies";
+import { TaskManagerContext } from "../App";
 
 function SignIn() {
     const navigate = useNavigate();
 	const usernameInput = useRef<HTMLInputElement>(null);
 	const passwordInput = useRef<HTMLInputElement>(null);
+    const taskManagerContext = useContext(TaskManagerContext)
 
     useEffect(() => {
         if(!!(getCookie('token'))) {
@@ -47,8 +49,9 @@ function SignIn() {
 					return response.json();
 				})
 				.then((data) => {
-					setCookie("token", `Bearer ${data.authorization}`)
-                    console.log(data.authorization)
+                    setCookie("token", `Bearer ${data.authorization}`)
+                    console.log(data.user)
+                    taskManagerContext?.actions.setUser(data.user)
 					navigate('main', { replace: true });
 				})
 				.catch((error) => {
