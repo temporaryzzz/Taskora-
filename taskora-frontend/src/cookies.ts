@@ -8,14 +8,7 @@ export function getCookie(name: string) {
 export function setCookie(name:string, value: string) {
   const expirationDate = new Date()
   expirationDate.setFullYear(expirationDate.getFullYear() + 1)
-  let updatedCookie = ''
-  if(name == 'token') {
-    updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + `; HttpOnly; path=/; expires=${expirationDate.toUTCString()}`
-    console.log('updatedCookie:', updatedCookie)
-  }
-  else {
-    updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + `; path=/; expires=${expirationDate.toUTCString()}`
-  }
+  const updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + `; path=/; expires=${expirationDate.toUTCString()}`
   document.cookie = updatedCookie;
 }
 

@@ -2,7 +2,6 @@ import { useContext, useRef, type FormEvent } from "react";
 import { useNavigate } from 'react-router';
 import { SERVER_ADDRES, FRONTEND_ADDRES } from "../api";
 import '../styles/main.scss'
-import { setCookie } from "../cookies";
 import { TaskManagerContext } from "../App";
 
 function SignIn() {
@@ -46,9 +45,7 @@ function SignIn() {
 					}
 					return response.json();
 				})
-				.then((data) => {
-                    setCookie("token", `Bearer ${data.authorization}`)
-                    console.log(data.user)
+				.then(() => {
                     taskManagerContext?.actions.setLogIn(true)
 					navigate('main', { replace: true });
 				})
