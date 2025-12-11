@@ -6,12 +6,13 @@ import type { AppState, AppActions, User, List, Task, CreateListDTO,
 import SignIn from './components/sign-in';
 import SignUp from './components/sign-up';
 import { fetchTasks, fetchLists, updateTaskOnServer, updateListOnServer, createListOnServer, createTaskOnServer, 
-  deleteListOnServer, deleteTaskOnServer, CustomError,
+  deleteListOnServer, deleteTaskOnServer,
   taskRecoveryOnServer,
   getUser} from './api';
 import './styles/main.scss'
 import MainPage from './components/main-page';
-import { getCookie, setCookie, deleteCookie } from './cookies';
+import { getCookie, setCookie } from './cookies';
+import { withAuthHandling } from './hooks';
 
 export const TaskManagerContext = createContext<{state: AppState; actions: AppActions} | undefined>(undefined);
 
@@ -31,25 +32,8 @@ function App() {
   const [tempTaskTitle, setTempTaskTitle] = useState<string>('');
   const [error, setError] = useState<boolean>(false)
 
-  const loadUser = async () => {
-    try {
-      const updatedUser = await getUser()
-      setUser(updatedUser);
-    }catch(error) {
-      if (error instanceof CustomError) {
-        console.log(error.message)
-        if(error.statusCode == 401) {
-          deleteCookie('token')
-          deleteCookie('logIn')
-          setLogIn(false)
-          navigate('', {replace: true})
-        }
-        else {
-          console.error(error.message);
-          setError(true)
-        }
-      }
-    }
+  const loadUser = () => {
+    withAuthHandling(getUser, (updatedUser) => setUser(updatedUser), {navigate, setLogIn, setError})
   }
 
   const setSelectedTask = (taskId: number) => {
@@ -61,211 +45,86 @@ function App() {
   }
 
   const updateTask = async (taskId: number, updates: UpdateTaskDTO) => {
-    try {
-      const updatedTask = await updateTaskOnServer(taskId, updates)
+    withAuthHandling(() => updateTaskOnServer(taskId, updates), 
+    (updatedTask) => {
       const updatedTasks = tasks.map(task =>
       task.id === updatedTask.id ? { ...task, ...updatedTask } : task);
-
       setTasks(updatedTasks);
-    }catch(error) {
-      if (error instanceof CustomError) {
-        console.log(error.message)
-        if(error.statusCode == 401) {
-          deleteCookie('token')
-          deleteCookie('logIn')
-          setLogIn(false)
-          navigate('', {replace: true})
-        }
-        else {
-          console.error(error.message);
-          setError(true)
-        }
-      }
-    }
+    }, 
+    {navigate, setLogIn, setError})
   }
 
   const updateList = async (listId: number, updates: UpdateListDTO) => {
-    try {
-      const updatedList = await updateListOnServer(listId, updates)
+    withAuthHandling(() => updateListOnServer(listId, updates), 
+    (updatedList) => {
       const updatedLists = lists?.map(list => list.id === updatedList.id ? { ...list, ...updatedList } : list);
-
       setLists(updatedLists);
-    }catch(error) {
-      if (error instanceof CustomError) {
-        console.log(error.message)
-        if(error.statusCode == 401) {
-          deleteCookie('token')
-          deleteCookie('logIn')
-          setLogIn(false)
-          navigate('', {replace: true})
-        }
-        else {
-          console.error(error.message);
-          setError(true)
-        }
-      }
-    }
+    }, 
+    {navigate, setLogIn, setError})
   }
 
   const switchList = async (listId: number) => {
     setCurrentList(lists.find((list) => list.id == listId))
     setSelectedTaskId(null);
     setTasks([])
-    
-    try {
+
+    withAuthHandling(() => fetchTasks(listId), 
+    (userTasks) => {
       setCookie(`lastOpenListId`, `${listId}`)
-      setTasks(await fetchTasks(listId))
-    }catch(error) {
-      if (error instanceof CustomError) {
-        console.log(error.message)
-        if(error.statusCode == 401) {
-          deleteCookie('token')
-          deleteCookie('logIn')
-          setLogIn(false)
-          navigate('', {replace: true})
-        }
-        else {
-          console.error('custom', error.message);
-          setError(true)
-        }
-      }
-    }
+      setTasks(userTasks);
+    }, 
+    {navigate, setLogIn, setError})
   }
 
   const loadLists = async () => {
-    try {
-      setLists([...lists, ...await fetchLists()])
-    }catch(error) {
-      if (error instanceof CustomError) {
-        console.log(error.message)
-        console.log('status code: ', error.statusCode)
-        if(error.statusCode == 401) {
-          deleteCookie('token')
-          deleteCookie('logIn')
-          setLogIn(false)
-          navigate('', {replace: true})
-        }
-        else {
-          console.error('error loadlists:', error.message);
-          setError(true)
-        }
-      }
-    }
+    withAuthHandling(fetchLists, 
+    (userLists) => {
+      setLists([...systemLists, ...userLists])
+    }, 
+    {navigate, setLogIn, setError})
   }
 
   const createList = async (list: CreateListDTO) => {
-    try {
-      if(user) {
-        const newList = await createListOnServer(list)
-        setLists(lists => [...lists, newList]);
-      }
-    }catch(error) {
-      if (error instanceof CustomError) {
-        console.log(error.message)
-        if(error.statusCode == 401) {
-          deleteCookie('token')
-          deleteCookie('logIn')
-          setLogIn(false)
-          navigate('', {replace: true})
-        }
-        else {
-          console.error(error.message);
-          setError(true)
-        }
-      }
-    }
+    withAuthHandling(() => createListOnServer(list), 
+    (newList) => {
+      setLists(lists => [...lists, newList]);
+    }, 
+    {navigate, setLogIn, setError})
   }
 
   const createTask = async (task: CreateTaskDTO) => {
-    try {
-      if(currentList) {
-        const newTask = await createTaskOnServer(task)
-        setTasks(tasks => [...tasks, newTask]);
-      }
-    }catch(error) {
-      if (error instanceof CustomError) {
-        console.error(error.message)
-        if(error.statusCode == 401) {
-          deleteCookie('token')
-          deleteCookie('logIn')
-          setLogIn(false)
-          navigate('', {replace: true})
-        }
-        else {
-          console.error("Произошла неизвестная ошибка.");
-          setError(true)
-        }
-      }
-    }
+    withAuthHandling(() => createTaskOnServer(task), 
+    (newTask) => {
+      setTasks(tasks => [...tasks, newTask]);
+    }, 
+    {navigate, setLogIn, setError})
   }
 
   const deleteList = (listId: number) => {
-    try{ 
-      deleteListOnServer(listId)
+    withAuthHandling(() => deleteListOnServer(listId), 
+    () => {
       setLists(lists => lists.filter(list => list.id !== listId))
       switchList(2)
-
-    }catch(error){
-      if (error instanceof CustomError) {
-        console.error(error.message)
-        if(error.statusCode == 401) {
-          deleteCookie('token')
-          deleteCookie('logIn')
-          setLogIn(false)
-          navigate('', {replace: true})
-        }
-        else {
-          console.error("Произошла неизвестная ошибка.");
-          setError(true)
-        }
-      }
-    }
+    }, 
+    {navigate, setLogIn, setError})
   }
 
   const deleteTask = (taskId: number) => {
-    try{ 
-      deleteTaskOnServer(taskId)
+    withAuthHandling(() => deleteTaskOnServer(taskId), 
+    () => {
       setTasks(tasks => tasks.filter(task => task.id !== taskId))
-
-      setSelectedTaskId(null)
-    }catch(error){
-      if (error instanceof CustomError) {
-        console.error(error.message)
-        if(error.statusCode == 401) {
-          deleteCookie('token')
-          setLogIn(false)
-          deleteCookie('logIn')
-          navigate('', {replace: true})
-        }
-        else {
-          console.error("Произошла неизвестная ошибка.");
-          setError(true)
-        }
-      }
-    }
+    }, 
+    {navigate, setLogIn, setError})
   }
 
   const taskRecovery = async (taskId: number) => {
-    try {
-      const updatedLists = await taskRecoveryOnServer(taskId)
+    withAuthHandling(() => taskRecoveryOnServer(taskId), 
+    (updatedLists) => {
       setLists([...systemLists, ...updatedLists])
       const updatedTasks = tasks.filter((task) => task.id !== taskId)
       setTasks(updatedTasks)
-    }catch(error) {
-      if (error instanceof CustomError) {
-        console.log(error.message)
-        if(error.statusCode == 401) {
-          deleteCookie('token')
-          deleteCookie('logIn')
-          setLogIn(false)
-          navigate('', {replace: true})
-        }
-        else {
-          console.error(error.message);
-          setError(true)
-        }
-      }
-    }
+    }, 
+    {navigate, setLogIn, setError})
   }
 
   useEffect(() => {
