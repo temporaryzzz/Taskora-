@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { SERVER_ADDRES, FRONTEND_ADDRES } from '../api';
@@ -12,11 +12,9 @@ function SignUp() {
 	const [password, setPassword] = useState<string>('');
 	const taskManagerContext = useContext(TaskManagerContext)
 
-	useEffect(() => {
-		if(taskManagerContext?.state.logIn == true) {
-			navigate('main', {replace: true})
-		}
-	}, [])
+	if(taskManagerContext?.state.logIn == true) {
+		navigate('main', {replace: true})
+	}
 
 	const handleSubmit = async (event: FormEvent) => {
 		event.preventDefault();

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, type FormEvent } from "react";
+import { useContext, useRef, type FormEvent } from "react";
 import { useNavigate } from 'react-router';
 import { SERVER_ADDRES, FRONTEND_ADDRES } from "../api";
 import '../styles/main.scss'
@@ -11,11 +11,9 @@ function SignIn() {
 	const passwordInput = useRef<HTMLInputElement>(null);
     const taskManagerContext = useContext(TaskManagerContext)
 
-    useEffect(() => {
-        if(taskManagerContext?.state.logIn == true) {
-            navigate('main', {replace: true})
-        }
-    }, [])
+    if(taskManagerContext?.state.logIn == true) {
+        navigate('main', {replace: true})
+    }
     
 	const handleSubmit = (event: FormEvent) => {
 		event.preventDefault();
@@ -51,7 +49,6 @@ function SignIn() {
 				.then((data) => {
                     setCookie("token", `Bearer ${data.authorization}`)
                     console.log(data.user)
-                    taskManagerContext?.actions.setUser(data.user)
                     taskManagerContext?.actions.setLogIn(true)
 					navigate('main', { replace: true });
 				})

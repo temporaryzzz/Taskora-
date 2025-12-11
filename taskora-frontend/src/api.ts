@@ -190,7 +190,7 @@ const taskRecoveryOnServer = async (taskId: number): Promise<List[]> => {
 }
 
 const getUser = async (): Promise<User> => {
-  const response = await fetch(`'http://localhost:8080/api/users`, {
+  const response = await fetch(`http://localhost:8080/api/users`, {
     method: 'GET',
     headers: {
       'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
@@ -200,7 +200,7 @@ const getUser = async (): Promise<User> => {
   });
 
   if (!response.ok) {
-    throw new CustomError(`Failed to fetch lists for user: ${response.status}`, response.status);
+    throw new CustomError(`Failed to fetch user: ${response.status}`, response.status);
   }
   const data = await response.json();
   const user: User = data;

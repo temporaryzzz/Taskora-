@@ -17,7 +17,7 @@ export const TaskManagerContext = createContext<{state: AppState; actions: AppAc
 
 function App() {
   const navigate = useNavigate()
-  const [logIn, setLogIn] = useState<boolean>(false)
+  const [logIn, setLogIn] = useState<boolean>(Boolean(getCookie('logIn')))
   const [user, setUser] = useState<User | undefined>()
   const [systemLists] = useState<Array<List>>([{title: 'Completed', id: -1, sections: [''], viewType: 'LIST', icon: "COMPLETED", color: "NONE"},
           {title: 'Today', id: -2, sections: [''], viewType: 'LIST', icon: "TODAY", color: "NONE"},
@@ -40,6 +40,7 @@ function App() {
         console.log(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          deleteCookie('logIn')
           setLogIn(false)
           navigate('', {replace: true})
         }
@@ -71,6 +72,7 @@ function App() {
         console.log(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          deleteCookie('logIn')
           setLogIn(false)
           navigate('', {replace: true})
         }
@@ -93,6 +95,7 @@ function App() {
         console.log(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          deleteCookie('logIn')
           setLogIn(false)
           navigate('', {replace: true})
         }
@@ -117,6 +120,7 @@ function App() {
         console.log(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          deleteCookie('logIn')
           setLogIn(false)
           navigate('', {replace: true})
         }
@@ -137,6 +141,7 @@ function App() {
         console.log('status code: ', error.statusCode)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          deleteCookie('logIn')
           setLogIn(false)
           navigate('', {replace: true})
         }
@@ -159,6 +164,7 @@ function App() {
         console.log(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          deleteCookie('logIn')
           setLogIn(false)
           navigate('', {replace: true})
         }
@@ -181,6 +187,7 @@ function App() {
         console.error(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          deleteCookie('logIn')
           setLogIn(false)
           navigate('', {replace: true})
         }
@@ -203,6 +210,7 @@ function App() {
         console.error(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          deleteCookie('logIn')
           setLogIn(false)
           navigate('', {replace: true})
         }
@@ -226,6 +234,7 @@ function App() {
         if(error.statusCode == 401) {
           deleteCookie('token')
           setLogIn(false)
+          deleteCookie('logIn')
           navigate('', {replace: true})
         }
         else {
@@ -247,6 +256,7 @@ function App() {
         console.log(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          deleteCookie('logIn')
           setLogIn(false)
           navigate('', {replace: true})
         }
@@ -261,23 +271,24 @@ function App() {
   useEffect(() => {
     if(logIn == true) {
       loadUser()
+      setCookie('logIn', 'true')
     }
   }, [logIn])
 
   useEffect(() => {
-    if(user) {
+    if(user !== undefined) {
       loadLists()
     }
   }, [user])
 
   useEffect(() => {
-    if(lists.length > 0) {
+    if(user !== undefined) {
       const lastOpenListId = Number(getCookie(`lastOpenListId`))
       if(!isNaN(lastOpenListId) && lastOpenListId != null) {
         switchList(lastOpenListId)
       }
       else {
-        switchList(2)
+        switchList(-2)
       }
     }
   }, [lists])
