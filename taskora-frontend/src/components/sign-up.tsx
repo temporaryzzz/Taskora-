@@ -1,19 +1,22 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { SERVER_ADDRES, FRONTEND_ADDRES } from '../api';
 import '../styles/main.scss'
-import { getCookie } from '../cookies';
+import { TaskManagerContext } from '../App';
 
 function SignUp() {
 	const navigate = useNavigate();
 	const [username, setUsername] = useState<string>('');
 	const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
+	const taskManagerContext = useContext(TaskManagerContext)
 
-	if(getCookie('token') !== undefined) {
-		navigate('../main', {replace: true})
-	}
+	useEffect(() => {
+		if(taskManagerContext?.state.logIn == true) {
+			navigate('main', {replace: true})
+		}
+	}, [])
 
 	const handleSubmit = async (event: FormEvent) => {
 		event.preventDefault();

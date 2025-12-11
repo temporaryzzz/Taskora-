@@ -7,7 +7,8 @@ import SignIn from './components/sign-in';
 import SignUp from './components/sign-up';
 import { fetchTasks, fetchLists, updateTaskOnServer, updateListOnServer, createListOnServer, createTaskOnServer, 
   deleteListOnServer, deleteTaskOnServer, CustomError,
-  taskRecoveryOnServer} from './api';
+  taskRecoveryOnServer,
+  getUser} from './api';
 import './styles/main.scss'
 import MainPage from './components/main-page';
 import { getCookie, setCookie, deleteCookie } from './cookies';
@@ -16,7 +17,8 @@ export const TaskManagerContext = createContext<{state: AppState; actions: AppAc
 
 function App() {
   const navigate = useNavigate()
-  const [user, setUser] = useState<User | undefined>({username: 'admin', email: 'admin@bk.ru'})
+  const [logIn, setLogIn] = useState<boolean>(false)
+  const [user, setUser] = useState<User | undefined>()
   const [systemLists] = useState<Array<List>>([{title: 'Completed', id: -1, sections: [''], viewType: 'LIST', icon: "COMPLETED", color: "NONE"},
           {title: 'Today', id: -2, sections: [''], viewType: 'LIST', icon: "TODAY", color: "NONE"},
           {title: 'Basket', id: -3, sections: [''], viewType: 'LIST', icon: "BASKET", color: "NONE"},
@@ -28,6 +30,26 @@ function App() {
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
   const [tempTaskTitle, setTempTaskTitle] = useState<string>('');
   const [error, setError] = useState<boolean>(false)
+
+  const loadUser = async () => {
+    try {
+      const updatedUser = await getUser()
+      setUser(updatedUser);
+    }catch(error) {
+      if (error instanceof CustomError) {
+        console.log(error.message)
+        if(error.statusCode == 401) {
+          deleteCookie('token')
+          setLogIn(false)
+          navigate('', {replace: true})
+        }
+        else {
+          console.error(error.message);
+          setError(true)
+        }
+      }
+    }
+  }
 
   const setSelectedTask = (taskId: number) => {
       setSelectedTaskId(taskId)
@@ -49,6 +71,7 @@ function App() {
         console.log(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          setLogIn(false)
           navigate('', {replace: true})
         }
         else {
@@ -70,6 +93,7 @@ function App() {
         console.log(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          setLogIn(false)
           navigate('', {replace: true})
         }
         else {
@@ -93,6 +117,7 @@ function App() {
         console.log(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          setLogIn(false)
           navigate('', {replace: true})
         }
         else {
@@ -112,6 +137,7 @@ function App() {
         console.log('status code: ', error.statusCode)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          setLogIn(false)
           navigate('', {replace: true})
         }
         else {
@@ -133,6 +159,7 @@ function App() {
         console.log(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          setLogIn(false)
           navigate('', {replace: true})
         }
         else {
@@ -154,6 +181,7 @@ function App() {
         console.error(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          setLogIn(false)
           navigate('', {replace: true})
         }
         else {
@@ -175,6 +203,7 @@ function App() {
         console.error(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          setLogIn(false)
           navigate('', {replace: true})
         }
         else {
@@ -196,6 +225,7 @@ function App() {
         console.error(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          setLogIn(false)
           navigate('', {replace: true})
         }
         else {
@@ -217,6 +247,7 @@ function App() {
         console.log(error.message)
         if(error.statusCode == 401) {
           deleteCookie('token')
+          setLogIn(false)
           navigate('', {replace: true})
         }
         else {
@@ -226,6 +257,12 @@ function App() {
       }
     }
   }
+
+  useEffect(() => {
+    if(logIn == true) {
+      loadUser()
+    }
+  }, [logIn])
 
   useEffect(() => {
     if(user) {
@@ -255,6 +292,7 @@ function App() {
       tempTaskTitle,
       currentList,
       error,
+      logIn,
     };
 
     const actions: AppActions = {
@@ -270,10 +308,11 @@ function App() {
       deleteList,
       deleteTask,
       taskRecovery,
+      setLogIn,
     };
 
     return { state, actions };
-  }, [user, lists, tasks, selectedTaskId, currentList, tempTaskTitle]);
+  }, [user, lists, tasks, selectedTaskId, currentList, tempTaskTitle, error, logIn]);
 
   return(
       <TaskManagerContext.Provider value={contextValue}>

@@ -1,4 +1,4 @@
-import type { UpdateTaskDTO, UpdateListDTO, Task, List, CreateListDTO, CreateTaskDTO } from "./interfaces";
+import type { UpdateTaskDTO, UpdateListDTO, Task, List, CreateListDTO, CreateTaskDTO, User } from "./interfaces";
 
 export const SERVER_ADDRES = 'http://localhost:8080/api';
 const SERVER_ADDRES__TASKS = 'http://localhost:8080/api/tasks/';
@@ -189,5 +189,25 @@ const taskRecoveryOnServer = async (taskId: number): Promise<List[]> => {
   return lists;
 }
 
+const getUser = async (): Promise<User> => {
+  const response = await fetch(`'http://localhost:8080/api/users`, {
+    method: 'GET',
+    headers: {
+      'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new CustomError(`Failed to fetch lists for user: ${response.status}`, response.status);
+  }
+  const data = await response.json();
+  const user: User = data;
+  console.log(user)
+  
+  return user;
+}
+
 export {  updateTaskOnServer, updateListOnServer, fetchTasks, fetchLists, 
-  createListOnServer, createTaskOnServer, deleteListOnServer, deleteTaskOnServer, taskRecoveryOnServer};
+  createListOnServer, createTaskOnServer, deleteListOnServer, deleteTaskOnServer, taskRecoveryOnServer, getUser};

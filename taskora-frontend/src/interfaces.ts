@@ -33,6 +33,7 @@ export interface AppState {
     selectedTaskId: number | null;
     tempTaskTitle: string;
     error: boolean;
+    logIn: boolean;
 }
 
 export type CreateTaskDTO = Omit<Task, 'id' | 'completed'>;
@@ -59,4 +60,5 @@ export interface AppActions {
     deleteList: (listId: number) => void;
     deleteTask: (taskId: number) => void;
     taskRecovery: (taskId: number) => void;
+    setLogIn: Dispatch<SetStateAction<boolean>>;
 }

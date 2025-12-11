@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, type FormEvent } from "react";
 import { useNavigate } from 'react-router';
 import { SERVER_ADDRES, FRONTEND_ADDRES } from "../api";
 import '../styles/main.scss'
-import { getCookie, setCookie } from "../cookies";
+import { setCookie } from "../cookies";
 import { TaskManagerContext } from "../App";
 
 function SignIn() {
@@ -12,7 +12,7 @@ function SignIn() {
     const taskManagerContext = useContext(TaskManagerContext)
 
     useEffect(() => {
-        if(!!(getCookie('token'))) {
+        if(taskManagerContext?.state.logIn == true) {
             navigate('main', {replace: true})
         }
     }, [])
@@ -52,6 +52,7 @@ function SignIn() {
                     setCookie("token", `Bearer ${data.authorization}`)
                     console.log(data.user)
                     taskManagerContext?.actions.setUser(data.user)
+                    taskManagerContext?.actions.setLogIn(true)
 					navigate('main', { replace: true });
 				})
 				.catch((error) => {
