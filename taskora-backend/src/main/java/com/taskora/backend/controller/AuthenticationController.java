@@ -107,7 +107,7 @@ public class AuthenticationController {
             return ResponseEntity
                 .ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body("Вход успешен");
+                .body(new SignInResponseDTO("Вход успешен"));
         } catch (Exception e) {
             System.err.println("Ошибка при попытке авторизации: " + e);
         }
