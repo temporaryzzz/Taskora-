@@ -1,6 +1,8 @@
 package com.taskora.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -92,13 +94,20 @@ public class AuthenticationController {
             );
             
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            SignInResponseDTO responseDTO = new SignInResponseDTO(
-                jwtUtil.generateToken(userDetails.getId())
-            );
+            String token = jwtUtil.generateToken(userDetails.getId());
+
+            ResponseCookie cookie = ResponseCookie.from("token", token)
+                .httpOnly(true)
+                .secure(false) // [fix] Пока нет https
+                .sameSite("None")
+                .path("/")
+                .maxAge(30 * 24 * 3600)
+                .build();
 
             return ResponseEntity
                 .ok()
-                .body(responseDTO);
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body("Вход успешен");
         } catch (Exception e) {
             System.err.println("Ошибка при попытке авторизации: " + e);
         }
