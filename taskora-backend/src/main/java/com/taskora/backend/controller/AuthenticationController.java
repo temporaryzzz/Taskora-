@@ -94,7 +94,7 @@ public class AuthenticationController {
             );
             
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            String token = jwtUtil.generateToken(userDetails.getId());
+            String token = "Bearer%20" + jwtUtil.generateToken(userDetails.getId());
 
             ResponseCookie cookie = ResponseCookie.from("token", token)
                 .httpOnly(true)

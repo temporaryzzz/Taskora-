@@ -54,12 +54,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
     
     private String parseJwt(HttpServletRequest request) {
-        // [fix] Для тестов через Postman
-        String headerAuth = request.getHeader("Authorization");
-        if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
-        }
-
         Cookie[] cookies = request.getCookies();
         
         if (cookies == null) 
