@@ -62,7 +62,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         return Arrays.stream(cookies)
             .filter(cookie -> "token".equals(cookie.getName()))
             .map(Cookie::getValue)
-            .map(value -> value.startsWith("Bearer%20") ? value.substring(9) : value)
             .findFirst()
             .orElse(null);
     }
