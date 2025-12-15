@@ -6,7 +6,7 @@ services:
       context: ./taskora-frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000" # Маппинг порта frontend
+      - "3000:80"
     networks:
       - taskora-network
     depends_on:

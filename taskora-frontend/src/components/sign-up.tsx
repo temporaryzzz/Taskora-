@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router';
-import { SERVER_ADDRES, FRONTEND_ADDRES } from '../api';
+import { SERVER_ADDRES } from '../api';
 import '../styles/main.scss'
 import { TaskManagerContext } from '../App';
 
@@ -23,9 +23,9 @@ function SignUp() {
 			fetch(`${SERVER_ADDRES}/auth/signup`, {
 				method: 'POST',
 				headers: { 
-					'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
 					'Content-Type': 'application/json'
 				 },
+				credentials: 'include',
 				body: JSON.stringify({ username: username, email: email, password: password }),
 			})
 				.then((response) => {

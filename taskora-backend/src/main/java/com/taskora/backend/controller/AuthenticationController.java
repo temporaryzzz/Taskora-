@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "http://127.0.0.1:3000"}, allowCredentials = "true")
 public class AuthenticationController {
 
     @Autowired
@@ -94,14 +94,15 @@ public class AuthenticationController {
             );
             
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            String token = "Bearer%20" + jwtUtil.generateToken(userDetails.getId());
+            String token = jwtUtil.generateToken(userDetails.getId());
 
             ResponseCookie cookie = ResponseCookie.from("token", token)
                 .httpOnly(true)
-                .secure(false) // [fix] Пока нет https
-                .sameSite("None")
+                .secure(false)
+                .sameSite("Lax")
                 .path("/")
                 .maxAge(30 * 24 * 3600)
+                .domain("localhost")
                 .build();
 
             return ResponseEntity

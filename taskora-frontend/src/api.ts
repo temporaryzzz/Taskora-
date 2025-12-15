@@ -1,11 +1,18 @@
 import type { UpdateTaskDTO, UpdateListDTO, Task, List, CreateListDTO, CreateTaskDTO, User } from "./interfaces";
 
-export const SERVER_ADDRES = 'http://localhost:8080/api';
-const SERVER_ADDRES__TASKS = 'http://localhost:8080/api/tasks/';
-const SERVER_ADDRES__TASKS_NO_SLASH = 'http://localhost:8080/api/tasks';
-const SERVER_ADDRES__LISTS = 'http://localhost:8080/api/tasklists/';
-const SERVER_ADDRES__LISTS_NO_SLASH = 'http://localhost:8080/api/tasklists';
+export const SERVER_ADDRES = '/api';
+const SERVER_ADDRES__TASKS = '/api/tasks/';
+const SERVER_ADDRES__TASKS_NO_SLASH = '/api/tasks';
+const SERVER_ADDRES__LISTS = '/api/tasklists/';
+const SERVER_ADDRES__LISTS_NO_SLASH = '/api/tasklists';
 export const FRONTEND_ADDRES = 'http://localhost:3000';
+
+const defaultFetchOptions = {
+  credentials: 'include' as const,
+  headers: {
+    'Content-Type': 'application/json',
+  }
+};
 
 export class CustomError extends Error {
   statusCode: number;
@@ -32,12 +39,11 @@ const fetchTasks = async (listId: number): Promise<Array<Task>> => {
   
   const response = await fetch(fetchString, {
     method: 'GET',
+    ...defaultFetchOptions,
     headers: {
-      'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
-      'Content-Type': 'application/json',
+      ...defaultFetchOptions.headers,
       'X-User-Timezone': `${Intl.DateTimeFormat().resolvedOptions().timeZone}`
     },
-    credentials: 'include',
   });
 
   if (!response.ok) {
@@ -53,11 +59,7 @@ const fetchTasks = async (listId: number): Promise<Array<Task>> => {
 const fetchLists = async (): Promise<Array<List>> => {
   const response = await fetch(`${SERVER_ADDRES__LISTS_NO_SLASH}`, {
     method: 'GET',
-    headers: {
-      'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
+    ...defaultFetchOptions,
   });
 
   if (!response.ok) {
@@ -72,11 +74,7 @@ const fetchLists = async (): Promise<Array<List>> => {
 const createListOnServer = async (create: CreateListDTO): Promise<List> => {
     const response = await fetch(`${SERVER_ADDRES__LISTS_NO_SLASH}`, {
     method: 'POST',
-    headers: {
-      'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
+    ...defaultFetchOptions,
     body: JSON.stringify({...create})
   });
 
@@ -112,8 +110,7 @@ const createTaskOnServer = async (create: CreateTaskDTO): Promise<Task> => {
 const updateTaskOnServer = async (taskId: number, updates: UpdateTaskDTO): Promise<Task> => {
   const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {
     method: 'PUT',
-    headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,},
-    credentials: 'include',
+    ...defaultFetchOptions,
     body: JSON.stringify(updates)
   });
 
@@ -129,8 +126,7 @@ const updateTaskOnServer = async (taskId: number, updates: UpdateTaskDTO): Promi
 const updateListOnServer = async (listId: number, updates: UpdateListDTO): Promise<List> => {
   const response = await fetch(`${SERVER_ADDRES__LISTS}${listId}`, {
     method: 'PUT',
-    headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,},
-    credentials: 'include',
+    ...defaultFetchOptions,
     body: JSON.stringify(updates)
   });
 
@@ -145,11 +141,8 @@ const updateListOnServer = async (listId: number, updates: UpdateListDTO): Promi
 
 const deleteTaskOnServer = async (taskId: number): Promise<void> => {
   const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {
-    headers: {
-      'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
-    },
     method: 'DELETE', 
-    credentials: 'include',
+    ...defaultFetchOptions,
   });
 
   if (!response.ok) {
@@ -159,11 +152,8 @@ const deleteTaskOnServer = async (taskId: number): Promise<void> => {
 
 const deleteListOnServer = async (listId: number): Promise<void> => {
   const response = await fetch(`${SERVER_ADDRES__LISTS}${listId}`, {
-    headers: {
-      'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
-    },
     method: 'DELETE', 
-    credentials: 'include',
+    ...defaultFetchOptions,
   });
 
   if (!response.ok) {
@@ -173,11 +163,8 @@ const deleteListOnServer = async (listId: number): Promise<void> => {
 
 const taskRecoveryOnServer = async (taskId: number): Promise<List[]> => {
     const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {
-    headers: {
-      'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
-    },
     method: 'PATCH', 
-    credentials: 'include',
+    ...defaultFetchOptions,
   });
 
   if (!response.ok) {
@@ -190,13 +177,9 @@ const taskRecoveryOnServer = async (taskId: number): Promise<List[]> => {
 }
 
 const getUser = async (): Promise<User> => {
-  const response = await fetch(`http://localhost:8080/api/users`, {
+  const response = await fetch(`/api/users`, {
     method: 'GET',
-    headers: {
-      'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
+    ...defaultFetchOptions,
   });
 
   if (!response.ok) {

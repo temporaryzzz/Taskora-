@@ -129,8 +129,8 @@ function App() {
 
   useEffect(() => {
     if(logIn == true) {
-      loadUser()
       setCookie('logIn', 'true')
+      loadUser()
     }
   }, [logIn])
 

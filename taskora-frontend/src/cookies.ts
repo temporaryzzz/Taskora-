@@ -7,7 +7,7 @@ export function getCookie(name: string) {
 
 export function setCookie(name:string, value: string) {
   const expirationDate = new Date()
-  expirationDate.setFullYear(expirationDate.getFullYear() + 1)
+  expirationDate.setMonth(expirationDate.getMonth() + 2)
   const updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + `; path=/; expires=${expirationDate.toUTCString()}`
   document.cookie = updatedCookie;
 }

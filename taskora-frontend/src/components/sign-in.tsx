@@ -1,6 +1,6 @@
 import { useContext, useRef, type FormEvent } from "react";
 import { useNavigate } from 'react-router';
-import { SERVER_ADDRES, FRONTEND_ADDRES } from "../api";
+import { SERVER_ADDRES } from "../api";
 import '../styles/main.scss'
 import { TaskManagerContext } from "../App";
 
@@ -36,7 +36,8 @@ function SignIn() {
         try {
 			fetch(`${SERVER_ADDRES}/auth/signin`, {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`, },
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
 				body: JSON.stringify({ login: username, password: password }),
 			})
 				.then((response) => {
