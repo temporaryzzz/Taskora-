@@ -180,6 +180,14 @@ export function TaskDetailsWindow() {
         InitializationPriorityButton()
     }, [task])
 
+    //Авторазмер textarea для title
+    useEffect(() => {
+        if(taskDetailsTitleRef.current) {
+            taskDetailsTitleRef.current.style.height = 'auto'
+            taskDetailsTitleRef.current.style.height = taskDetailsTitleRef.current.scrollHeight + 'px'
+        }
+    }, [taskDetailsTitleRef.current?.value])
+
     useOnClickOutside(priorityMenuRef, () => {
         if(priorityMenuRef.current && priorityMenuRef.current.classList.contains(stateClasses.activeOptions)) {
              priorityMenuRef.current.classList.remove(stateClasses.activeOptions)

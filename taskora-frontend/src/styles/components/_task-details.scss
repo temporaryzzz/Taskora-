@@ -31,7 +31,7 @@
         &--title {
             @include fluid-text(18, 16);
 
-            height: rem(50);
+            min-height: rem(50);
             overflow-y: scroll;
         }
 
