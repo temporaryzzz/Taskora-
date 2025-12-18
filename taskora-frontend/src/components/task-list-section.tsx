@@ -58,7 +58,7 @@ export function TaskListSection(props: TaskListSectionProps) {
                     })}
                 </ul>
                 <ul className="task-list__section-completed-tasks">
-                    <p className="task-list__section-body-title" style={{'display' : completedTasks.length > 0 ? 'block' : 'none'}}>Completed</p>
+                    <p className="task-list__section-body-title" style={{'display' : completedTasks.length > 0 ? 'block' : 'none'}}>Completed • {completedTasks.length}</p>
                     {completedTasks.map((task) => {
                         if(task.section == sectionTitle) {
                             return <TaskComponent task={task} key={task.id}/>

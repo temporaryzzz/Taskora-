@@ -41,7 +41,7 @@ export function TaskList() {
                     })}
                 </ul>
                 <ul className="task-list__tasks task-list__tasks--completed">
-                    <p className="task-list__section-body-title" style={{'display' : completedTasks.length > 0 ? 'block' : 'none'}}>Completed</p>
+                    <p className="task-list__section-body-title" style={{'display' : completedTasks.length > 0 ? 'block' : 'none'}}>Completed • {completedTasks.length}</p>
                     {completedTasks.map((taskItem) => {
                         return <TaskComponent task={taskItem} key={taskItem.id}/>
                     })}
@@ -59,7 +59,7 @@ export function TaskList() {
                     })}
                 </ul>
                 <ul className="task-list__tasks task-list__tasks--completed">
-                    <p className="task-list__section-body-title" style={{'display' : completedTasks.length > 0 ? 'block' : 'none'}}>Completed</p>
+                    <p className="task-list__section-body-title" style={{'display' : completedTasks.length > 0 ? 'block' : 'none'}}>Completed • {completedTasks.length}</p>
                     {completedTasks.map((taskItem) => {
                         return <TaskComponent task={taskItem} key={taskItem.id}/>
                     })}
