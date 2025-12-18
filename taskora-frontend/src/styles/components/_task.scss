@@ -62,6 +62,7 @@
         -webkit-appearance: none;
         outline: none;
         cursor: pointer;
+        align-self: flex-start;
 
         &::after {
             content: '\2713';
