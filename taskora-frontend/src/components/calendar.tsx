@@ -95,11 +95,12 @@ export function Calendar(props: CalendarProps) {
 	};
 
     const changeCurrentMonth = (direction: '+' | '-') => {
-        if (direction == '+') {
-            setRenderDate(new Date(renderDate.setMonth(renderDate.getMonth() + 1)))
-		} else {
-            setRenderDate(new Date(renderDate.setMonth(renderDate.getMonth() - 1)))
-		}
+        setRenderDate(prev => {
+            const d = new Date(prev);
+            if (direction === '+') d.setMonth(d.getMonth() + 1);
+            else d.setMonth(d.getMonth() - 1);
+            return d;
+        })
     }
 
     const setDeadline = () => {
@@ -180,16 +181,16 @@ export function Calendar(props: CalendarProps) {
                 <li className="calendar__day">ВС.</li>
             </ul>
             <ul className="calendar__container" id="week-1">
-                {dates.slice(0, 7).map((dateNum, index) => {
-                    return <DateButton 
-                        date={dateNum} 
-                        week={1} 
-                        fullDate={renderDate} 
-                        changeCurrentMonth={changeCurrentMonth} 
-                        setTargetDate={setDeadlineDate} 
-                        targetDate={deadlineDate}
-                        key={index}/>
-                })}
+                    {dates.slice(0, 7).map((dateNum, index) => {
+                        return <DateButton 
+                            date={dateNum} 
+                            week={1} 
+                            fullDate={renderDate} 
+                            changeCurrentMonth={changeCurrentMonth} 
+                            setTargetDate={setDeadlineDate} 
+                            targetDate={deadlineDate}
+                            key={`${renderDate.getFullYear()}-${renderDate.getMonth()}-1-${index}-${dateNum}`}/>
+                    })}
             </ul>
             <ul className="calendar__container" id="week-2">
                 {dates.slice(7, 14).map((dateNum, index) => {
@@ -200,7 +201,7 @@ export function Calendar(props: CalendarProps) {
                         changeCurrentMonth={changeCurrentMonth} 
                         setTargetDate={setDeadlineDate} 
                         targetDate={deadlineDate}
-                        key={index}/>
+                        key={`${renderDate.getFullYear()}-${renderDate.getMonth()}-2-${index}-${dateNum}`}/>
                 })}
             </ul>
             <ul className="calendar__container" id="week-3">
@@ -212,7 +213,7 @@ export function Calendar(props: CalendarProps) {
                         changeCurrentMonth={changeCurrentMonth} 
                         setTargetDate={setDeadlineDate}  
                         targetDate={deadlineDate}
-                        key={index}/>
+                        key={`${renderDate.getFullYear()}-${renderDate.getMonth()}-3-${index}-${dateNum}`}/>
                 })}
             </ul>
             <ul className="calendar__container" id="week-4">
@@ -224,7 +225,7 @@ export function Calendar(props: CalendarProps) {
                         changeCurrentMonth={changeCurrentMonth} 
                         setTargetDate={setDeadlineDate}  
                         targetDate={deadlineDate}
-                        key={index}/>
+                        key={`${renderDate.getFullYear()}-${renderDate.getMonth()}-4-${index}-${dateNum}`}/>
                 })}
             </ul>
             <ul className="calendar__container" id="week-5">
@@ -236,7 +237,7 @@ export function Calendar(props: CalendarProps) {
                         changeCurrentMonth={changeCurrentMonth} 
                         setTargetDate={setDeadlineDate}  
                         targetDate={deadlineDate}
-                        key={index}/>
+                        key={`${renderDate.getFullYear()}-${renderDate.getMonth()}-5-${index}-${dateNum}`}/>
                 })}
             </ul>
             <ul className="calendar__container" id="week-6">
@@ -248,7 +249,7 @@ export function Calendar(props: CalendarProps) {
                         changeCurrentMonth={changeCurrentMonth} 
                         setTargetDate={setDeadlineDate}  
                         targetDate={deadlineDate}
-                        key={index}/>
+                        key={`${renderDate.getFullYear()}-${renderDate.getMonth()}-6-${index}-${dateNum}`}/>
                 })}
             </ul>
             <div className="dropdown-menu" ref={dropdownRef}>
@@ -284,126 +285,15 @@ export function Calendar(props: CalendarProps) {
 
 
 function DateButton(props: DateButtonProps) {
-	const { date, week, fullDate, changeCurrentMonth, setTargetDate } = props;
+    const { date, week, fullDate, changeCurrentMonth, setTargetDate, targetDate } = props;
     const [dateButton, setDateButton] = useState<Date>()
-    const [today] = useState<Date>(new Date())
+    const today = new Date()
     const [classDateButton, setClassDateButton] = useState<string>('calendar__date')
     const stateClasses = {
         default: 'calendar__date',
         notIncluded: 'calendar__date calendar__date--not-included',
         today: 'calendar__date calendar__date--today',
         target: 'calendar__date calendar__date--target',
-    }
-
-    const InitializationDate = () => {
-        switch(week) {
-            case 1: {
-                if(date > 7) {
-                    let newDate = new Date(fullDate)
-                    newDate = new Date(newDate.setMonth(newDate.getMonth() - 1))
-                    newDate = new Date(newDate.getFullYear(), newDate.getMonth(), date)
-                    setDateButton(newDate)
-
-                    if(newDate.getFullYear() == today.getFullYear() 
-                        && newDate.getMonth() == today.getMonth()
-                        && newDate.getDate() == today.getDate()) {
-                        setClassDateButton(stateClasses.today)
-                    }
-                    else {
-                        setClassDateButton(stateClasses.notIncluded)
-                    }
-                }
-                else {
-                    let newDate = new Date(fullDate.getFullYear(), fullDate.getMonth(), date)
-                    setDateButton(newDate)
-
-                    if(newDate.getFullYear() == today.getFullYear() 
-                        && newDate.getMonth() == today.getMonth()
-                        && newDate.getDate() == today.getDate()) {
-                        setClassDateButton(stateClasses.today)
-                    }
-                    else {
-                        setClassDateButton(stateClasses.default)
-                    }
-                }
-                break
-            }
-            case 5: {
-                if(date < 23) {
-                    let newDate = new Date(fullDate)
-                    newDate = new Date(newDate.setMonth(newDate.getMonth() + 1))
-                    newDate = new Date(newDate.getFullYear(), newDate.getMonth(), date)
-                    setDateButton(newDate)
-
-                    if(newDate.getFullYear() == today.getFullYear() 
-                        && newDate.getMonth() == today.getMonth()
-                        && newDate.getDate() == today.getDate()) {
-                        setClassDateButton(stateClasses.today)
-                    }
-                    else {
-                        setClassDateButton(stateClasses.notIncluded)
-                    }
-                }
-                else {
-                    let newDate = new Date(fullDate.getFullYear(), fullDate.getMonth(), date)
-                    setDateButton(newDate)
-
-                    if(newDate.getFullYear() == today.getFullYear() 
-                        && newDate.getMonth() == today.getMonth()
-                        && newDate.getDate() == today.getDate()) {
-                        setClassDateButton(stateClasses.today)
-                    }
-                    else {
-                        setClassDateButton(stateClasses.default)
-                    }
-                }
-                break
-            }
-            case 6: {
-                if(date < 30) {
-                    let newDate = new Date(fullDate)
-                    newDate = new Date(newDate.setMonth(newDate.getMonth() + 1))
-                    newDate = new Date(newDate.getFullYear(), newDate.getMonth(), date)
-                    setDateButton(newDate)
-
-                    if(newDate.getFullYear() == today.getFullYear() 
-                        && newDate.getMonth() == today.getMonth()
-                        && newDate.getDate() == today.getDate()) {
-                        setClassDateButton(stateClasses.today)
-                    }
-                    else {
-                        setClassDateButton(stateClasses.notIncluded)
-                    }
-                }
-                else {
-                    let newDate = new Date(fullDate.getFullYear(), fullDate.getMonth(), date)
-                    setDateButton(newDate)
-
-                    if(newDate.getFullYear() == today.getFullYear() 
-                        && newDate.getMonth() == today.getMonth()
-                        && newDate.getDate() == today.getDate()) {
-                        setClassDateButton(stateClasses.today)
-                    }
-                    else {
-                        setClassDateButton(stateClasses.default)
-                    }
-                }
-                break
-            }
-            default: {
-                let newDate = new Date(fullDate.getFullYear(), fullDate.getMonth(), date)
-                setDateButton(newDate)
-
-                if(newDate.getFullYear() == today.getFullYear() 
-                    && newDate.getMonth() == today.getMonth()
-                    && newDate.getDate() == today.getDate()) {
-                    setClassDateButton(stateClasses.today)
-                }
-                else {
-                    setClassDateButton(stateClasses.default)
-                }
-            }
-        }
     }
 
     const setDeadlineDate = () => {
@@ -429,13 +319,35 @@ function DateButton(props: DateButtonProps) {
     }
 
     useEffect(() => {
-        InitializationDate()
-        if(props.targetDate !== null && new Date(props.targetDate).getFullYear() == dateButton?.getFullYear()
-            && new Date(props.targetDate).getMonth() == dateButton?.getMonth()
-            && new Date(props.targetDate).getDate() == dateButton?.getDate()) {
-            setClassDateButton(stateClasses.target)
+        let newDate: Date;
+        if (week === 1 && date > 7) {
+            newDate = new Date(fullDate.getFullYear(), fullDate.getMonth() - 1, date)
+        } else if ((week === 5 && date < 23) || (week === 6 && date < 30)) {
+            newDate = new Date(fullDate.getFullYear(), fullDate.getMonth() + 1, date)
+        } else {
+            newDate = new Date(fullDate.getFullYear(), fullDate.getMonth(), date)
         }
-    },[props])
+
+        setDateButton(newDate)
+
+        let cls = stateClasses.default
+        if (newDate.getFullYear() === today.getFullYear() && newDate.getMonth() === today.getMonth() && newDate.getDate() === today.getDate()) {
+            cls = stateClasses.today
+        } else if (newDate.getMonth() !== fullDate.getMonth()) {
+            cls = stateClasses.notIncluded
+        } else {
+            cls = stateClasses.default
+        }
+
+        if (targetDate !== null) {
+            const t = new Date(targetDate)
+            if (t.getFullYear() === newDate.getFullYear() && t.getMonth() === newDate.getMonth() && t.getDate() === newDate.getDate()) {
+                cls = stateClasses.target
+            }
+        }
+
+        setClassDateButton(cls)
+    }, [date, week, fullDate, targetDate])
 
     return(
         <li className={classDateButton} onClick={setDeadlineDate}>{props.date}</li>
