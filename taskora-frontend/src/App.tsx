@@ -18,8 +18,6 @@ import { withAuthHandling } from './hooks';
 export const TaskManagerContext = createContext<{state: AppState; actions: AppActions} | undefined>(undefined);
 
 function App() {
-  console.log('App rendered')
-
   const navigate = useNavigate()
   const [logIn, setLogIn] = useState<boolean>(Boolean(getCookie('logIn')))
   const [user, setUser] = useState<User | undefined>()

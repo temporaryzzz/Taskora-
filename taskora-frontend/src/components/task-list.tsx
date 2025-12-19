@@ -12,8 +12,6 @@ type TaskListProps = {
 }
 
 function TaskList(props: TaskListProps) {
-    console.log('TaskList rendered')
-
     const [completedTasks, setCompletedTasks] = useState<Task[]>(props.tasks.filter((task) => task.completed == true))
     const [activeTasks, setActiveTasks] = useState<Task[]>(props.tasks.filter((task) => task.completed == false))
 

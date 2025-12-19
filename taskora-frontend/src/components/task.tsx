@@ -9,8 +9,6 @@ type TaskProps = {
 }
 
 function TaskComponent(props: TaskProps) {
-    console.log('Task rendered')
-
     const taskManagerContext = useContext(TaskManagerContext)
     if(taskManagerContext == undefined) {
         return
