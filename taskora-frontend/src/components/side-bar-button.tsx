@@ -21,7 +21,6 @@ function SideBarButton(props: SideBarButtonProps) {
         SHEET: "icon--sheet",
         FOLDER: "icon--folder",
         INBOX: "icon--inbox",
-        TODAY: "icon--today",
         ALL: "icon--all",
         COMPLETED: "icon--completed",
         BASKET: "icon--basket",
@@ -63,7 +62,7 @@ function SideBarButton(props: SideBarButtonProps) {
                 setIcon(stateClassesIcon.INBOX)
                 break;
             case 'TODAY':
-                setIcon(stateClassesIcon.TODAY)
+                setIcon(stateClassesIcon.DEFAULT)
                 setContent(String(new Date().getDate()))
                 break;
             case 'ALL':
