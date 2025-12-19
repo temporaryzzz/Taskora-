@@ -30,7 +30,7 @@ export interface AppState {
     lists: Array<List>;
     tasks: Array<Task>;
     currentList: List | undefined;
-    selectedTaskId: number | null;
+    selectedTask: Task | null;
     tempTaskTitle: string;
     error: boolean;
     logIn: boolean;

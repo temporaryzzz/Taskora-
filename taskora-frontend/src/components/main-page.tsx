@@ -1,6 +1,6 @@
 import '../styles/main.scss'
 import SideBar from './side-bar'
-import { Header } from './header'
+import Header from './header'
 import TaskList from './task-list'
 import { TaskDetailsWindow } from './task-details-window'
 import { useContext } from 'react'
@@ -15,7 +15,7 @@ function MainPage() {
 
     return(
         <>
-        <Header />
+        <Header currentListTitle={taskManagerContext.state.currentList?.title}/>
             <main>
                 <SideBar lists={taskManagerContext.state.lists}/>
                 <TaskList tasks={taskManagerContext.state.tasks} currentList={taskManagerContext.state.currentList}/>

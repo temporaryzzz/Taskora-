@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useMemo, useRef, useState } from "react"
 import type { Task } from "../interfaces"
 import { TaskManagerContext } from "../App"
 import { Calendar } from "./calendar"
@@ -6,11 +6,13 @@ import { useOnClickOutside } from "../hooks"
 
 
 export function TaskDetailsWindow() {
-    const [task, setTask] = useState<Task>()
-    const [deadlineMessage, setDeadlineMessage] = useState<string>('Установите дату')
-    const [taskDeadline, setTaskDeadline] = useState<string |null>(null)
-    const [classButtonPriority, setClassButtonPriority] = useState<string>('button button--priority-default')
     const taskManagerContext = useContext(TaskManagerContext)
+    if(taskManagerContext == undefined) {
+        return
+    }
+
+    const [task, setTask] = useState<Task>()
+    const [taskDeadline, setTaskDeadline] = useState<string |null>(null)
     const taskDetailsRef = useRef<HTMLDivElement>(null)
     const calendarRef = useRef<HTMLDivElement>(null)
     const taskDetailsTitleRef = useRef<HTMLTextAreaElement>(null)
@@ -44,78 +46,67 @@ export function TaskDetailsWindow() {
 		'дек.',
 	];
 
-    if(taskManagerContext == undefined) {
-        return
-    }
-
-    const InitializationDeadlineMessage = () => {
-        if(task && task.deadline !== null) {
-            setTaskDeadline(task.deadline)
-            const date = new Date(task.deadline)
-            let hours = ', ' + String(date.getHours())
-            let minutes = ':' + String(date.getMinutes())
-            let dateNumber = String(date.getDate())
-            let month = monthState[date.getMonth()]
-            let year = ''
-
-            if(date.getHours() < 10) {
-                hours = ' 0' + String(date.getHours())
-            }
-            if(date.getMinutes() !== 30) {
-                minutes = ':0' + String(date.getMinutes())
-            }
-            if(date.getMinutes() == 59) {
-                hours = ''
-                minutes = ''
-            }
-            if(date.getFullYear() !== new Date().getFullYear()) {
-                year = String(date.getFullYear())
-            }
-            if(task && new Date(task.deadline) < new Date()) {
-                taskDetailsDedlineButtonRef.current?.classList.add(stateClasses.redButton)
-            }
-            else {
-                taskDetailsDedlineButtonRef.current?.classList.remove(stateClasses.redButton)
-            }
-
-            setDeadlineMessage(dateNumber + ' ' + month + ' ' + year + hours + minutes)
+    const deadlineMessage = useMemo(() => {
+        if(!task || task.deadline === null) {
+            return 'Установите дату'
         }
-        else {
-            setDeadlineMessage('Установите дату')
+        
+        const date = new Date(task.deadline)
+        let hours = ', ' + String(date.getHours())
+        let minutes = ':' + String(date.getMinutes())
+        let dateNumber = String(date.getDate())
+        let month = monthState[date.getMonth()]
+        let year = ''
+
+        if(date.getHours() < 10) {
+            hours = ' 0' + String(date.getHours())
         }
-    }
+        if(date.getMinutes() !== 30) {
+            minutes = ':0' + String(date.getMinutes())
+        }
+        if(date.getMinutes() === 59) {
+            hours = ''
+            minutes = ''
+        }
+        if(date.getFullYear() !== new Date().getFullYear()) {
+            year = String(date.getFullYear())
+        }
+
+        return dateNumber + ' ' + month + ' ' + year + hours + minutes
+    }, [task?.deadline])
+
+    const isDeadlineOverdue = useMemo(() => {
+        if(!task || task.deadline === null) return false
+        return new Date(task.deadline) < new Date()
+    }, [task?.deadline])
+
+    const classButtonPriority = useMemo(() => {
+        if(!task) return stateClasses.btnDefault
+
+        switch (task.priority) {
+            case 'DEFAULT': {
+                return stateClasses.btnDefault
+            }
+            case 'MIDDLE': {
+                return stateClasses.btnMiddle
+            }   
+            case 'HIGH': {
+                return stateClasses.btnHigh
+            }
+            case 'HIGHEST': {
+                return stateClasses.btnHighest
+            }
+        }
+    }, [task?.priority])
 
     const InitializationTask = () => {
-        if(taskManagerContext.state.selectedTaskId !== null && taskDetailsRef.current) {
+        if(taskManagerContext.state.selectedTask !== null && taskDetailsRef.current) {
             taskDetailsRef.current.style.display = 'flex'
-            setTask(taskManagerContext.state.tasks.find(task => task.id == taskManagerContext.state.selectedTaskId))
+            setTask(taskManagerContext.state.selectedTask)
         }
         else {
             if(taskDetailsRef.current) {
                 taskDetailsRef.current.style.display = 'none'
-            }
-        }
-    }
-
-    const InitializationPriorityButton = () => {
-        if(task) {
-            switch (task.priority) {
-                case 'DEFAULT': {
-                    setClassButtonPriority(stateClasses.btnDefault)
-                    break
-                }
-                case 'MIDDLE': {
-                    setClassButtonPriority(stateClasses.btnMiddle)
-                    break
-                }
-                case 'HIGH': {
-                    setClassButtonPriority(stateClasses.btnHigh)
-                    break
-                }
-                case 'HIGHEST': {
-                    setClassButtonPriority(stateClasses.btnHighest)
-                    break
-                }
             }
         }
     }
@@ -169,16 +160,25 @@ export function TaskDetailsWindow() {
 
     useEffect(() => {
         InitializationTask()
-    }, [taskManagerContext.state.selectedTaskId])
+    }, [taskManagerContext.state.selectedTask])
 
     useEffect(() => {
         if(taskDetailsDescriptionRef.current && taskDetailsTitleRef.current) {
             taskDetailsTitleRef.current.value = task?.title??''
             taskDetailsDescriptionRef.current.value = task?.description??''
         }
-        InitializationDeadlineMessage()
-        InitializationPriorityButton()
+        if(task?.deadline) {
+            setTaskDeadline(task.deadline)
+        }
     }, [task])
+
+    useEffect(() => {
+        if(isDeadlineOverdue) {
+            taskDetailsDedlineButtonRef.current?.classList.add(stateClasses.redButton)
+        } else {
+            taskDetailsDedlineButtonRef.current?.classList.remove(stateClasses.redButton)
+        }
+    }, [isDeadlineOverdue])
 
     //Авторазмер textarea для title
     useEffect(() => {

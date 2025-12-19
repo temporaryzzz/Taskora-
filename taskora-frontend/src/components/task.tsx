@@ -155,7 +155,7 @@ function TaskComponent(props: TaskProps) {
     }, [props.task])
 
     useEffect(() => {
-        if(taskManagerContext.state.selectedTaskId == props.task.id) {
+        if(taskManagerContext.state.selectedTask?.id === props.task.id) {
             taskElementRef.current?.classList.add(stateClasses.active)
         }
         else {
@@ -163,7 +163,7 @@ function TaskComponent(props: TaskProps) {
                 taskElementRef.current?.classList.remove(stateClasses.active)
             }
         }
-    }, [taskManagerContext.state.selectedTaskId])
+    }, [taskManagerContext.state.selectedTask?.id])
 
     useOnClickOutside(contextMenuRef, () => {
         if(contextMenuRef.current) {
@@ -182,7 +182,7 @@ function TaskComponent(props: TaskProps) {
                 <input type="checkbox" className={classTaskCheckbox}
                     onChange={() => toggleCompleted()} 
                     ref={checkboxElementRef}/>
-                <h3 className="task__title h5">{props.task.id == taskManagerContext.state.selectedTaskId ? taskManagerContext.state.tempTaskTitle : props.task.title}</h3>
+                <h3 className="task__title h5">{props.task.id == taskManagerContext.state.selectedTask?.id ? taskManagerContext.state.tempTaskTitle : props.task.title}</h3>
             </div>
             <div className="task__extra">
                 <p className={classTaskDate}>{dateMessage}</p>

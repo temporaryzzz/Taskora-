@@ -31,16 +31,20 @@ function App() {
   const [lists, setLists] = useState<Array<List>>([...systemLists])
   const [tasks, setTasks] = useState<Array<Task>>([])
   const [currentList, setCurrentList] = useState<List | undefined>(undefined)
-  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
+  const [selectedTaskIdLocal, setSelectedTaskIdLocal] = useState<number | null>(null)
   const [tempTaskTitle, setTempTaskTitle] = useState<string>('');
   const [error, setError] = useState<boolean>(false)
+
+  const selectedTask = useMemo(() => {
+    return tasks.find(task => task.id === selectedTaskIdLocal) || null
+  }, [tasks, selectedTaskIdLocal])
 
   const loadUser = () => {
     withAuthHandling(getUser, (updatedUser) => setUser(updatedUser), {navigate, setLogIn, setError})
   }
 
   const setSelectedTask = (taskId: number) => {
-      setSelectedTaskId(taskId)
+      setSelectedTaskIdLocal(taskId)
       let title = tasks.find(task => task.id == taskId)?.title
       if(title) {
         setTempTaskTitle(title);
@@ -68,7 +72,7 @@ function App() {
 
   const switchList = async (listId: number) => {
     setCurrentList(lists.find((list) => list.id == listId))
-    setSelectedTaskId(null);
+    setSelectedTaskIdLocal(null);
     setTasks([])
 
     withAuthHandling(() => fetchTasks(listId), 
@@ -161,7 +165,7 @@ function App() {
       user,
       lists,
       tasks,
-      selectedTaskId,
+      selectedTask,
       tempTaskTitle,
       currentList,
       error,
@@ -185,7 +189,7 @@ function App() {
     };
 
     return { state, actions };
-  }, [user, lists, tasks, selectedTaskId, currentList, tempTaskTitle, error, logIn]);
+  }, [user, lists, tasks, selectedTask, currentList, tempTaskTitle, error, logIn]);
 
   return(
       <TaskManagerContext.Provider value={contextValue}>
