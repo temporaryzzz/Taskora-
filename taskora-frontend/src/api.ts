@@ -1,4 +1,5 @@
 import type { UpdateTaskDTO, UpdateListDTO, Task, List, CreateListDTO, CreateTaskDTO, User } from "./interfaces";
+import { SYSTEM_LIST_IDS } from "./constants/systemListIds";
 
 export const SERVER_ADDRES = '/api';
 const SERVER_ADDRES__TASKS = '/api/tasks/';
@@ -27,13 +28,13 @@ export class CustomError extends Error {
 
 const fetchTasks = async (listId: number): Promise<Array<Task>> => {
   let fetchString = `${SERVER_ADDRES__TASKS}${listId}`
-  if(listId == -1) {
+  if(listId == SYSTEM_LIST_IDS.COMPLETED) {
      fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=completed`
-  } else if(listId == -2) {
+  } else if(listId == SYSTEM_LIST_IDS.TODAY) {
     fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=today`
-  } else if(listId == -3) {
+  } else if(listId == SYSTEM_LIST_IDS.BASKET) {
     fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=deleted`
-  } else if(listId == -4) {
+  } else if(listId == SYSTEM_LIST_IDS.ALL) {
     fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=all`
   }
   

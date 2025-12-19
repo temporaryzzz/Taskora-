@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { TaskManagerContext } from "../App";
-import { TaskComponent } from "./task";
+import TaskComponent from "./task";
 import type { Task } from "../interfaces";
 import { CreateTaskForm } from "./create-task-form";
 type TaskListSectionProps = {

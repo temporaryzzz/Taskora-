@@ -1,15 +1,15 @@
-import { useContext, useState } from "react";
-import { TaskManagerContext } from "../App";
+import { memo, useState } from "react";
+import { SYSTEM_LIST_IDS } from "../constants/systemListIds";
 import { CreateListForm } from './create-list-form'
 import SideBarButton from "./side-bar-button";
+import type { List } from "../interfaces";
 
-export function SideBar() {
-    const taskManagerContext = useContext(TaskManagerContext)
+type SideBarProps = {
+    lists: Array<List>;
+}
+
+function SideBar(props: SideBarProps) {
     const [activeCreateForm, setActiveCreateForm] = useState<boolean>(false)
-
-    if(taskManagerContext == undefined) {
-        return
-    }
 
     return(
         <div className="side-bar">
@@ -27,8 +27,8 @@ export function SideBar() {
                 <button className="side-bar__button  side-bar__button--title button" onClick={() => setActiveCreateForm(true)}>Task-lists</button>
                 <CreateListForm activeCreateForm={activeCreateForm} setActiveCreateForm={setActiveCreateForm}/>
                 <ul className="side-bar__list" id="lists">
-                    {taskManagerContext.state.lists.map((list) => {
-                        if(list.id !== -1 && list.id !== -3) {
+                    {props.lists.map((list) => {
+                        if(list.id !== SYSTEM_LIST_IDS.COMPLETED && list.id !== SYSTEM_LIST_IDS.BASKET) {
                             return (<SideBarButton list={list} key={list.id}/>)
                         }
                     })}
@@ -36,8 +36,8 @@ export function SideBar() {
             </div>
             <div className="side-bar__wrapper">
                 <ul className="side-bar__list" id="system-lists">
-                    {taskManagerContext.state.lists.map((list) => {
-                        if(list.id == -1 || list.id == -3) {
+                    {props.lists.map((list) => {
+                        if(list.id == SYSTEM_LIST_IDS.COMPLETED || list.id == SYSTEM_LIST_IDS.BASKET) {
                             return (<SideBarButton list={list} key={list.id}/>)
                         }
                     })}
@@ -46,3 +46,5 @@ export function SideBar() {
         </div>
     )
 }
+
+export default memo(SideBar);

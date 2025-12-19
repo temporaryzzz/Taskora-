@@ -1,4 +1,5 @@
-import { useContext, useEffect, useRef, useState } from "react"
+import { memo, useContext, useEffect, useRef, useState } from "react"
+import { SYSTEM_LIST_IDS } from "../constants/systemListIds"
 import type { Task } from "../interfaces"
 import { TaskManagerContext } from "../App"
 import { useOnClickOutside } from "../hooks"
@@ -7,7 +8,9 @@ type TaskProps = {
     task: Task
 }
 
-export function TaskComponent(props: TaskProps) {
+function TaskComponent(props: TaskProps) {
+    console.log('Task rendered')
+
     const taskManagerContext = useContext(TaskManagerContext)
     if(taskManagerContext == undefined) {
         return
@@ -230,7 +233,7 @@ export function TaskComponent(props: TaskProps) {
                         <p>Перенести на след. неделю</p>
                     </li>
                     <div className="context-menu__border"></div>
-                    {taskManagerContext.state.currentList?.id == -3?
+                    {taskManagerContext.state.currentList?.id == SYSTEM_LIST_IDS.BASKET?
                     <li className="context-menu__item context-menu__item--accent" onClick={() => taskManagerContext.actions.taskRecovery(props.task.id)}>
                         <p>Восстановить</p>
                     </li>:
@@ -243,3 +246,5 @@ export function TaskComponent(props: TaskProps) {
         </li>
     )
 }
+
+export default memo(TaskComponent);

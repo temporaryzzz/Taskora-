@@ -1,30 +1,32 @@
-import { useContext, useState, useEffect, useRef, type FormEvent } from "react";
+import { useContext, useState, useEffect, useRef, type FormEvent, memo } from "react";
+import { SYSTEM_LIST_IDS } from "../constants/systemListIds";
 import { TaskManagerContext } from "../App";
 import { TaskListSection } from "./task-list-section";
-import type { Task } from "../interfaces";
-import { TaskComponent } from "./task";
+import type { List, Task } from "../interfaces";
+import TaskComponent from "./task";
 import { CreateTaskForm } from "./create-task-form";
 
-export function TaskList() {
-    const taskManagerContext = useContext(TaskManagerContext)
+type TaskListProps = {
+    tasks: Array<Task>;
+    currentList?: List;
+}
 
-    if(taskManagerContext == undefined) {
-        return
-    }
+function TaskList(props: TaskListProps) {
+    console.log('TaskList rendered')
 
-    const [completedTasks, setCompletedTasks] = useState<Task[]>(taskManagerContext.state.tasks.filter((task) => task.completed == true))
-    const [activeTasks, setActiveTasks] = useState<Task[]>(taskManagerContext.state.tasks.filter((task) => task.completed == false))
+    const [completedTasks, setCompletedTasks] = useState<Task[]>(props.tasks.filter((task) => task.completed == true))
+    const [activeTasks, setActiveTasks] = useState<Task[]>(props.tasks.filter((task) => task.completed == false))
 
     useEffect(() => {
-        setCompletedTasks(taskManagerContext.state.tasks.filter((task) => task.completed == true))
-        setActiveTasks(taskManagerContext.state.tasks.filter((task) => task.completed == false))
-    }, [taskManagerContext.state.tasks])
+        setCompletedTasks(props.tasks.filter((task) => task.completed == true))
+        setActiveTasks(props.tasks.filter((task) => task.completed == false))
+    }, [props.tasks])
 
-    if(taskManagerContext.state.currentList && taskManagerContext.state.currentList.viewType == 'KANBAN') {
+    if(props.currentList && props.currentList.viewType == 'KANBAN') {
         return(
             <div className="task-list">
                 <div className="task-list__sections">
-                    {taskManagerContext.state.currentList?.sections.map((section: string, index: number) => {
+                    {props.currentList?.sections.map((section: string, index: number) => {
                         return <TaskListSection section={section} key={index}/>
                     })}
                     {<AddSectionButton />}
@@ -32,7 +34,7 @@ export function TaskList() {
             </div>
         )
     }
-    else if(taskManagerContext.state.currentList && taskManagerContext.state.currentList.id < 0) {
+    else if(props.currentList && SYSTEM_LIST_IDS.COMPLETED === props.currentList.id || SYSTEM_LIST_IDS.TODAY === props.currentList?.id || SYSTEM_LIST_IDS.BASKET === props.currentList?.id || SYSTEM_LIST_IDS.ALL === props.currentList?.id) {
         return(
             <div className="task-list task-list--list-view">
                 <ul className="task-list__tasks task-list__tasks--active">
@@ -49,7 +51,7 @@ export function TaskList() {
             </div>
         )
     }
-    else if(taskManagerContext.state.currentList && taskManagerContext.state.currentList.viewType == 'LIST' && taskManagerContext.state.currentList.id >= 0) {
+    else if(props.currentList && props.currentList.viewType == 'LIST' && props.currentList.id >= 0) {
         return(
             <div className="task-list task-list--list-view">
                 <CreateTaskForm section="Main Section" showForm={true}/>
@@ -122,3 +124,5 @@ function AddSectionButton() {
         )
     }
 }
+
+export default memo(TaskList);

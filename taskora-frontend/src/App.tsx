@@ -1,6 +1,7 @@
 //⁡⁢⁣⁣𝗜𝗠𝗣𝗢𝗥𝗧𝗦⁡
 import { Route, Routes, useNavigate } from 'react-router';
 import { createContext, useState, useMemo, useEffect } from 'react';
+import { SYSTEM_LIST_IDS } from './constants/systemListIds';
 import type { AppState, AppActions, User, List, Task, CreateListDTO, 
               CreateTaskDTO, UpdateTaskDTO, UpdateListDTO} from './interfaces';
 import SignIn from './components/sign-in';
@@ -17,13 +18,17 @@ import { withAuthHandling } from './hooks';
 export const TaskManagerContext = createContext<{state: AppState; actions: AppActions} | undefined>(undefined);
 
 function App() {
+  console.log('App rendered')
+
   const navigate = useNavigate()
   const [logIn, setLogIn] = useState<boolean>(Boolean(getCookie('logIn')))
   const [user, setUser] = useState<User | undefined>()
-  const [systemLists] = useState<Array<List>>([{title: 'Completed', id: -1, sections: [''], viewType: 'LIST', icon: "COMPLETED", color: "NONE"},
-          {title: 'Today', id: -2, sections: [''], viewType: 'LIST', icon: "TODAY", color: "NONE"},
-          {title: 'Basket', id: -3, sections: [''], viewType: 'LIST', icon: "BASKET", color: "NONE"},
-          {title: 'All', id: -4,  sections: [''], viewType: 'LIST', icon: "DEFAULT", color: "NONE"}])
+  const [systemLists] = useState<Array<List>>([
+    {title: 'Completed', id: SYSTEM_LIST_IDS.COMPLETED, sections: [''], viewType: 'LIST', icon: "COMPLETED", color: "NONE"},
+    {title: 'Today', id: SYSTEM_LIST_IDS.TODAY, sections: [''], viewType: 'LIST', icon: "TODAY", color: "NONE"},
+    {title: 'Basket', id: SYSTEM_LIST_IDS.BASKET, sections: [''], viewType: 'LIST', icon: "BASKET", color: "NONE"},
+    {title: 'All', id: SYSTEM_LIST_IDS.ALL, sections: [''], viewType: 'LIST', icon: "DEFAULT", color: "NONE"}
+  ])
   //КОСТЫЛЬ - отрицаетльные id, чтобы они не совпали с id созданных листов
   const [lists, setLists] = useState<Array<List>>([...systemLists])
   const [tasks, setTasks] = useState<Array<Task>>([])
@@ -147,7 +152,7 @@ function App() {
         switchList(lastOpenListId)
       }
       else {
-        switchList(-2)
+        switchList(SYSTEM_LIST_IDS.TODAY)
       }
     }
   }, [lists])

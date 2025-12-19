@@ -1,5 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import type { List } from "../interfaces";
+import { memo, useContext, useEffect, useRef, useState } from "react";import { SYSTEM_LIST_IDS } from "../constants/systemListIds";import type { List } from "../interfaces";
 import { TaskManagerContext } from "../App";
 import { EditListForm } from "./edit-list-form";
 import { useOnClickOutside } from "../hooks";
@@ -139,7 +138,7 @@ function SideBarButton(props: SideBarButtonProps) {
         }
     })
 
-    if(props.list.id < 0) {
+    if(SYSTEM_LIST_IDS.COMPLETED === props.list.id || SYSTEM_LIST_IDS.TODAY === props.list.id || SYSTEM_LIST_IDS.BASKET === props.list.id || SYSTEM_LIST_IDS.ALL === props.list.id) {
         return (
             <li 
                 className="side-bar__item" 
@@ -185,7 +184,7 @@ function SideBarButton(props: SideBarButtonProps) {
                                 taskManagerContext.actions.deleteList(props.list.id)
                                 toggleContexMenuActive()
                                 //switch all
-                                taskManagerContext.actions.switchList(-4)
+                                taskManagerContext.actions.switchList(SYSTEM_LIST_IDS.ALL)
                                 }}>
                                 <p>Удалить</p>
                             </li>
@@ -198,4 +197,4 @@ function SideBarButton(props: SideBarButtonProps) {
     }
 }
 
-export default SideBarButton;
+export default memo(SideBarButton);
