@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState, type SetStateAction } from "react";
-import { TaskManagerContext } from "../App";
+import { StateContext, ActionsContext } from "../App";
 import type { CreateListDTO } from "../interfaces";
 
 type CreateListFormnProps = { 
@@ -7,27 +7,28 @@ type CreateListFormnProps = {
     setActiveCreateForm: React.Dispatch<SetStateAction<boolean>>,
  };
 
+const stateClasses ={
+    active: "not-clickable--active",
+}
+
 export function CreateListForm(props: CreateListFormnProps) {
-    const taskManagerContext = useContext(TaskManagerContext)
+    const state = useContext(StateContext)
+    const actions = useContext(ActionsContext)
     const [title, setTitle] = useState<string>('')
     const [color, setColor] = useState<'LIGHT' | 'RED' | 'BLUE' | 'YELLOW' | 'VIOLET' | 'GREEN' | 'NONE'>('NONE')
     const [icon, setIcon] = useState<'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET' | 'FOLDER'>('DEFAULT')
     const [viewType, setViewType] = useState<'LIST' | 'KANBAN'>('KANBAN')
     const createFormRef = useRef<HTMLDivElement>(null)
 
-    if(taskManagerContext  == undefined) {
+    if(state  == undefined || actions == undefined) {
         return
-    }
-
-    const stateClasses ={
-        active: "not-clickable--active",
     }
 
     const createList = () => {
         if(/\S/.test(title ?? '') && title != 'Basket' && title != 'Completed' && title != 'All' && title != 'Today') { //Добавить предупреждение пользователю, что нельзя так называть списки
-            if(taskManagerContext.state.user !== undefined) {
+            if(state.user !== undefined) {
                 const CreateListDTO: CreateListDTO = {title: title, viewType: viewType, icon: icon, color: color}
-                taskManagerContext.actions.createList(CreateListDTO)
+                actions.createList(CreateListDTO)
                 props.setActiveCreateForm(false)
                 return true
             }

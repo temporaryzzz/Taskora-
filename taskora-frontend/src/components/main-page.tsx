@@ -4,21 +4,21 @@ import Header from './header'
 import TaskList from './task-list'
 import { TaskDetailsWindow } from './task-details-window'
 import { useContext } from 'react'
-import { TaskManagerContext } from '../App'
+import { StateContext } from '../App'
 
 function MainPage() {
-    const taskManagerContext = useContext(TaskManagerContext)
+    const state = useContext(StateContext)
 
-    if(taskManagerContext == undefined) {
+    if(state == undefined) {
         return
     }
 
     return(
         <>
-        <Header currentListTitle={taskManagerContext.state.currentList?.title}/>
+        <Header currentListTitle={state.currentList?.title}/>
             <main>
-                <SideBar lists={taskManagerContext.state.lists}/>
-                <TaskList tasks={taskManagerContext.state.tasks} currentList={taskManagerContext.state.currentList}/>
+                <SideBar lists={state.lists}/>
+                <TaskList tasks={state.tasks} currentList={state.currentList}/>
                 <TaskDetailsWindow />
             </main>
         </>

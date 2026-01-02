@@ -1,6 +1,6 @@
 //⁡⁢⁣⁣𝗜𝗠𝗣𝗢𝗥𝗧𝗦⁡
 import { Route, Routes, useNavigate } from 'react-router';
-import { createContext, useState, useMemo, useEffect } from 'react';
+import { createContext, useState, useMemo, useEffect, useCallback } from 'react';
 import { SYSTEM_LIST_IDS } from './constants/systemListIds';
 import type { AppState, AppActions, User, List, Task, CreateListDTO, 
               CreateTaskDTO, UpdateTaskDTO, UpdateListDTO} from './interfaces';
@@ -15,7 +15,8 @@ import MainPage from './components/main-page';
 import { getCookie, setCookie } from './cookies';
 import { withAuthHandling } from './hooks';
 
-export const TaskManagerContext = createContext<{state: AppState; actions: AppActions} | undefined>(undefined);
+export const StateContext = createContext<AppState | undefined>(undefined);
+export const ActionsContext = createContext<AppActions | undefined>(undefined);
 
 function App() {
   const navigate = useNavigate()
@@ -34,24 +35,24 @@ function App() {
   const [selectedTaskIdLocal, setSelectedTaskIdLocal] = useState<number | null>(null)
   const [tempTaskTitle, setTempTaskTitle] = useState<string>('');
   const [error, setError] = useState<boolean>(false)
-
+  
   const selectedTask = useMemo(() => {
     return tasks.find(task => task.id === selectedTaskIdLocal) || null
-  }, [tasks, selectedTaskIdLocal])
+  }, [selectedTaskIdLocal, tasks])
 
   const loadUser = () => {
     withAuthHandling(getUser, (updatedUser) => setUser(updatedUser), {navigate, setLogIn, setError})
   }
 
-  const setSelectedTask = (taskId: number) => {
+  const setSelectedTask = useCallback((taskId: number) => {
       setSelectedTaskIdLocal(taskId)
       let title = tasks.find(task => task.id == taskId)?.title
       if(title) {
         setTempTaskTitle(title);
       }
-  }
+  }, [tasks])
 
-  const updateTask = async (taskId: number, updates: UpdateTaskDTO) => {
+  const updateTask = useCallback(async (taskId: number, updates: UpdateTaskDTO) => {
     withAuthHandling(() => updateTaskOnServer(taskId, updates), 
     (updatedTask) => {
       const updatedTasks = tasks.map(task =>
@@ -59,18 +60,18 @@ function App() {
       setTasks(updatedTasks);
     }, 
     {navigate, setLogIn, setError})
-  }
+  }, [tasks, navigate])
 
-  const updateList = async (listId: number, updates: UpdateListDTO) => {
+  const updateList = useCallback(async (listId: number, updates: UpdateListDTO) => {
     withAuthHandling(() => updateListOnServer(listId, updates), 
     (updatedList) => {
       const updatedLists = lists?.map(list => list.id === updatedList.id ? { ...list, ...updatedList } : list);
       setLists(updatedLists);
     }, 
     {navigate, setLogIn, setError})
-  }
+  }, [lists, navigate])
 
-  const switchList = async (listId: number) => {
+  const switchList = useCallback(async (listId: number) => {
     setCurrentList(lists.find((list) => list.id == listId))
     setSelectedTaskIdLocal(null);
     setTasks([])
@@ -81,50 +82,50 @@ function App() {
       setTasks(userTasks);
     }, 
     {navigate, setLogIn, setError})
-  }
+  }, [lists, navigate])
 
-  const loadLists = async () => {
+  const loadLists = useCallback(async () => {
     withAuthHandling(fetchLists, 
     (userLists) => {
       setLists([...systemLists, ...userLists])
     }, 
     {navigate, setLogIn, setError})
-  }
+  }, [systemLists, navigate])
 
-  const createList = async (list: CreateListDTO) => {
+  const createList = useCallback(async (list: CreateListDTO) => {
     withAuthHandling(() => createListOnServer(list), 
     (newList) => {
       setLists(lists => [...lists, newList]);
     }, 
     {navigate, setLogIn, setError})
-  }
+  }, [navigate])
 
-  const createTask = async (task: CreateTaskDTO) => {
+  const createTask = useCallback(async (task: CreateTaskDTO) => {
     withAuthHandling(() => createTaskOnServer(task), 
     (newTask) => {
       setTasks(tasks => [...tasks, newTask]);
     }, 
     {navigate, setLogIn, setError})
-  }
+  }, [navigate])
 
-  const deleteList = (listId: number) => {
+  const deleteList = useCallback((listId: number) => {
     withAuthHandling(() => deleteListOnServer(listId), 
     () => {
       setLists(lists => lists.filter(list => list.id !== listId))
       switchList(2)
     }, 
     {navigate, setLogIn, setError})
-  }
+  }, [navigate, switchList])
 
-  const deleteTask = (taskId: number) => {
+  const deleteTask = useCallback((taskId: number) => {
     withAuthHandling(() => deleteTaskOnServer(taskId), 
     () => {
       setTasks(tasks => tasks.filter(task => task.id !== taskId))
     }, 
     {navigate, setLogIn, setError})
-  }
+  }, [navigate])
 
-  const taskRecovery = async (taskId: number) => {
+  const taskRecovery = useCallback(async (taskId: number) => {
     withAuthHandling(() => taskRecoveryOnServer(taskId), 
     (updatedLists) => {
       setLists([...systemLists, ...updatedLists])
@@ -132,7 +133,7 @@ function App() {
       setTasks(updatedTasks)
     }, 
     {navigate, setLogIn, setError})
-  }
+  }, [systemLists, tasks, navigate])
 
   useEffect(() => {
     if(logIn == true) {
@@ -160,7 +161,7 @@ function App() {
   }, [lists])
 
   //⁡⁢⁣⁣CONTEXT⁡
-  const contextValue = useMemo(() => {
+  const stateValue = useMemo(() => {
     const state: AppState = {
       user,
       lists,
@@ -171,7 +172,10 @@ function App() {
       error,
       logIn,
     };
+    return state;
+  }, [user, lists, tasks, selectedTask, currentList, tempTaskTitle, error, logIn]);
 
+  const actionsValue = useMemo(() => {
     const actions: AppActions = {
       setUser,
       setSelectedTask,
@@ -187,18 +191,19 @@ function App() {
       taskRecovery,
       setLogIn,
     };
-
-    return { state, actions };
-  }, [user, lists, tasks, selectedTask, currentList, tempTaskTitle, error, logIn]);
+    return actions;
+  }, [setUser, setSelectedTask, setTempTaskTitle, updateTask, updateList, switchList, loadLists, createList, createTask, deleteList, deleteTask, taskRecovery, setLogIn]);
 
   return(
-      <TaskManagerContext.Provider value={contextValue}>
-        <Routes>
-          <Route path="" element={<SignIn />} />
-          <Route path="sign-up" element={<SignUp />} />
-          <Route path='main' element={<MainPage />} />
-        </Routes>
-      </TaskManagerContext.Provider>
+      <StateContext.Provider value={stateValue}>
+        <ActionsContext.Provider value={actionsValue}>
+          <Routes>
+            <Route path="" element={<SignIn />} />
+            <Route path="sign-up" element={<SignUp />} />
+            <Route path='main' element={<MainPage />} />
+          </Routes>
+        </ActionsContext.Provider>
+      </StateContext.Provider>
 )
 }
 

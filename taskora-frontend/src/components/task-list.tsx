@@ -1,10 +1,10 @@
 import { useContext, useState, useEffect, useRef, type FormEvent, memo } from "react";
 import { SYSTEM_LIST_IDS } from "../constants/systemListIds";
-import { TaskManagerContext } from "../App";
+import { StateContext, ActionsContext } from "../App";
 import { TaskListSection } from "./task-list-section";
 import type { List, Task } from "../interfaces";
 import TaskComponent from "./task";
-import { CreateTaskForm } from "./create-task-form";
+import CreateTaskForm from "./create-task-form";
 
 type TaskListProps = {
     tasks: Array<Task>;
@@ -12,6 +12,9 @@ type TaskListProps = {
 }
 
 function TaskList(props: TaskListProps) {
+    const state = useContext(StateContext)
+    const actions = useContext(ActionsContext)
+    
     const [completedTasks, setCompletedTasks] = useState<Task[]>(props.tasks.filter((task) => task.completed == true))
     const [activeTasks, setActiveTasks] = useState<Task[]>(props.tasks.filter((task) => task.completed == false))
 
@@ -50,9 +53,12 @@ function TaskList(props: TaskListProps) {
         )
     }
     else if(props.currentList && props.currentList.viewType == 'LIST' && props.currentList.id >= 0) {
+        if(state == undefined || actions == undefined) {
+            return
+        }
         return(
             <div className="task-list task-list--list-view">
-                <CreateTaskForm section="Main Section" showForm={true}/>
+                <CreateTaskForm section="Main Section" showForm={true} currentListId={props.currentList.id} onCreateTask={actions.createTask}/>
                 <ul className="task-list__tasks task-list__tasks--active">
                     {activeTasks.map((taskItem) => {
                         return <TaskComponent task={taskItem} key={taskItem.id}/>
@@ -70,11 +76,12 @@ function TaskList(props: TaskListProps) {
 }
 
 function AddSectionButton() {
-    const taskManagerContext = useContext(TaskManagerContext)
+    const state = useContext(StateContext)
+    const actions = useContext(ActionsContext)
     const addInputRef = useRef<HTMLInputElement>(null)
     const addButtonRef = useRef<HTMLButtonElement>(null)
 
-    if(taskManagerContext == undefined) {
+    if(state == undefined || actions == undefined) {
         return
     }
 
@@ -94,16 +101,16 @@ function AddSectionButton() {
 
     const addSection = (event: FormEvent) => {
         event.preventDefault()
-        if(addInputRef.current && /\S/.test(addInputRef.current.value ?? '') && taskManagerContext.state.currentList) {
-            const list = taskManagerContext.state.currentList
-            taskManagerContext.actions.updateList(list.id, 
+        if(addInputRef.current && /\S/.test(addInputRef.current.value ?? '') && state.currentList) {
+            const list = state.currentList
+            actions.updateList(list.id, 
                 {...list, sections: [...list.sections, addInputRef.current.value]})
             addInputRef.current.value = ''
             switchInput(false)
         }
     }
 
-    if(taskManagerContext.state.currentList &&  taskManagerContext.state.currentList.id >= 0) {
+    if(state.currentList &&  state.currentList.id >= 0) {
         return(
             <section className="task-list__section">
                 <form className="task-list__section-title-wrapper" onSubmit={(event) => addSection(event)}>

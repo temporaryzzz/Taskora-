@@ -2,15 +2,16 @@ import { useContext, useRef, type FormEvent } from "react";
 import { useNavigate } from 'react-router';
 import { SERVER_ADDRES } from "../api";
 import '../styles/main.scss'
-import { TaskManagerContext } from "../App";
+import { StateContext, ActionsContext } from "../App";
 
 function SignIn() {
     const navigate = useNavigate();
 	const usernameInput = useRef<HTMLInputElement>(null);
 	const passwordInput = useRef<HTMLInputElement>(null);
-    const taskManagerContext = useContext(TaskManagerContext)
+    const state = useContext(StateContext)
+    const actions = useContext(ActionsContext)
 
-    if(taskManagerContext?.state.logIn == true) {
+    if(state?.logIn == true) {
         navigate('main', {replace: true})
     }
     
@@ -47,7 +48,7 @@ function SignIn() {
 					return response.json();
 				})
 				.then(() => {
-                    taskManagerContext?.actions.setLogIn(true)
+                    actions?.setLogIn(true)
 					navigate('main', { replace: true });
 				})
 				.catch((error) => {

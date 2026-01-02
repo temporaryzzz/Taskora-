@@ -1,13 +1,39 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react"
 import type { Task } from "../interfaces"
-import { TaskManagerContext } from "../App"
+import { StateContext, ActionsContext } from "../App"
 import { Calendar } from "./calendar"
 import { useOnClickOutside } from "../hooks"
 
+const stateClasses = {
+    hidden: 'visually-hidden',
+    redButton: 'task-details__button--red',
+    activeOptions: 'context-menu--active',
+    activeOptionsItem: 'context-menu__item--active',
+    btnDefault: 'button button--priority-default',
+    btnMiddle: 'button button--priority-middle',
+    btnHigh: 'button button--priority-high',
+    btnHighest: 'button button--priority-highest',
+}
+
+const monthState = [
+    'янв.',
+    'фев.',
+    'мар.',
+    'апр.',
+    'мая',
+    'июня',
+    'июля',
+    'авг.',
+    'сент.',
+    'окт.',
+    'ноя.',
+    'дек.',
+];
 
 export function TaskDetailsWindow() {
-    const taskManagerContext = useContext(TaskManagerContext)
-    if(taskManagerContext == undefined) {
+    const state = useContext(StateContext)
+    const actions = useContext(ActionsContext)
+    if(state == undefined || actions == undefined) {
         return
     }
 
@@ -19,32 +45,6 @@ export function TaskDetailsWindow() {
     const taskDetailsDescriptionRef = useRef<HTMLTextAreaElement>(null)
     const taskDetailsDedlineButtonRef = useRef<HTMLButtonElement>(null)
     const priorityMenuRef = useRef<HTMLDivElement>(null)
-
-    const stateClasses = {
-        hidden: 'visually-hidden',
-        redButton: 'task-details__button--red',
-        activeOptions: 'context-menu--active',
-        activeOptionsItem: 'context-menu__item--active',
-        btnDefault: 'button button--priority-default',
-        btnMiddle: 'button button--priority-middle',
-        btnHigh: 'button button--priority-high',
-        btnHighest: 'button button--priority-highest',
-    }
-
-    const monthState = [
-		'янв.',
-		'фев.',
-		'мар.',
-		'апр.',
-		'мая',
-		'июня',
-		'июля',
-		'авг.',
-		'сент.',
-		'окт.',
-		'ноя.',
-		'дек.',
-	];
 
     const deadlineMessage = useMemo(() => {
         if(!task || task.deadline === null) {
@@ -80,7 +80,8 @@ export function TaskDetailsWindow() {
         return new Date(task.deadline) < new Date()
     }, [task?.deadline])
 
-    const classButtonPriority = useMemo(() => {
+    //Не мемоизируем т.к. дешевые вычесления
+    const classButtonPriority = () => {
         if(!task) return stateClasses.btnDefault
 
         switch (task.priority) {
@@ -97,12 +98,12 @@ export function TaskDetailsWindow() {
                 return stateClasses.btnHighest
             }
         }
-    }, [task?.priority])
+    }
 
     const InitializationTask = () => {
-        if(taskManagerContext.state.selectedTask !== null && taskDetailsRef.current) {
+        if(state.selectedTask !== null && taskDetailsRef.current) {
             taskDetailsRef.current.style.display = 'flex'
-            setTask(taskManagerContext.state.selectedTask)
+            setTask(state.selectedTask)
         }
         else {
             if(taskDetailsRef.current) {
@@ -120,7 +121,7 @@ export function TaskDetailsWindow() {
     const setPriority = (priority: 'DEFAULT' | 'MIDDLE' | 'HIGH' | 'HIGHEST') => {
         if(task) {
             setTask({...task, priority: priority})
-            taskManagerContext.actions.updateTask(task.id, {ownerListId: task.ownerListId, title: task.title, description: task.description,
+            actions.updateTask(task.id, {ownerListId: task.ownerListId, title: task.title, description: task.description,
                 deadline: taskDeadline, priority: priority, completed: task.completed, section: task.section
             })
         }
@@ -131,7 +132,7 @@ export function TaskDetailsWindow() {
             console.log(date)
             setTaskDeadline(date)
             setTask({...task, deadline: date})
-            taskManagerContext.actions.updateTask(task.id, {ownerListId: task.ownerListId, title: task.title, description: task.description,
+            actions.updateTask(task.id, {ownerListId: task.ownerListId, title: task.title, description: task.description,
                 deadline: date, priority: task.priority, completed: task.completed, section: task.section
             })
         }
@@ -145,14 +146,14 @@ export function TaskDetailsWindow() {
         if(taskDetailsTitleRef.current && task) {
             let title = e.target.value
             setTask({...task, title})
-            taskManagerContext.actions.setTempTaskTitle(title)
+            actions.setTempTaskTitle(title)
         }
     }
 
     const updateTask = () => {
         if(task) {
             console.log(taskDeadline)
-            taskManagerContext.actions.updateTask(task.id, {ownerListId: task.ownerListId, title: task.title, description: task.description,
+            actions.updateTask(task.id, {ownerListId: task.ownerListId, title: task.title, description: task.description,
                 deadline: taskDeadline, priority: task.priority, completed: task.completed, section: task.section
             })
         }
@@ -160,7 +161,7 @@ export function TaskDetailsWindow() {
 
     useEffect(() => {
         InitializationTask()
-    }, [taskManagerContext.state.selectedTask])
+    }, [state.selectedTask])
 
     useEffect(() => {
         if(taskDetailsDescriptionRef.current && taskDetailsTitleRef.current) {
@@ -205,7 +206,7 @@ export function TaskDetailsWindow() {
                         {deadlineMessage}
                     </button>
                 </div>
-                <button className={classButtonPriority} onClick={toggleShowPriority}>
+                <button className={classButtonPriority()} onClick={toggleShowPriority}>
                     <div className="context-menu context-menu--left" ref={priorityMenuRef}>
                             <label>Priority</label>
                             <ul className="context-menu__items context-menu__items--horizontal">
@@ -255,7 +256,7 @@ export function TaskDetailsWindow() {
             </ul>
             <div className="task-details__button-wrapper"> 
                 <button className="task-details__button button" id="ownerList">
-                    {taskManagerContext.state.lists.map((list) => list.id == task?.ownerListId? list.title: '')}
+                    {state.lists.map((list) => list.id == task?.ownerListId? list.title: '')}
                 </button>
             </div>
         </div>

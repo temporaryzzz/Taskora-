@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState, type SetStateAction } from "react";
-import { TaskManagerContext } from "../App";
+import { StateContext, ActionsContext } from "../App";
 import type { UpdateListDTO, List } from "../interfaces";
 
 type EditListFormnProps = { 
@@ -8,26 +8,27 @@ type EditListFormnProps = {
     setActiveEditForm: React.Dispatch<SetStateAction<boolean>>,
  };
 
+const stateClasses = {
+    active: "not-clickable--active",
+}
+
 export function EditListForm(props: EditListFormnProps) {
-    const taskManagerContext = useContext(TaskManagerContext)
+    const state = useContext(StateContext)
+    const actions = useContext(ActionsContext)
     const [title, setTitle] = useState<string>(props.list.title)
     const [color, setColor] = useState<'LIGHT' | 'RED' | 'BLUE' | 'YELLOW' | 'VIOLET' | 'GREEN' | 'NONE'>(props.list.color)
     const [icon, setIcon] = useState<'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET' | 'FOLDER'>(props.list.icon)
     const createFormRef = useRef<HTMLDivElement>(null)
 
-    if(taskManagerContext  == undefined) {
+    if(state  == undefined || actions == undefined) {
         return
-    }
-
-    const stateClasses ={
-        active: "not-clickable--active",
     }
 
     const updateList = () => {
         if(/\S/.test(title ?? '') && title != 'Basket' && title != 'Completed' && title != 'All') {
-            if(taskManagerContext.state.user !== undefined) {
+            if(state.user !== undefined) {
                 const UpdateListDTO: UpdateListDTO = {title: title, sections: props.list.sections, icon: icon, color: color, viewType: props.list.viewType}
-                taskManagerContext.actions.updateList(props.list.id, UpdateListDTO)
+                actions.updateList(props.list.id, UpdateListDTO)
                 props.setActiveEditForm(false)
                 return true
             }

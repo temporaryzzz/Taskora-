@@ -1,16 +1,42 @@
 import { memo, useContext, useEffect, useRef, useState } from "react"
 import { SYSTEM_LIST_IDS } from "../constants/systemListIds"
 import type { Task } from "../interfaces"
-import { TaskManagerContext } from "../App"
+import { StateContext, ActionsContext } from "../App"
 import { useOnClickOutside } from "../hooks"
 
 type TaskProps = {
     task: Task
 }
 
+const stateClasses = {
+    DEFAULT: 'task__checkbox',
+    MIDDLE: 'task__checkbox task__checkbox--middle',
+    HIGH: 'task__checkbox task__checkbox--high',
+    HIGHEST: 'task__checkbox task__checkbox--highest',
+    active: 'task--active',
+    activeOptions: 'context-menu--active',
+    activeOptionsItem: 'context-menu__item--active',
+}
+
+const monthState = [
+    'янв.',
+    'фев.',
+    'мар.',
+    'апр.',
+    'мая',
+    'июня',
+    'июля',
+    'авг.',
+    'сен.',
+    'окт.',
+    'ноя.',
+    'дек.',
+];
+
 function TaskComponent(props: TaskProps) {
-    const taskManagerContext = useContext(TaskManagerContext)
-    if(taskManagerContext == undefined) {
+    const state = useContext(StateContext)
+    const actions = useContext(ActionsContext)
+    if(state == undefined || actions == undefined) {
         return
     }
 
@@ -21,36 +47,11 @@ function TaskComponent(props: TaskProps) {
     const [classTaskCheckbox, setClassTaskCheckbox] = useState<string>('task__checkbox')
     const [dateMessage, setDateMessage] = useState('');
 
-    const stateClasses = {
-        DEFAULT: 'task__checkbox',
-        MIDDLE: 'task__checkbox task__checkbox--middle',
-        HIGH: 'task__checkbox task__checkbox--high',
-        HIGHEST: 'task__checkbox task__checkbox--highest',
-        active: 'task--active',
-        activeOptions: 'context-menu--active',
-        activeOptionsItem: 'context-menu__item--active',
-    }
-
-    const monthState = [
-		'янв.',
-		'фев.',
-		'мар.',
-		'апр.',
-		'мая',
-		'июня',
-		'июля',
-		'авг.',
-		'сен.',
-		'окт.',
-		'ноя.',
-		'дек.',
-	];
-
     const toggleCompleted = () => {
         if(checkboxElementRef.current) {
             taskElementRef.current?.classList.toggle('task--completed')   
             console.log(checkboxElementRef.current.checked)
-            taskManagerContext.actions.updateTask(props.task.id, {...props.task, completed: checkboxElementRef.current.checked})
+            actions.updateTask(props.task.id, {...props.task, completed: checkboxElementRef.current.checked})
         }
     }
 
@@ -103,7 +104,7 @@ function TaskComponent(props: TaskProps) {
     }
 
     const updatePriority = (priority: 'DEFAULT' | 'MIDDLE' | 'HIGH' | 'HIGHEST') => {
-        taskManagerContext.actions.updateTask(props.task.id, {...props.task, priority: priority})
+        actions.updateTask(props.task.id, {...props.task, priority: priority})
     }
 
     const updateDeadline = (date: number) => {
@@ -118,7 +119,7 @@ function TaskComponent(props: TaskProps) {
             newDate.setMinutes(59)
         }
 
-        taskManagerContext.actions.updateTask(props.task.id, {...props.task, deadline: newDate.toISOString()})
+        actions.updateTask(props.task.id, {...props.task, deadline: newDate.toISOString()})
     }
 
     useEffect(() => {
@@ -155,7 +156,7 @@ function TaskComponent(props: TaskProps) {
     }, [props.task])
 
     useEffect(() => {
-        if(taskManagerContext.state.selectedTask?.id === props.task.id) {
+        if(state.selectedTask?.id === props.task.id) {
             taskElementRef.current?.classList.add(stateClasses.active)
         }
         else {
@@ -163,7 +164,7 @@ function TaskComponent(props: TaskProps) {
                 taskElementRef.current?.classList.remove(stateClasses.active)
             }
         }
-    }, [taskManagerContext.state.selectedTask?.id])
+    }, [state.selectedTask?.id])
 
     useOnClickOutside(contextMenuRef, () => {
         if(contextMenuRef.current) {
@@ -173,7 +174,7 @@ function TaskComponent(props: TaskProps) {
 
     return(
         <li className="task" ref={taskElementRef} 
-            onClick={() => taskManagerContext.actions.setSelectedTask(props.task.id)}
+            onClick={() => actions.setSelectedTask(props.task.id)}
             onContextMenu={(e) => {
                 e.preventDefault()
                 showContextMenu(e)
@@ -182,7 +183,7 @@ function TaskComponent(props: TaskProps) {
                 <input type="checkbox" className={classTaskCheckbox}
                     onChange={() => toggleCompleted()} 
                     ref={checkboxElementRef}/>
-                <h3 className="task__title h5">{props.task.id == taskManagerContext.state.selectedTask?.id ? taskManagerContext.state.tempTaskTitle : props.task.title}</h3>
+                <h3 className="task__title h5">{props.task.id == state.selectedTask?.id ? state.tempTaskTitle : props.task.title}</h3>
             </div>
             <div className="task__extra">
                 <p className={classTaskDate}>{dateMessage}</p>
@@ -231,11 +232,11 @@ function TaskComponent(props: TaskProps) {
                         <p>Перенести на след. неделю</p>
                     </li>
                     <div className="context-menu__border"></div>
-                    {taskManagerContext.state.currentList?.id == SYSTEM_LIST_IDS.BASKET?
-                    <li className="context-menu__item context-menu__item--accent" onClick={() => taskManagerContext.actions.taskRecovery(props.task.id)}>
+                    {state.currentList?.id == SYSTEM_LIST_IDS.BASKET?
+                    <li className="context-menu__item context-menu__item--accent" onClick={() => actions.taskRecovery(props.task.id)}>
                         <p>Восстановить</p>
                     </li>:
-                    <li className="context-menu__item context-menu__item--red" onClick={() => {taskManagerContext.actions.deleteTask(props.task.id)}}>
+                    <li className="context-menu__item context-menu__item--red" onClick={() => {actions.deleteTask(props.task.id)}}>
                         <p>Удалить</p>
                     </li>
                     }

@@ -1,13 +1,39 @@
 import { memo, useContext, useEffect, useRef, useState } from "react";import { SYSTEM_LIST_IDS } from "../constants/systemListIds";import type { List } from "../interfaces";
-import { TaskManagerContext } from "../App";
+import { StateContext, ActionsContext } from "../App";
 import { EditListForm } from "./edit-list-form";
 import { useOnClickOutside } from "../hooks";
 
 
 type SideBarButtonProps = { list: List };
 
+const stateClassesIcon = {
+    DEFAULT: "icon--circle-default",
+    LINES: "icon--lines",
+    SHEET: "icon--sheet",
+    FOLDER: "icon--folder",
+    INBOX: "icon--inbox",
+    ALL: "icon--all",
+    COMPLETED: "icon--completed",
+    BASKET: "icon--basket",
+}
+
+const stateClassesColor = {
+    LIGHT: "color-indicator--light",
+    RED: "color-indicator--red",
+    VIOLET: "color-indicator--violet",
+    GREEN: "color-indicator--green",
+    BLUE: "color-indicator--blue",
+    YELLOW: "color-indicator--yellow",
+    NONE: "",
+}
+
+const stateClasses = {
+    activeOptions: 'context-menu--active',
+}
+
 function SideBarButton(props: SideBarButtonProps) {
-	const taskManagerContext = useContext(TaskManagerContext);
+	const state = useContext(StateContext);
+	const actions = useContext(ActionsContext);
 	const activeRef = useRef<HTMLButtonElement>(null);
     const contextMenuRef = useRef<HTMLDivElement>(null)
     const [icon, setIcon] = useState<string>()
@@ -15,32 +41,7 @@ function SideBarButton(props: SideBarButtonProps) {
     const [activeEditForm, setActiveEditForm] = useState<boolean>(false)
     const [content, setContent] = useState('');
 
-    const stateClassesIcon = {
-        DEFAULT: "icon--circle-default",
-        LINES: "icon--lines",
-        SHEET: "icon--sheet",
-        FOLDER: "icon--folder",
-        INBOX: "icon--inbox",
-        ALL: "icon--all",
-        COMPLETED: "icon--completed",
-        BASKET: "icon--basket",
-    }
-
-    const stateClassesColor = {
-        LIGHT: "color-indicator--light",
-        RED: "color-indicator--red",
-        VIOLET: "color-indicator--violet",
-        GREEN: "color-indicator--green",
-        BLUE: "color-indicator--blue",
-        YELLOW: "color-indicator--yellow",
-        NONE: "",
-    }
-
-    const stateClasses = {
-        activeOptions: 'context-menu--active',
-    }
-
-    if(taskManagerContext == undefined) {
+    if(state == undefined || actions == undefined) {
         return
     }
 
@@ -116,12 +117,12 @@ function SideBarButton(props: SideBarButtonProps) {
 	};
 
 	useEffect(() => {
-		if (taskManagerContext.state.currentList?.id == props.list.id) {
+		if (state.currentList?.id == props.list.id) {
 			setActiveButton(true);
 		} else {
 			setActiveButton(false);
 		}
-	}, [taskManagerContext.state.currentList]);
+	}, [state.currentList]);
 
     useEffect(() => {
         InitializationButtonIcon()
@@ -142,8 +143,8 @@ function SideBarButton(props: SideBarButtonProps) {
             <li 
                 className="side-bar__item" 
                 onClick={() => {
-                        if(props.list.id !== taskManagerContext.state.currentList?.id) {
-                            taskManagerContext.actions.switchList(props.list.id)
+                        if(props.list.id !== state.currentList?.id) {
+                            actions.switchList(props.list.id)
                             setActiveButton(true)
                         }
                     }}>
@@ -160,8 +161,8 @@ function SideBarButton(props: SideBarButtonProps) {
                     className="side-bar__item">
                     <button className={`side-bar__button button icon ${icon}`} ref={activeRef}
                         onClick={() => {
-                            if(props.list.id !== taskManagerContext.state.currentList?.id) {
-                                taskManagerContext.actions.switchList(props.list.id)
+                            if(props.list.id !== state.currentList?.id) {
+                                actions.switchList(props.list.id)
                                 setActiveButton(true)
                             }
                         }}>
@@ -180,10 +181,10 @@ function SideBarButton(props: SideBarButtonProps) {
                                 <p>Редактировать</p>
                             </li>
                             <li className="context-menu__item context-menu__item--red" onClick={() => {
-                                taskManagerContext.actions.deleteList(props.list.id)
+                                actions.deleteList(props.list.id)
                                 toggleContexMenuActive()
                                 //switch all
-                                taskManagerContext.actions.switchList(SYSTEM_LIST_IDS.ALL)
+                                actions.switchList(SYSTEM_LIST_IDS.ALL)
                                 }}>
                                 <p>Удалить</p>
                             </li>

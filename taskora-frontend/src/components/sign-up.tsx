@@ -3,16 +3,16 @@ import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { SERVER_ADDRES } from '../api';
 import '../styles/main.scss'
-import { TaskManagerContext } from '../App';
+import { StateContext } from '../App';
 
 function SignUp() {
 	const navigate = useNavigate();
 	const [username, setUsername] = useState<string>('');
 	const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
-	const taskManagerContext = useContext(TaskManagerContext)
+	const state = useContext(StateContext)
 
-	if(taskManagerContext?.state.logIn == true) {
+	if(state?.logIn == true) {
 		navigate('main', {replace: true})
 	}
 

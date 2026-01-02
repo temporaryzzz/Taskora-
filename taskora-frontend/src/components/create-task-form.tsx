@@ -1,5 +1,4 @@
-import { useContext, useEffect, useRef, useState, type Dispatch, type FormEvent, type SetStateAction } from "react";
-import { TaskManagerContext } from "../App";
+import { memo, useEffect, useRef, useState, type FormEvent } from "react";
 import type { CreateTaskDTO} from "../interfaces";
 import { useOnClickOutside } from "../hooks";
 import { Calendar } from "./calendar";
@@ -7,15 +6,21 @@ import { Calendar } from "./calendar";
 type CreateTaskFormProps = {
     section: string
     showForm: boolean
-    setShowForm?: Dispatch<SetStateAction<boolean>>
+    currentListId: number
+    setShowForm?: (value: boolean) => void
+    onCreateTask: (task: CreateTaskDTO) => void
 }
 
-export function CreateTaskForm(props: CreateTaskFormProps) {
-    const taskManagerContext = useContext(TaskManagerContext)
+const stateClasses = {
+    hidden: 'visually-hidden',
+    activeOptions: 'context-menu--active',
+    activeOptionsItem: 'context-menu__item--active',
+    activeButton: 'task-list__section-button--active',
+    activeOptionsButton: 'button--options-active',
+    activeDateButton: 'button--date-active',
+}
 
-    if(taskManagerContext == undefined || taskManagerContext.state.currentList == undefined) {
-        return
-    }
+function CreateTaskForm(props: CreateTaskFormProps) {
 
     const inputAddTaskRef = useRef<HTMLInputElement>(null)
     const optionsRef = useRef<HTMLDivElement>(null)
@@ -23,16 +28,8 @@ export function CreateTaskForm(props: CreateTaskFormProps) {
     const calendarButtonRef = useRef<HTMLSpanElement>(null)
     const optionsButtonRef = useRef<HTMLSpanElement>(null)
     const formAddTaskRef = useRef<HTMLFormElement>(null)
-    const [taskBeingCreated, setTaskBeingCreated] = useState<CreateTaskDTO>({ownerListId: taskManagerContext.state.currentList.id, title: '', description: '', 
+    const [taskBeingCreated, setTaskBeingCreated] = useState<CreateTaskDTO>({ownerListId: props.currentListId, title: '', description: '', 
         priority: 'DEFAULT', section: props.section, deadline: null})
-    const stateClasses = {
-        hidden: 'visually-hidden',
-        activeOptions: 'context-menu--active',
-        activeOptionsItem: 'context-menu__item--active',
-        activeButton: 'task-list__section-button--active',
-        activeOptionsButton: 'button--options-active',
-        activeDateButton: 'button--date-active',
-    }
 
     const InizializationClassButtons = () => {
         if(taskBeingCreated.priority !== 'DEFAULT') {
@@ -74,21 +71,17 @@ export function CreateTaskForm(props: CreateTaskFormProps) {
     const handleCreateTask = (event: FormEvent) => {
         event.preventDefault()
         if(/\S/.test(taskBeingCreated.title)) {
-            taskManagerContext.actions.createTask(taskBeingCreated)
+            props.onCreateTask(taskBeingCreated)
             console.log(taskBeingCreated)
         }
         clear()
     }
 
     const clear = () => {
-        if(taskManagerContext.state.currentList) {
-            setTaskBeingCreated({ownerListId: taskManagerContext.state.currentList.id, title: '', description: '', 
-            priority: 'DEFAULT', section: props.section, deadline: null})
-        }
+        setTaskBeingCreated({ownerListId: props.currentListId, title: '', description: '', 
+        priority: 'DEFAULT', section: props.section, deadline: null})
         if(formAddTaskRef.current && inputAddTaskRef.current && optionsRef.current) {
-            if(props.setShowForm !== undefined) {
-                formAddTaskRef.current.classList.add(stateClasses.hidden)
-            }
+            formAddTaskRef.current.classList.add(stateClasses.hidden)
             optionsRef.current.classList.remove(stateClasses.activeOptions)
             inputAddTaskRef.current.blur()
             inputAddTaskRef.current.value = '' 
@@ -183,3 +176,5 @@ export function CreateTaskForm(props: CreateTaskFormProps) {
         </form>
     )
 }
+
+export default memo(CreateTaskForm);

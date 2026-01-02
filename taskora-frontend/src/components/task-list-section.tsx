@@ -1,38 +1,40 @@
-import { useContext, useEffect, useState } from "react";
-import { TaskManagerContext } from "../App";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { StateContext, ActionsContext } from "../App";
 import TaskComponent from "./task";
-import type { Task } from "../interfaces";
-import { CreateTaskForm } from "./create-task-form";
+import CreateTaskForm from "./create-task-form";
 type TaskListSectionProps = {
     section: string,
 };
 
 export function TaskListSection(props: TaskListSectionProps) {
-    const taskManagerContext = useContext(TaskManagerContext)
-    if(taskManagerContext == undefined || taskManagerContext.state.currentList == undefined) {
+    const state = useContext(StateContext)
+    const actions = useContext(ActionsContext)
+    if(state == undefined || state.currentList == undefined || actions == undefined) {
         return
     }
     
     const [sectionTitle, setSectionTitle] = useState<string>(props.section)
-    const [completedTasks, setCompletedTasks] = useState<Task[]>(taskManagerContext.state.tasks.filter((task) => task.completed == true && task.section == sectionTitle))
-    const [activeTasks, setActiveTasks] = useState<Task[]>(taskManagerContext.state.tasks.filter((task) => task.completed == false && task.section == sectionTitle))
+    const activeTasks = useMemo(() => state.tasks.filter((task) => task.completed == false && task.section == sectionTitle), [state.tasks, sectionTitle])
+    const completedTasks = useMemo(() => state.tasks.filter((task) => task.completed == true && task.section == sectionTitle), [state.tasks, sectionTitle])
     const [showCreateTaskForm, setShowCreateTaskForm] = useState<boolean>(false)
 
     //Надо будет отправлять запрос на обновление section у задач этой секции
     const handleBlur = () => {
-        if(taskManagerContext?.state.currentList && props.section !== sectionTitle) {
-            const list = taskManagerContext.state.currentList
-            const updatedSections = list.sections?.map(section => section === props.section ? section = sectionTitle : section);
-            taskManagerContext.actions.updateList(list.id, 
+        if(state?.currentList && props.section !== sectionTitle) {
+            const list = state.currentList
+            const updatedSections = list.sections?.map((section: string) => section === props.section ? section = sectionTitle : section);
+            actions.updateList(list.id, 
                 {title: list.title, icon: list.icon, color: list.color, sections: updatedSections, viewType: list.viewType})
         }
     }
 
+    const setShowForm = useCallback((value: boolean) => {
+        setShowCreateTaskForm(value)
+    }, [])
+
     useEffect(() => {
         setSectionTitle(props.section)
-        setCompletedTasks(taskManagerContext.state.tasks.filter((task) => task.completed == true && task.section == sectionTitle))
-        setActiveTasks(taskManagerContext.state.tasks.filter((task) => task.completed == false && task.section == sectionTitle))
-    }, [props])
+    }, [props.section])
 
     return(
         <section className="task-list__section">
@@ -47,7 +49,7 @@ export function TaskListSection(props: TaskListSectionProps) {
                         <span className="three-dots-menu three-dots-menu--active"></span>
                     </div>
                 </span>
-                <CreateTaskForm section={sectionTitle} showForm={showCreateTaskForm} setShowForm={setShowCreateTaskForm}/>
+                <CreateTaskForm section={sectionTitle} showForm={showCreateTaskForm} setShowForm={setShowForm} currentListId={state.currentList.id} onCreateTask={actions.createTask}/>
             </div>
             <div className="task-list__section-body">
                 <ul className="task-list__section-active-tasks">
