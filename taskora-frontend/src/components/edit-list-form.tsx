@@ -17,7 +17,7 @@ export function EditListForm(props: EditListFormnProps) {
     const actions = useContext(ActionsContext)
     const [title, setTitle] = useState<string>(props.list.title)
     const [color, setColor] = useState<'LIGHT' | 'RED' | 'BLUE' | 'YELLOW' | 'VIOLET' | 'GREEN' | 'NONE'>(props.list.color)
-    const [icon, setIcon] = useState<'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET' | 'FOLDER'>(props.list.icon)
+    const [icon, setIcon] = useState<'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET' | 'FOLDER' | 'CASE'>(props.list.icon)
     const createFormRef = useRef<HTMLDivElement>(null)
 
     if(state  == undefined || actions == undefined) {
@@ -47,8 +47,8 @@ export function EditListForm(props: EditListFormnProps) {
     };
 
     const handleIconChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value as 'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET' | 'FOLDER';
-        if (['DEFAULT', 'INBOX', 'ALL', 'TODAY', 'COMPLETED', 'BASKET', 'LINES', 'SHEET', 'FOLDER'].includes(value)) {
+        const value = e.target.value as 'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET' | 'FOLDER' | 'CASE';
+        if (['DEFAULT', 'INBOX', 'ALL', 'TODAY', 'COMPLETED', 'BASKET', 'LINES', 'SHEET', 'FOLDER', 'CASE'].includes(value)) {
             setIcon(value);
             e.target.checked = true
         }
@@ -131,21 +131,29 @@ export function EditListForm(props: EditListFormnProps) {
                 <div className="edit-form__select">
                     <label className="edit-form__select-title" aria-label="List icon">List icon</label>
                     <ul className="edit-form__select-items" aria-labelledby="List icon">
-                        <li className="edit-form__select-item edit-form__select-item--icon-default">
+                        <li className="edit-form__select-item edit-form__select-item--icon-circle">
                             <input type="radio" className="edit-form__select-radio" name={`icon-${props.list.id}`} id={`default-icon-${props.list.id}`} value="DEFAULT" onChange={(event) => {handleIconChange(event)}}/>
-                            <label htmlFor={`default-icon-${props.list.id}`}></label>
+                            <label htmlFor={`default-icon-${props.list.id}`} className="icon icon--circle-default"></label>
                         </li>
-                        <li className="edit-form__select-item edit-form__select-item--icon-lines">
+                        <li className="edit-form__select-item edit-form__select-item--icon">
                             <input type="radio" className="edit-form__select-radio" name={`icon-${props.list.id}`} id={`lines-${props.list.id}`} value="LINES" onChange={(event) => {handleIconChange(event)}}/>
-                            <label htmlFor={`lines-${props.list.id}`}></label>
+                            <label htmlFor={`lines-${props.list.id}`} className="icon icon--lines"></label>
                         </li>
-                        <li className="edit-form__select-item edit-form__select-item--icon-sheet">
+                        <li className="edit-form__select-item edit-form__select-item--icon">
                             <input type="radio" className="edit-form__select-radio" name={`icon-${props.list.id}`} id={`sheet-${props.list.id}`} value="SHEET" onChange={(event) => {handleIconChange(event)}}/>
-                            <label htmlFor={`sheet-${props.list.id}`}></label>
+                            <label htmlFor={`sheet-${props.list.id}`} className="icon icon--sheet"></label>
                         </li>
-                        <li className="edit-form__select-item edit-form__select-item--icon-folder">
+                        <li className="edit-form__select-item edit-form__select-item--icon">
                             <input type="radio" className="edit-form__select-radio" name={`icon-${props.list.id}`} id={`folder-${props.list.id}`} value="FOLDER" onChange={(event) => {handleIconChange(event)}}/>
-                            <label htmlFor={`folder-${props.list.id}`}></label>
+                            <label htmlFor={`folder-${props.list.id}`} className="icon icon--folder"></label>
+                        </li>
+                        <li className="edit-form__select-item edit-form__select-item--icon">
+                            <input type="radio" className="edit-form__select-radio" name={`icon-${props.list.id}`} id={`inbox-${props.list.id}`} value="INBOX" onChange={(event) => {handleIconChange(event)}}/>
+                            <label htmlFor={`inbox-${props.list.id}`} className="icon icon--inbox"></label>
+                        </li>
+                        <li className="edit-form__select-item edit-form__select-item--icon">
+                            <input type="radio" className="edit-form__select-radio" name={`icon-${props.list.id}`} id={`case-${props.list.id}`} value="CASE" onChange={(event) => {handleIconChange(event)}}/>
+                            <label htmlFor={`case-${props.list.id}`} className="icon icon--case"></label>
                         </li>
                     </ul>
                 </div>

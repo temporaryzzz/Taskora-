@@ -15,6 +15,7 @@ const stateClassesIcon = {
     ALL: "icon--all",
     COMPLETED: "icon--completed",
     BASKET: "icon--basket",
+    CASE: "icon--case",
 }
 
 const stateClassesColor = {
@@ -45,6 +46,7 @@ function SideBarButton(props: SideBarButtonProps) {
         return
     }
 
+    //Не мемеоизируем т.к. это не ресурсно затратная операции
     const InitializationButtonIcon = () => {
         switch (props.list.icon) {
             case 'DEFAULT':
@@ -61,6 +63,9 @@ function SideBarButton(props: SideBarButtonProps) {
                 break;
             case 'INBOX':
                 setIcon(stateClassesIcon.INBOX)
+                break;
+            case 'CASE':
+                setIcon(stateClassesIcon.CASE)
                 break;
             case 'TODAY':
                 setIcon(stateClassesIcon.DEFAULT)

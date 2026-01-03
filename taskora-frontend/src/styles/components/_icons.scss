@@ -90,6 +90,15 @@
         }
     }
 
+    &--case {
+
+        &::before {
+            --size: #{fluid(20, 16)};
+
+            background-image: url('../../assets/icons/list-case-icon.svg');
+        }
+    }
+
     &--profile {
 
         &::before {

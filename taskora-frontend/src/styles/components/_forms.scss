@@ -175,27 +175,7 @@
                 --color: var(--color-red);
             }
 
-            &--icon-default {
-                --color: var(--main-accent);
-
-                [type="radio"] + label{
-
-                    &::before {
-                        --size: #{rem(20)};
-
-                        @include square(var(--size));
-
-                        flex-shrink: 0;
-                        background-position: center;
-                        background-size: contain;
-                        background-repeat: no-repeat;
-                        background-image: url('../../assets/icons/circle-default-icon.svg');
-                        background-color: transparent;
-                    }
-                }
-            }
-
-            &--icon-lines {
+            &--icon {
                 --color: var(--main-accent);
 
                 [type="radio"] + label{
@@ -209,47 +189,25 @@
                         background-position: center;
                         background-size: contain;
                         background-repeat: no-repeat;
-                        background-image: url('../../assets/icons/list-line-icon.svg');
                         background-color: transparent;
                     }
                 }
             }
 
-            &--icon-sheet {
+            &--icon-circle {
                 --color: var(--main-accent);
 
                 [type="radio"] + label{
+
                     &::before {
                         --size: #{rem(20)};
 
                         @include square(var(--size));
 
                         flex-shrink: 0;
-                        border-radius: rem(2);
                         background-position: center;
                         background-size: contain;
                         background-repeat: no-repeat;
-                        background-image: url('../../assets/icons/list-sheet-icon.svg');
-                        background-color: transparent;
-                    }
-                }
-            }
-
-            &--icon-folder {
-                --color: var(--main-accent);
-
-                [type="radio"] + label{
-                    &::before {
-                        --size: #{rem(20)};
-
-                        @include square(var(--size));
-
-                        flex-shrink: 0;
-                        border-radius: rem(2);
-                        background-position: center;
-                        background-size: contain;
-                        background-repeat: no-repeat;
-                        background-image: url('../../assets/icons/list-folder-icon.svg');
                         background-color: transparent;
                     }
                 }
