@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import { SYSTEM_LIST_IDS } from "../constants/systemListIds";
+import { SYSTEM_LIST_IDS } from "../constants";
 import { CreateListForm } from './create-list-form'
 import SideBarButton from "./side-bar-button";
 import type { List } from "../interfaces";

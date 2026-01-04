@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef, useState, type SetStateAction } from "react";
 import { StateContext, ActionsContext } from "../App";
 import type { UpdateListDTO, List } from "../interfaces";
+import { LIST_COLORS, LIST_ICONS } from "../constants";
 
 type EditListFormnProps = { 
     list: List,
@@ -16,8 +17,8 @@ export function EditListForm(props: EditListFormnProps) {
     const state = useContext(StateContext)
     const actions = useContext(ActionsContext)
     const [title, setTitle] = useState<string>(props.list.title)
-    const [color, setColor] = useState<'LIGHT' | 'RED' | 'BLUE' | 'YELLOW' | 'VIOLET' | 'GREEN' | 'NONE'>(props.list.color)
-    const [icon, setIcon] = useState<'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET' | 'FOLDER' | 'CASE'>(props.list.icon)
+    const [color, setColor] = useState<typeof LIST_COLORS[number]>(props.list.color)
+    const [icon, setIcon] = useState<typeof LIST_ICONS[number]>(props.list.icon)
     const createFormRef = useRef<HTMLDivElement>(null)
 
     if(state  == undefined || actions == undefined) {
@@ -39,16 +40,16 @@ export function EditListForm(props: EditListFormnProps) {
     }
 
     const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value as 'LIGHT' | 'RED' | 'BLUE' | 'YELLOW' | 'VIOLET' | 'GREEN' | 'NONE';
-        if (["LIGHT", "RED", "BLUE", "YELLOW", "VIOLET", "GREEN", "NONE"].includes(value)) {
+        const value = e.target.value as typeof LIST_COLORS[number];
+        if (LIST_COLORS.includes(value)) {
             setColor(value);
             e.target.checked = true
         }
     };
 
     const handleIconChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value as 'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET' | 'FOLDER' | 'CASE';
-        if (['DEFAULT', 'INBOX', 'ALL', 'TODAY', 'COMPLETED', 'BASKET', 'LINES', 'SHEET', 'FOLDER', 'CASE'].includes(value)) {
+        const value = e.target.value as typeof LIST_ICONS[number];
+        if (LIST_ICONS.includes(value)) {
             setIcon(value);
             e.target.checked = true
         }

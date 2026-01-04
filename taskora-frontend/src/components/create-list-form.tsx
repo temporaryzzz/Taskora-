@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef, useState, type SetStateAction } from "react";
 import { StateContext, ActionsContext } from "../App";
 import type { CreateListDTO } from "../interfaces";
+import { LIST_COLORS, LIST_ICONS } from "../constants";
 
 type CreateListFormnProps = { 
     activeCreateForm: boolean,
@@ -15,8 +16,8 @@ export function CreateListForm(props: CreateListFormnProps) {
     const state = useContext(StateContext)
     const actions = useContext(ActionsContext)
     const [title, setTitle] = useState<string>('')
-    const [color, setColor] = useState<'LIGHT' | 'RED' | 'BLUE' | 'YELLOW' | 'VIOLET' | 'GREEN' | 'NONE'>('NONE')
-    const [icon, setIcon] = useState<'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET' | 'FOLDER' | 'CASE'>('DEFAULT')
+    const [color, setColor] = useState<typeof LIST_COLORS[number]>('NONE')
+    const [icon, setIcon] = useState<typeof LIST_ICONS[number]>('DEFAULT')
     const [viewType, setViewType] = useState<'LIST' | 'KANBAN'>('KANBAN')
     const createFormRef = useRef<HTMLDivElement>(null)
 
@@ -39,16 +40,16 @@ export function CreateListForm(props: CreateListFormnProps) {
     }
 
     const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value as 'LIGHT' | 'RED' | 'BLUE' | 'YELLOW' | 'VIOLET' | 'GREEN' | 'NONE';
-        if (["LIGHT", "RED", "BLUE", "YELLOW", "VIOLET", "GREEN", "NONE"].includes(value)) {
+        const value = e.target.value as typeof LIST_COLORS[number];
+        if (LIST_COLORS.includes(value)) {
             setColor(value);
             e.target.checked = true
         }
     };
 
     const handleIconChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value as 'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET' | 'FOLDER' | 'CASE';
-        if (['DEFAULT', 'INBOX', 'ALL', 'TODAY', 'COMPLETED', 'BASKET', 'LINES', 'SHEET', 'FOLDER', 'CASE'].includes(value)) {
+        const value = e.target.value as typeof LIST_ICONS[number];
+        if (LIST_ICONS.includes(value)) {
             setIcon(value);
             e.target.checked = true
         }

@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect, useRef, useState } from "react";import { SYSTEM_LIST_IDS } from "../constants/systemListIds";import type { List } from "../interfaces";
+import { memo, useContext, useEffect, useRef, useState } from "react";import { SYSTEM_LIST_IDS } from "../constants";import type { List } from "../interfaces";
 import { StateContext, ActionsContext } from "../App";
 import { EditListForm } from "./edit-list-form";
 import { useOnClickOutside } from "../hooks";

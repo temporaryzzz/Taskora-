@@ -1,4 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
+import type { LIST_COLORS, LIST_ICONS } from "./constants";
 
 export interface User {
     username: string;
@@ -10,8 +11,8 @@ export interface List {
     title: string;
     sections: string[];
     viewType: 'KANBAN' | 'LIST';
-    icon: 'DEFAULT' | 'INBOX' | 'ALL' | 'TODAY' | 'COMPLETED' | 'BASKET' | 'LINES' | 'SHEET' | 'FOLDER' | 'CASE';
-    color: 'LIGHT' | 'RED' | 'BLUE' | 'YELLOW' | 'VIOLET' | 'GREEN' | 'NONE';
+    icon: typeof LIST_ICONS[number];
+    color: typeof LIST_COLORS[number];
 }
 
 export interface Task {

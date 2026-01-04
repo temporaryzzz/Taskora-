@@ -1,5 +1,5 @@
 import type { UpdateTaskDTO, UpdateListDTO, Task, List, CreateListDTO, CreateTaskDTO, User } from "./interfaces";
-import { SYSTEM_LIST_IDS } from "./constants/systemListIds";
+import { SYSTEM_LIST_IDS } from "./constants";
 
 export const SERVER_ADDRES = '/api';
 const SERVER_ADDRES__TASKS = '/api/tasks/';
