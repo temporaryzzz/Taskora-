@@ -47,6 +47,8 @@
         font-weight: 400;
         font-family: var(--font-famaly-accent);
         font-size: rem(14);
+        text-overflow: ellipsis;
+        overflow: hidden;
         color: inherit;
     }
 
@@ -56,6 +58,7 @@
         @include square(var(--size));
 
         display: flex;
+        flex-shrink: 0;
         border-radius: 3px;
         border: rem(2) solid var(--color-dark-40);
         appearance: none;

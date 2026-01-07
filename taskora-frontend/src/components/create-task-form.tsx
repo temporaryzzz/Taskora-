@@ -80,32 +80,37 @@ function CreateTaskForm(props: CreateTaskFormProps) {
     const clear = () => {
         setTaskBeingCreated({ownerListId: props.currentListId, title: '', description: '', 
         priority: 'DEFAULT', section: props.section, deadline: null})
-        if(formAddTaskRef.current && inputAddTaskRef.current && optionsRef.current) {
-            formAddTaskRef.current.classList.add(stateClasses.hidden)
-            optionsRef.current.classList.remove(stateClasses.activeOptions)
-            inputAddTaskRef.current.blur()
+        if(props.setShowForm !== undefined) {
+            props.setShowForm(false)
+        }
+        //Потом переделать через функцию/состояние
+        if(inputAddTaskRef.current) {
             inputAddTaskRef.current.value = '' 
+            inputAddTaskRef.current?.blur();
+            optionsRef.current?.classList.remove(stateClasses.activeOptions)
         }
     }
 
-    const showAddTaskForm = () => {
+    const toggleAddTaskForm = () => {
         if(formAddTaskRef.current && props.showForm == true) {
             formAddTaskRef.current.classList.remove(stateClasses.hidden)
             inputAddTaskRef.current?.focus()
+        }
+        else if(formAddTaskRef.current && props.showForm == false) {
+            formAddTaskRef.current.classList.add(stateClasses.hidden);
+            inputAddTaskRef.current?.blur();
+            optionsRef.current?.classList.remove(stateClasses.activeOptions)
         }
     }
 
     useOnClickOutside(formAddTaskRef, () => {
         if (formAddTaskRef.current && props.setShowForm !== undefined) {
-            formAddTaskRef.current.classList.add(stateClasses.hidden);
-            inputAddTaskRef.current?.blur();
-            optionsRef.current?.classList.remove(stateClasses.activeOptions)
             props.setShowForm(false)
         }
     })
 
     useEffect(() => {
-        showAddTaskForm()
+        toggleAddTaskForm()
     }, [props.showForm])
 
     useEffect(() => {

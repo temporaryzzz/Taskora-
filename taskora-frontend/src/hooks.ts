@@ -32,7 +32,8 @@ type ApiCallOptions = {
   setLogIn: Dispatch<SetStateAction<boolean>>;
 };
 
-export const withAuthHandling = async <T>(apiFn: () => Promise<T>, onSuccess: (data: T) => void, { navigate, setError, setLogIn }: ApiCallOptions) => {
+export const withAuthHandling = async <T>(apiFn: () => Promise<T>, onSuccess: (data: T) => void, 
+{ navigate, setError, setLogIn }: ApiCallOptions) => {
   try {
     const data = await apiFn();
     onSuccess(data);
