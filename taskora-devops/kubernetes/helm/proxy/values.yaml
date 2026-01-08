@@ -1,0 +1,95 @@
+replicaCount: 2
+
+image:
+  repository: nginx
+  tag: stable
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+frontend:
+  serviceName: frontend
+  port: 3000
+
+backend:
+  serviceName: backend
+  port: 8080
+
+nginx:
+  config: |
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://{{ .Values.frontend.serviceName }}:{{ .Values.frontend.port }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location /api/ {
+            proxy_pass http://{{ .Values.backend.serviceName }}:{{ .Values.backend.port }};
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            add_header Access-Control-Allow-Origin $http_origin always;
+            add_header Access-Control-Allow-Credentials true always;
+            add_header Access-Control-Allow-Methods "GET,POST,PUT,DELETE,OPTIONS,PATCH" always;
+            add_header Access-Control-Allow-Headers "Content-Type,Authorization" always;
+
+            if ($request_method = OPTIONS) {
+                return 204;
+            }
+        }
+    }
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+volumeMounts:
+  - name: nginx-config
+    mountPath: /etc/nginx/conf.d
+
+volumes:
+  - name: nginx-config
+    configMap:
+      name: proxy-nginx
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: proxy.example.com
+      paths:
+        - path: /(.*)
+          pathType: ImplementationSpecific
+  tls: []
+
+serviceAccount:
+  create: true
+  name: ""
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
