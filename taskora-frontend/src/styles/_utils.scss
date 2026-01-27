@@ -28,3 +28,9 @@
       display: flex;
   }
 }
+
+.border-line {
+  width: 100%;
+  height: rem(1);
+  background-color: var(--color-dark-20);
+}

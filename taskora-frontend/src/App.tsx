@@ -192,7 +192,8 @@ function App() {
       setLogIn,
     };
     return actions;
-  }, [setUser, setSelectedTask, setTempTaskTitle, updateTask, updateList, switchList, loadLists, createList, createTask, deleteList, deleteTask, taskRecovery, setLogIn]);
+  }, [setUser, setSelectedTask, setTempTaskTitle, updateTask, updateList, 
+    switchList, loadLists, createList, createTask, deleteList, deleteTask, taskRecovery, setLogIn]);
 
   return(
       <StateContext.Provider value={stateValue}>

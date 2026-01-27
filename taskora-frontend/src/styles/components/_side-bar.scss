@@ -7,8 +7,8 @@
     width: fit-content;
     color: var(--color-light);
     font-size: rem(16);
-    row-gap: rem(5);
-    height: 100%;
+    border-top-right-radius: rem(20);
+    border-bottom-right-radius: rem(20);
     transition-duration: var(--transition-duration);
 
     @include mobile {
@@ -23,8 +23,14 @@
         padding-right: rem(10);
         padding-block: rem(10);
         padding-left: rem(5);
-        border-bottom-right-radius: rem(20);
-        border-top-right-radius: rem(20);
+
+        &:first-child {
+            border-top-right-radius: rem(20);
+        }
+
+        &:last-child {
+            border-bottom-right-radius: rem(20);
+        }
 
         &--max-hieght {
             flex-grow: 1;

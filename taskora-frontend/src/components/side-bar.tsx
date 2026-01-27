@@ -23,6 +23,7 @@ function SideBar(props: SideBarProps) {
                     </li>
                 </ul>
             </div>
+            <div className="border-line"></div>
             <div className="side-bar__wrapper side-bar__wrapper--max-hieght">
                 <button className="side-bar__button  side-bar__button--title button" onClick={() => setActiveCreateForm(true)}>Task-lists</button>
                 <CreateListForm activeCreateForm={activeCreateForm} setActiveCreateForm={setActiveCreateForm}/>
@@ -34,6 +35,7 @@ function SideBar(props: SideBarProps) {
                     })}
                 </ul>
             </div>
+            <div className="border-line"></div>
             <div className="side-bar__wrapper">
                 <ul className="side-bar__list" id="system-lists">
                     {props.lists.map((list) => {

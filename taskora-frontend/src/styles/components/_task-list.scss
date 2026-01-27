@@ -42,7 +42,6 @@
         overflow: scroll;
         overflow-y: scroll;
         overflow-x: hidden;
-        border-right: rem(1) solid var(--color-dark-25);
 
         &::-webkit-scrollbar {
             width: rem(8);
