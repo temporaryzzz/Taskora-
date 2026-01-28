@@ -12,6 +12,8 @@
 
         display: flex;
         color: var(--main-accent);
+        font-size: rem(12);
+        font-weight: 600;
         content: attr(data-content);
         justify-content: center;
         align-items: center;

@@ -58,7 +58,7 @@ function TaskList(props: TaskListProps) {
         }
         return(
             <div className={state.selectedTask == null ? "task-list task-list--list-view right-border" : "task-list task-list--list-view"}>
-                <CreateTaskForm section="Main Section" showForm={true} currentListId={props.currentList.id} onCreateTask={actions.createTask}/>
+                <CreateTaskForm section="Main Section" showForm={true} currentListId={props.currentList.id} viewType={props.currentList.viewType} onCreateTask={actions.createTask}/>
                 <ul className="task-list__tasks task-list__tasks--active">
                     {activeTasks.map((taskItem) => {
                         return <TaskComponent task={taskItem} key={taskItem.id}/>

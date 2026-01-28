@@ -16,6 +16,7 @@ const stateClassesIcon = {
     COMPLETED: "icon--completed",
     BASKET: "icon--basket",
     CASE: "icon--case",
+    TODAY: "icon--today",
 }
 
 const stateClassesColor = {
@@ -68,7 +69,7 @@ function SideBarButton(props: SideBarButtonProps) {
                 setIcon(stateClassesIcon.CASE)
                 break;
             case 'TODAY':
-                setIcon(stateClassesIcon.DEFAULT)
+                setIcon(stateClassesIcon.TODAY)
                 setContent(String(new Date().getDate()))
                 break;
             case 'ALL':

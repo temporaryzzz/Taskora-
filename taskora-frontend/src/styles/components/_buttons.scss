@@ -10,13 +10,13 @@
     white-space: nowrap;
     color: var(--main-accent);
     background-color: var(--color-light);
-    border-radius: rem(15);
+    border-radius: rem(13);
     border: none;
 
     @include laptop {
         padding: rem(6) rem(34);
         font-size: rem(14);
-        border-radius: rem(15);
+        border-radius: rem(13);
     }
 
     @include hover {

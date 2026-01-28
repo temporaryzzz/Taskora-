@@ -7,6 +7,7 @@ type CreateTaskFormProps = {
     section: string
     showForm: boolean
     currentListId: number
+    viewType: "LIST" | "KANBAN"
     setShowForm?: (value: boolean) => void
     onCreateTask: (task: CreateTaskDTO) => void
 }
@@ -18,6 +19,7 @@ const stateClasses = {
     activeButton: 'task-list__section-button--active',
     activeOptionsButton: 'button--options-active',
     activeDateButton: 'button--date-active',
+    listFormClass: 'task-list__section-title-wrapper--full-width',
 }
 
 function CreateTaskForm(props: CreateTaskFormProps) {
@@ -93,11 +95,15 @@ function CreateTaskForm(props: CreateTaskFormProps) {
 
     const toggleAddTaskForm = () => {
         if(formAddTaskRef.current && props.showForm == true) {
+            if(props.viewType == "LIST") {
+                formAddTaskRef.current.classList.add(stateClasses.listFormClass);
+            }
             formAddTaskRef.current.classList.remove(stateClasses.hidden)
             inputAddTaskRef.current?.focus()
         }
         else if(formAddTaskRef.current && props.showForm == false) {
             formAddTaskRef.current.classList.add(stateClasses.hidden);
+            formAddTaskRef.current.classList.remove(stateClasses.listFormClass);
             inputAddTaskRef.current?.blur();
             optionsRef.current?.classList.remove(stateClasses.activeOptions)
         }
@@ -121,7 +127,7 @@ function CreateTaskForm(props: CreateTaskFormProps) {
         <form 
             ref={formAddTaskRef} 
             onSubmit={(e) => handleCreateTask(e)}
-            className="task-list__section-title-wrapper task-list__section-title-wrapper--full-width visually-hidden">
+            className="task-list__section-title-wrapper visually-hidden">
             <div className="task-list__section-title-wrapper task-list__section-title-wrapper--full-width bordered">
                 <label htmlFor="add-task" className="visually-hidden">
                     Введите название новой задачи

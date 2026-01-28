@@ -49,7 +49,7 @@ export function TaskListSection(props: TaskListSectionProps) {
                         <span className="three-dots-menu three-dots-menu--active"></span>
                     </div>
                 </span>
-                <CreateTaskForm section={sectionTitle} showForm={showCreateTaskForm} setShowForm={setShowForm} currentListId={state.currentList.id} onCreateTask={actions.createTask}/>
+                <CreateTaskForm section={sectionTitle} showForm={showCreateTaskForm} setShowForm={setShowForm} currentListId={state.currentList.id} viewType={state.currentList.viewType} onCreateTask={actions.createTask}/>
             </div>
             <div className="task-list__section-body">
                 <ul className="task-list__section-active-tasks">
