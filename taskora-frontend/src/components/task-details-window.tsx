@@ -13,6 +13,8 @@ const stateClasses = {
     btnMiddle: 'button button--priority-middle',
     btnHigh: 'button button--priority-high',
     btnHighest: 'button button--priority-highest',
+    defDetailsClass: 'task-details',
+    activeDetailsClass: 'task-details task-details--active',
 }
 
 const monthState = [
@@ -39,7 +41,7 @@ export function TaskDetailsWindow() {
 
     const [task, setTask] = useState<Task>()
     const [taskDeadline, setTaskDeadline] = useState<string |null>(null)
-    const taskDetailsRef = useRef<HTMLDivElement>(null)
+    const [taskDetailsClass, setTaskDetailsClass] = useState<string>(stateClasses.defDetailsClass)
     const calendarRef = useRef<HTMLDivElement>(null)
     const taskDetailsTitleRef = useRef<HTMLTextAreaElement>(null)
     const taskDetailsDescriptionRef = useRef<HTMLTextAreaElement>(null)
@@ -101,14 +103,12 @@ export function TaskDetailsWindow() {
     }
 
     const InitializationTask = () => {
-        if(state.selectedTask !== null && taskDetailsRef.current) {
-            taskDetailsRef.current.style.display = 'flex'
+        if(state.selectedTask !== null) {
             setTask(state.selectedTask)
+            setTaskDetailsClass(stateClasses.activeDetailsClass)
         }
         else {
-            if(taskDetailsRef.current) {
-                taskDetailsRef.current.style.display = 'none'
-            }
+            setTaskDetailsClass(stateClasses.defDetailsClass)
         }
     }
 
@@ -196,7 +196,7 @@ export function TaskDetailsWindow() {
     })
 
     return(
-        <div className="task-details" ref={taskDetailsRef}>
+        <div className={taskDetailsClass}>
             <div className="task-details__header">
                 <div className="task-details__button-wrapper">
                     <div className="task-details__calendar visually-hidden" ref={calendarRef}>

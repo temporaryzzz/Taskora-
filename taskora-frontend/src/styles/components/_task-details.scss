@@ -14,10 +14,14 @@
     bottom: rem(-3);
     top: calc(var(--header-hieght) + rem(5));
 
+    &--active {
+        display: flex;
+    }
+
     &__input {
         @include textarea-default;
 
-        width: rem(350);
+        width: rem(500);
         background-color: var(--color-dark);
         border-radius: rem(10);
         color: var(--color-light);
