@@ -143,6 +143,10 @@ export function CreateListForm(props: CreateListFormnProps) {
                             <input type="radio" className="edit-form__select-radio" name="icon" id="case" value="CASE" onChange={(event) => {handleIconChange(event)}}/>
                             <label htmlFor="case" className="icon icon--case"></label>
                         </li>
+                        <li className="edit-form__select-item edit-form__select-item--icon-circle">
+                            <input type="radio" className="edit-form__select-radio" name="icon" id="gear" value="GEAR" onChange={(event) => {handleIconChange(event)}}/>
+                            <label htmlFor="gear" className="icon icon--gear"></label>
+                        </li>
                     </ul>
                 </div>
                 <div className="edit-form__select">

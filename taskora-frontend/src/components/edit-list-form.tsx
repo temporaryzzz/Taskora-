@@ -156,6 +156,10 @@ export function EditListForm(props: EditListFormnProps) {
                             <input type="radio" className="edit-form__select-radio" name={`icon-${props.list.id}`} id={`case-${props.list.id}`} value="CASE" onChange={(event) => {handleIconChange(event)}}/>
                             <label htmlFor={`case-${props.list.id}`} className="icon icon--case"></label>
                         </li>
+                        <li className="edit-form__select-item edit-form__select-item--icon-circle">
+                            <input type="radio" className="edit-form__select-radio" name={`icon-${props.list.id}`} id={`gear-${props.list.id}`} value="GEAR" onChange={(event) => {handleIconChange(event)}}/>
+                            <label htmlFor={`gear-${props.list.id}`} className="icon icon--gear"></label>
+                        </li>
                     </ul>
                 </div>
                 <div className="edit-form__buttons-wrapper">

@@ -146,4 +146,12 @@
 
         }
     }
+    &--gear {
+        &::before {
+            --size: #{fluid(22, 18)};
+
+            background-image: url('../../assets/icons/gear-icon.svg');
+
+        }
+    }
 }

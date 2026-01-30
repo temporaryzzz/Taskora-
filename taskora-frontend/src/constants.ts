@@ -7,7 +7,7 @@ export const SYSTEM_LIST_IDS = {
 
 export const LIST_ICONS = [
   'DEFAULT', 'INBOX', 'ALL', 'TODAY', 'COMPLETED', 
-  'BASKET', 'LINES', 'SHEET', 'FOLDER', 'CASE'
+  'BASKET', 'LINES', 'SHEET', 'FOLDER', 'CASE', 'GEAR'
 ] as const;
 
 export const LIST_COLORS = [
