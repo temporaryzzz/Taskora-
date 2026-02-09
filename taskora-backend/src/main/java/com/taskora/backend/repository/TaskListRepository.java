@@ -9,5 +9,5 @@ import com.taskora.backend.entity.TaskList;
 
 @Repository
 public interface TaskListRepository extends JpaRepository<TaskList, Long> {
-    List<TaskList> findByOwnerId(Long ownerId);
+    List<TaskList> findByOwnerIdAndDeletedFalse(Long ownerId);
 }

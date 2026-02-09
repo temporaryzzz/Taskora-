@@ -1,0 +1,111 @@
+@use "../helpers" as *;
+
+.context-menu {
+    display: none;
+    flex-direction: column;
+    row-gap: rem(10);
+    padding: rem(10);
+    background-color: var(--color-dark-15);
+    width: fit-content;
+    border-radius: rem(6);
+    border: rem(1) solid var(--color-dark-25);
+    position: absolute;
+    left: 0;
+    top: rem(35);
+    z-index: 150;
+
+    &--left {
+        left: auto;
+        right: 0;
+    }
+
+    &--active {
+        display: flex;
+    }
+
+    &--wrapper {
+        padding: 0px;
+        border: none;
+        background-color: transparent;
+    }
+
+    label {
+        text-align: start;
+    }
+
+    &__items {
+        display: flex;
+        flex-direction: column;
+        padding-bottom: rem(10);
+        row-gap: rem(2);
+
+        &--horizontal {
+            flex-direction: row;
+            justify-content: space-around;
+            column-gap: rem(8);
+        }
+    }
+
+    &__item {
+        display: flex;
+        justify-content: start;
+        color: var(--color-muted-light);
+        font-size: rem(14);
+        font-weight: 400;
+        padding: rem(4);
+        border-radius: rem(5);
+
+        @include hover {
+            background-color: var(--color-dark-20);
+            cursor: pointer;
+        }
+
+        p {
+            max-width: rem(160);
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+
+            @include hover {
+                cursor: pointer;
+            }
+        }
+
+        &--active {
+            background-color: var(--color-dark-25);
+        }
+        
+        &--button {
+            padding: rem(6) rem(4);
+        }
+
+        &--red {
+            padding: rem(6) rem(4);
+            color: var(--color-muted-red);
+
+            @include hover {
+                background-color: var(--color-opacity-red);
+                cursor: pointer;
+            }
+        }
+
+        &--accent {
+            padding: rem(6) rem(4);
+            color: var(--main-accent);
+
+            @include hover {
+                background-color: var(--main-opacity-accent);
+                cursor: pointer;
+            }
+        }
+    }
+
+    &__border {
+        border-bottom: rem(1) solid var(--color-dark-25);
+    }
+
+    label {
+        color: var(--color-gray-60);
+        font-size: rem(14);
+    }
+}

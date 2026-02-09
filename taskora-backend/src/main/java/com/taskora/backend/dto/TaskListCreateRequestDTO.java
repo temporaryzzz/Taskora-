@@ -1,32 +1,30 @@
 package com.taskora.backend.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Size;
 
 @Schema(description = "Запрос на создание списка задач")
 public class TaskListCreateRequestDTO {
 
-    @Schema(description = "Id пользователя")
-    Long owner_id;
-
-    @Schema(description = "Название списка задач от 3 до 25 символов")
-    @Size(min = 3, max = 25)
+    @Schema(description = "Название списка задач")
     String title;
 
+    @Schema(description = "Название иконки списка", example = "DEFAULT")
+    String icon;
 
-    public TaskListCreateRequestDTO(Long owner_id, String title) {
-        this.owner_id = owner_id;
+    @Schema(description = "Цвет иконки", example = "DEFAULT")
+    String color;
+
+    @Schema(description = "Тип отображения задач в списке", example = "KANBAN")
+    String viewType;
+
+
+    public TaskListCreateRequestDTO(String title, String icon, String color, String viewType) {
         this.title = title;
+        this.icon = icon;
+        this.color = color;
+        this.viewType = viewType;
     }
 
-
-    public Long getOwner_id() {
-        return owner_id;
-    }
-
-    public void setOwner_id(Long owner_id) {
-        this.owner_id = owner_id;
-    }
 
     public String getTitle() {
         return title;
@@ -34,5 +32,29 @@ public class TaskListCreateRequestDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getViewType() {
+        return viewType;
+    }
+
+    public void setViewType(String viewType) {
+        this.viewType = viewType;
     }
 }

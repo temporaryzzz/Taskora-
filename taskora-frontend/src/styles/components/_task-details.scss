@@ -1,0 +1,88 @@
+@use "../helpers" as *;
+
+.task-details {
+    display: none;
+    position: absolute;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: rem(10);
+    row-gap: rem(20);
+    background-color: var(--color-dark-15);
+    border-top-left-radius: rem(20);
+    border-bottom-left-radius: rem(20);
+    right: 0;
+    bottom: rem(-3);
+    top: calc(var(--header-hieght) + rem(5));
+
+    &--active {
+        display: flex;
+    }
+
+    &__input {
+        @include textarea-default;
+
+        width: rem(500);
+        background-color: var(--color-dark);
+        border-radius: rem(10);
+        color: var(--color-light);
+        padding: rem(10);
+        outline: none;
+
+        &::-webkit-scrollbar {
+            width: rem(0);
+        }
+
+        &--title {
+            @include fluid-text(18, 16);
+
+            min-height: rem(50);
+            overflow-y: scroll;
+        }
+
+        &--description {
+            @include fluid-text(16, 14);
+
+            height: rem(500);
+            overflow: hidden;
+        }
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__subtasks {
+        flex-grow: 1;
+    }
+
+    &__button {
+        @include fluid-text(16, 14);
+
+        background-color: transparent;
+        border-radius: rem(8);
+        justify-content: start;
+        font-weight: 400;
+        padding: rem(5) rem(10);
+
+        @include hover {
+            background-color: var(--color-dark-25);
+            color: var(--main-accent);
+        }
+
+        &--red {
+            color: var(--color-red);
+        }
+    }
+
+    &__button-wrapper {
+        position: relative;
+        height: fit-content;
+    }
+
+    &__calendar {
+        position: absolute;
+        top: rem(50);
+    }
+}

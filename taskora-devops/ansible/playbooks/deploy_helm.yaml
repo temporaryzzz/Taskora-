@@ -1,0 +1,28 @@
+- name: Prepare Kubernetes cluster
+  hosts: arch_server
+  become: yes
+
+  vars:
+    kube_context: microk8s
+    helm_charts:
+      - namespace: taskora
+      - namespace: monitoring
+
+  tasks:
+    - name: Установить Helm
+      pacman:
+        name: helm
+        state: present
+
+    - name: Убедиться, что microk8s запущен
+      shell: "microk8s status --wait-ready"
+      register: microk8s_status
+      changed_when: false
+
+    - name: Создать namespace, если отсутствует
+      community.kubernetes.k8s:
+        api_version: v1
+        kind: Namespace
+        name: "{{ item.namespace }}"
+        kubeconfig: /var/snap/microk8s/current/credentials/client.config
+      loop: "{{ helm_charts }}"

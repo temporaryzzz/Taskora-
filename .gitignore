@@ -34,3 +34,10 @@ build/
 
 ### Other ###
 db.json5
+.env
+.env.*.local
+
+### K8s ###
+*-secret.yaml
+
+!*-secret-example.yaml

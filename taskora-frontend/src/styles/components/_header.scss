@@ -1,0 +1,56 @@
+@use "../helpers" as *;
+
+.header {
+
+    &__body {
+        display: flex;
+        justify-content: space-between;
+        width: 100vw;
+        padding: rem(12) rem(20);
+        background-color: var(--color-dark-15);
+        border-bottom-right-radius: rem(10);
+
+        @include mobile {
+            padding-block: rem(20);
+        }
+
+        &-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            column-gap: fluid(100, 20)
+        }
+    }
+
+    &__overlay {
+        display: flex;
+        font-family: var(--font-famaly-accent);
+        font-size: rem(22);
+        align-items: center;
+    }
+
+    &__title {
+        font-family: var(--font-famaly-accent);
+        font-weight: 500;
+        color: var(--main-accent);
+    }
+
+    &__settings {
+        @include square(#{fluid(36, 28)});
+
+        content: '';
+        flex-shrink: 0;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-color: transparent;
+        background-image: url('../../assets/icons/settings-icon.svg');
+        white-space: nowrap;
+        border: none;
+        outline: none;
+
+        @include hover {
+            background-image: url('../../assets/icons/settings-white-icon.svg');
+        }
+    }
+}

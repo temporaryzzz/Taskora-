@@ -1,10 +1,13 @@
 package com.taskora.backend.entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,8 +18,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "task_lists")
 public class TaskList {
     
     @Id
@@ -30,17 +35,37 @@ public class TaskList {
     @OneToMany(mappedBy = "taskList", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Task> tasks = new ArrayList<>();
 
-    @Column(nullable = false, length = 25)
+    @Column(nullable = false)
     String title;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    LocalDateTime created_at;
+    @Column(columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
+    List<String> sections = new ArrayList<>(List.of("Main section"));
+
+    @Column(nullable = false)
+    String icon = "DEFAULT";
+
+    @Column(nullable = false)
+    String color = "DEFAULT";
+
+    @Column(nullable = false)
+    String viewType = "KANBAN";
+
+    @Column(nullable = false)
+    boolean deleted = false;
+
+    @Column(name = "deleted_at")
+    Instant deletedAt;
 
     @CreationTimestamp
-    LocalDateTime updated_at;
+    @Column(name = "created_at", updatable = false)
+    Instant createdAt;
 
-    
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    Instant updatedAt;
+
+
     public Long getId() {
         return id;
     }
@@ -73,19 +98,67 @@ public class TaskList {
         this.title = title;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public List<String> getSections() {
+        return sections;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
+    public void setSections(List<String> sections) {
+        this.sections = sections;
     }
 
-    public LocalDateTime getUpdated_at() {
-        return updated_at;
+    public String getIcon() {
+        return icon;
     }
 
-    public void setUpdated_at(LocalDateTime updated_at) {
-        this.updated_at = updated_at;
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getViewType() {
+        return viewType;
+    }
+
+    public void setViewType(String viewType) {
+        this.viewType = viewType;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Instant getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Instant deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

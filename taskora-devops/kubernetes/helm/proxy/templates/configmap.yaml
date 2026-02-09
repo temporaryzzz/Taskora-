@@ -1,10 +1,11 @@
+{{- if .Values.nginx.config }}
 apiVersion: v1
 kind: ConfigMap
-metadata:
-  name: proxy-nginx
+metadata: 
+  name: {{ include "proxy.fullname" . }}-nginx
   labels:
-    app.kubernetes.io/name: proxy
-    app.kubernetes.io/instance: {{ .Release.Name }}
-data:
-  default.conf: |-
-    {{ tpl .Values.nginx.config . | nindent 4 }}
+    {{- include "proxy.labels" . | nindent 4 }}
+data:  
+  default.conf: |
+    {{- .Values.nginx.config | nindent 4 }}
+{{- end }}

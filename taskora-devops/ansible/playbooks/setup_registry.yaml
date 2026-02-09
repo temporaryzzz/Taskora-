@@ -1,0 +1,46 @@
+- name: Установка локального Docker registry
+  hosts: arch_server
+  become: yes
+
+  vars: 
+    registry_port: 32000
+    registry_container_name: "local-registry"
+    registry_data_path: "/var/lib/registry"
+    docker_user: "myuser"
+
+  tasks:
+    - name: Установить Docker
+      pacman:
+        name: docker
+        state: present
+
+    - name: Включить и запустить Docker
+      systemd: 
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Добавить пользователя в группу Docker
+      user:
+        name: "{{ docker_user }}"
+        append: yes
+        groups: docker
+
+    - name: Создать папку для данных registry 
+      file: 
+        path: "{{ registry_data_path }}"
+        state: directory
+        owner: "{{ docker_user }}"
+        group: docker
+        mode: '0755'
+
+    - name: Запустить контейнер Docker Registry
+      community.docker.docker_container:
+        name: "{{ registry_container_name }}"
+        image: registry:2
+        state: started
+        restart_policy: always
+        published_ports: 
+          - "{{ registry_port }}:5000"
+        volumes: 
+          - "{{ registry_data_path }}:/var/lib/registry"

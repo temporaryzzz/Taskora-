@@ -1,25 +1,13 @@
-replicaCount: 3
+replicaCount: 1
 
-# This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
 serviceAccount:
-  # Specifies whether a service account should be created
   create: true
-  # Automatically mount a ServiceAccount's API credentials?
   automount: true
-  # Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
   name: "taskora-backend"
 
 ingress:
   enabled: false
-  annotations: {}
-  hosts:
-    - host: example.local
-      paths:
-        - /
-  tls: []
 
 autoscaling:
   enabled: false
@@ -38,44 +26,46 @@ service:
 
 resources:
   limits:
-    cpu: 500m
-    memory: 512Mi
+    cpu: 300m
+    memory: 384Mi
   requests:
-    cpu: 250m
+    cpu: 150m
     memory: 256Mi
 
-env:
-  # Define plain env vars as a YAML list of name/value objects.
-  # Example entries (uncomment or edit as needed):
-  - name: SPRING_DATASOURCE_URL
-    value: jdbc:postgresql://database.taskora.svc.cluster.local:5432/taskora_db
-  - name: SPRING_JPA_HIBERNATE_DDL_AUTO
-    value: update
-
-# envSecrets: list of secret-backed env entries (valueFrom.secretKeyRef)
-# Example below shows how to reference the existing 'backend-secret'
 envSecrets:
   - name: SPRING_DATASOURCE_USERNAME
     valueFrom:
       secretKeyRef:
-        name: backend-secret
+        name: database-secret
         key: username
   - name: SPRING_DATASOURCE_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: backend-secret
+        name: database-secret
         key: password
 
-livenessProbe: {}
-  # httpGet:
-  #  path: /actuator/health
-  # port: 8080
-  # initialDelaySeconds: 10
-  # periodSeconds: 10
+  - name: SPRING_DATASOURCE_URL
+    valueFrom:
+      secretKeyRef:
+        name: backend-secret
+        key: URL
 
-readinessProbe: {}
-#  httpGet:
-#   path: /actuator/health
-#  port: 8080
-#initialDelaySeconds: 5
-#periodSeconds: 5
+  - name: JWT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: backend-secret
+        key: JWT
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 5

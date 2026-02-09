@@ -1,4 +1,4 @@
-replicaCount: 3
+replicaCount: 1
 image:
   repository: taskora-frontend
 
@@ -49,7 +49,6 @@ service:
   # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
   port: 3000
 
-# This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: true
   className: nginx
@@ -59,9 +58,6 @@ ingress:
         - path: /
           pathType: Prefix
   tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -69,11 +65,11 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 250m
-    memory: 256Mi
+    cpu: 25m
+    memory: 32Mi
   requests:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 50m
+    memory: 64Mi
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe: {}

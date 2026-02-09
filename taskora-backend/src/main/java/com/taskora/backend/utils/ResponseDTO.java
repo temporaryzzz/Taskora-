@@ -2,11 +2,11 @@ package com.taskora.backend.utils;
 
 import java.util.List;
 
-import com.taskora.backend.dto.SettingsDTO;
+// import com.taskora.backend.dto.SettingsDTO;
 import com.taskora.backend.dto.TaskDTO;
 import com.taskora.backend.dto.TaskListDTO;
 import com.taskora.backend.dto.UserDTO;
-import com.taskora.backend.entity.Settings;
+// import com.taskora.backend.entity.Settings;
 import com.taskora.backend.entity.Task;
 import com.taskora.backend.entity.TaskList;
 import com.taskora.backend.entity.User;
@@ -17,7 +17,7 @@ import com.taskora.backend.entity.User;
 public class ResponseDTO {
     
     public UserDTO fromUserEntityToDTO(User user) {
-        return new UserDTO(user.getId(), user.getUsername(), user.getEmail());
+        return new UserDTO(user.getUsername(), user.getEmail());
     }
 
     public List<UserDTO> fromUserEntityListToDTOList(List<User> users) {
@@ -27,7 +27,7 @@ public class ResponseDTO {
     }
 
     public TaskListDTO fromTaskListEntityToDTO(TaskList taskList) {
-        return new TaskListDTO(taskList.getId(), taskList.getOwner().getId(), taskList.getTitle());
+        return new TaskListDTO(taskList.getId(), taskList.getTitle(), taskList.getSections(), taskList.getIcon(), taskList.getColor(), taskList.getViewType());
     }
 
     public List<TaskListDTO> fromTaskListsToDTOList(List<TaskList> taskLists) {
@@ -37,7 +37,7 @@ public class ResponseDTO {
     }
 
     public TaskDTO fromTaskEntityToDTO(Task task) {
-        return new TaskDTO(task.getId(), task.getTaskList().getId(), task.getTitle(), task.getDescription(), task.getDue_date(), task.getPriority(), task.getCompleted());
+        return new TaskDTO(task.getId(), task.getTaskList().getId(), task.getSection(), task.getTitle(), task.getDescription(), task.getDueDate(), task.getPriority(), task.isCompleted());
     }
 
     public List<TaskDTO> fromTaskListToDTOList(List<Task> tasks) {
@@ -46,7 +46,7 @@ public class ResponseDTO {
             .toList();
     }
 
-    public SettingsDTO fromSettingsEntityToDTO(Settings settings) {
-        return new SettingsDTO(settings.getDark_mode(), settings.getNotifications_enabled());
-    }
+    // public SettingsDTO fromSettingsEntityToDTO(Settings settings) {
+    //     return new SettingsDTO(settings.getDark_mode(), settings.getNotifications_enabled());
+    // }
 }
