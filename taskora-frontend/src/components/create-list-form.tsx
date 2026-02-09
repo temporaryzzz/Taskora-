@@ -1,0 +1,176 @@
+import { useContext, useEffect, useRef, useState, type SetStateAction } from "react";
+import { StateContext, ActionsContext } from "../App";
+import type { CreateListDTO } from "../interfaces";
+import { LIST_COLORS, LIST_ICONS } from "../constants";
+
+type CreateListFormnProps = { 
+    activeCreateForm: boolean,
+    setActiveCreateForm: React.Dispatch<SetStateAction<boolean>>,
+ };
+
+const stateClasses ={
+    active: "not-clickable--active",
+}
+
+export function CreateListForm(props: CreateListFormnProps) {
+    const state = useContext(StateContext)
+    const actions = useContext(ActionsContext)
+    const [title, setTitle] = useState<string>('')
+    const [color, setColor] = useState<typeof LIST_COLORS[number]>('NONE')
+    const [icon, setIcon] = useState<typeof LIST_ICONS[number]>('DEFAULT')
+    const [viewType, setViewType] = useState<'LIST' | 'KANBAN'>('KANBAN')
+    const createFormRef = useRef<HTMLDivElement>(null)
+
+    if(state  == undefined || actions == undefined) {
+        return
+    }
+
+    const createList = () => {
+        if(/\S/.test(title ?? '') && title != 'Basket' && title != 'Completed' && title != 'All' && title != 'Today') { //Добавить предупреждение пользователю, что нельзя так называть списки
+            if(state.user !== undefined) {
+                const CreateListDTO: CreateListDTO = {title: title, viewType: viewType, icon: icon, color: color}
+                actions.createList(CreateListDTO)
+                props.setActiveCreateForm(false)
+                return true
+            }
+            else {
+                return false
+            }
+        }
+    }
+
+    const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value as typeof LIST_COLORS[number];
+        if (LIST_COLORS.includes(value)) {
+            setColor(value);
+            e.target.checked = true
+        }
+    };
+
+    const handleIconChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value as typeof LIST_ICONS[number];
+        if (LIST_ICONS.includes(value)) {
+            setIcon(value);
+            e.target.checked = true
+        }
+    };
+
+    const handleSetViewType = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value as 'LIST' | 'KANBAN';
+        if (['LIST', 'KANBAN'].includes(value)) {
+            setViewType(value);
+            e.target.checked = true
+        }
+    };
+
+    const toggleVisible = () => {
+        if(!createFormRef.current) {
+            return
+        }
+        if(props.activeCreateForm == true) {
+            createFormRef.current.classList.add(stateClasses.active)
+        }
+        else {
+            createFormRef.current.classList.remove(stateClasses.active)
+        }
+    }
+
+    useEffect(() => {
+        toggleVisible()
+    }, [props.activeCreateForm])
+
+    return(
+        <div className="not-clickable" ref={createFormRef}>
+            <div className="edit-form pop-up-window">
+                <input type="text" className="edit-form__input" placeholder="title" required onChange={(event) => {setTitle(event.target.value)}}/>
+                <div className="edit-form__select">
+                    <label className="edit-form__select-title" aria-label="List color">List color</label>
+                    <ul className="edit-form__select-items" aria-labelledby="List color">
+                        <li className="edit-form__select-item edit-form__select-item--color-none">
+                            <input type="radio" className="edit-form__select-radio" name="color" id="none" value="NONE" onChange={(event) => {handleColorChange(event)}}/>
+                            <label htmlFor="none" className="edit-form__select-label"></label>
+                        </li>
+                        <li className="edit-form__select-item">
+                            <input type="radio" className="edit-form__select-radio" name="color" id="light" value="LIGHT" onChange={(event) => {handleColorChange(event)}}/>
+                            <label htmlFor="light" className="edit-form__select-label"></label>
+                        </li>
+                        <li className="edit-form__select-item edit-form__select-item--color-violet">
+                            <input type="radio" className="edit-form__select-radio" name="color" id="violet" value="VIOLET" onChange={(event) => {handleColorChange(event)}}/>
+                            <label htmlFor="violet" className="edit-form__select-label"></label>
+                        </li>
+                        <li className="edit-form__select-item edit-form__select-item--color-blue">
+                            <input type="radio" className="edit-form__select-radio" name="color" id="blue" value="BLUE" onChange={(event) => {handleColorChange(event)}}/>
+                            <label htmlFor="blue" className="edit-form__select-label"></label>
+                        </li>
+                        <li className="edit-form__select-item edit-form__select-item--color-green">
+                            <input type="radio" className="edit-form__select-radio" name="color" id="green" value="GREEN" onChange={(event) => {handleColorChange(event)}}/>
+                            <label htmlFor="green" className="edit-form__select-label"></label>
+                        </li>
+                        <li className="edit-form__select-item edit-form__select-item--color-yellow">
+                            <input type="radio" className="edit-form__select-radio" name="color" id="yellow" value="YELLOW" onChange={(event) => {handleColorChange(event)}}/>
+                            <label htmlFor="yellow" className="edit-form__select-label"></label>
+                        </li>
+                        <li className="edit-form__select-item edit-form__select-item--color-red">
+                            <input type="radio" className="edit-form__select-radio" name="color" id="red" value="RED" onChange={(event) => {handleColorChange(event)}}/>
+                            <label htmlFor="red" className="edit-form__select-label"></label>
+                        </li>
+                    </ul>
+                </div>
+                <div className="edit-form__select">
+                    <label className="edit-form__select-title" aria-label="List icon">List icon</label>
+                    <ul className="edit-form__select-items" aria-labelledby="List icon">
+                        <li className="edit-form__select-item edit-form__select-item--icon-circle">
+                            <input type="radio" className="edit-form__select-radio" name="icon" id="default-icon" value="DEFAULT" onChange={(event) => {handleIconChange(event)}}/>
+                            <label htmlFor="default-icon" className="icon icon--circle-default"></label>
+                        </li>
+                        <li className="edit-form__select-item edit-form__select-item--icon">
+                            <input type="radio" className="edit-form__select-radio" name="icon" id="lines" value="LINES" onChange={(event) => {handleIconChange(event)}}/>
+                            <label htmlFor="lines" className="icon icon--lines"></label>
+                        </li>
+                        <li className="edit-form__select-item edit-form__select-item--icon">
+                            <input type="radio" className="edit-form__select-radio" name="icon" id="sheet" value="SHEET" onChange={(event) => {handleIconChange(event)}}/>
+                            <label htmlFor="sheet" className="icon icon--sheet"></label>
+                        </li>
+                        <li className="edit-form__select-item edit-form__select-item--icon">
+                            <input type="radio" className="edit-form__select-radio" name="icon" id="folder" value="FOLDER" onChange={(event) => {handleIconChange(event)}}/>
+                            <label htmlFor="folder" className="icon icon--folder"></label>
+                        </li>
+                        <li className="edit-form__select-item edit-form__select-item--icon">
+                            <input type="radio" className="edit-form__select-radio" name="icon" id="inbox" value="INBOX" onChange={(event) => {handleIconChange(event)}}/>
+                            <label htmlFor="inbox" className="icon icon--inbox"></label>
+                        </li>
+                        <li className="edit-form__select-item edit-form__select-item--icon">
+                            <input type="radio" className="edit-form__select-radio" name="icon" id="case" value="CASE" onChange={(event) => {handleIconChange(event)}}/>
+                            <label htmlFor="case" className="icon icon--case"></label>
+                        </li>
+                    </ul>
+                </div>
+                <div className="edit-form__select">
+                    <label className="edit-form__select-title" aria-label="List view-type">View type</label>
+                    <ul className="edit-form__select-items edit-form__select-items--view-type" aria-labelledby="List view-type">
+                        <li className="edit-form__select-item edit-form__select-item--view-type-section">
+                            <input type="radio" className="edit-form__select-radio" name="view-type" id="kanban" value="KANBAN" onChange={(event) => {handleSetViewType(event)}}/>
+                            <label htmlFor="kanban"></label>
+                        </li>
+                        <li className="edit-form__select-item edit-form__select-item--view-type-list">
+                            <input type="radio" className="edit-form__select-radio" name="view-type" id="list" value="LIST" onChange={(event) => {handleSetViewType(event)}}/>
+                            <label htmlFor="list"></label>
+                        </li>
+                    </ul>
+                </div>
+                <div className="edit-form__buttons-wrapper">
+                    <button className="edit-form__button edit-form__button--transparent button" onClick={(event) => {
+                            event.preventDefault()
+                            props.setActiveCreateForm(false)
+                        }}>Cancel</button>
+                    <button className="edit-form__button button button--inverse" onClick={(event) => {
+                            event.preventDefault()
+                            if(!createList()) {
+                                console.log('error create list(create list form)')
+                            }
+                        }}>Add</button>
+                </div>
+            </div>
+        </div>
+    )
+}

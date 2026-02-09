@@ -1,43 +1,54 @@
 package com.taskora.backend.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.taskora.backend.dto.SignRequestDTO;
+import com.taskora.backend.dto.SignUpRequestDTO;
 import com.taskora.backend.dto.UserDTO;
 import com.taskora.backend.entity.User;
+import com.taskora.backend.exception.AlreadyExistsException;
 import com.taskora.backend.repository.UserRepository;
 import com.taskora.backend.utils.ResponseDTO;
 
 @Service
 public class UserService {
 
-    private final UserRepository repository;
+    // [fix] почему то при шифровании пароля нужно явно указывать, что он {bcrypt}
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserRepository repository;
 
-    public UserService(UserRepository repository) {
-        this.repository = repository;
-    }
 
     /**
-     * Создает пользователя в БД
+     * Создает пользователя.
      * 
      * @param requestDTO - {@code username}, {@code email}, {@code password}
      * @return {@link UserDTO} созданного пользователя
+     * 
+     * @throws AlreadyExistsException если пользователь с таким {@code username} или {@code email} существует
      */
-    public UserDTO createUser(SignRequestDTO requestDTO) {
+    public UserDTO createUser(SignUpRequestDTO requestDTO) {
+        if (isUserExistsByUsername(requestDTO.getUsername()))
+            throw new AlreadyExistsException("Пользователь с данным username уже существует");
+        if (isUserExistsByEmail(requestDTO.getEmail()))
+            throw new AlreadyExistsException("Пользователь с данным email уже существует");
+
         User user = new User();
         user.setUsername(requestDTO.getUsername());
         user.setEmail(requestDTO.getEmail());
-        user.setPassword(requestDTO.getPassword());
+        user.setPassword("{bcrypt}" + passwordEncoder.encode(requestDTO.getPassword()));
 
         repository.save(user);
+
         ResponseDTO responseDTO = new ResponseDTO();
-        
         return responseDTO.fromUserEntityToDTO(user);
     }
 
@@ -46,12 +57,25 @@ public class UserService {
      * 
      * @param id пользователя
      * @return {@link User} найденного пользователя; {@code null}, если пользователь не найден
+     * @throws UsernameNotFoundException если пользователь с данным {@code id} не найден
      */
     public User findUserById(Long id) {
         User user = repository.findById(id)
-            .orElse(null);
+            .orElseThrow(() -> new UsernameNotFoundException("Пользователь с id: " + id + " не найден"));
         
         return user;
+    }
+
+    /**[fix]
+     * 
+     * @param id
+     * @return
+     */
+    public UserDTO findUserDetailsById(Long id) {
+        User user = findUserById(id);
+
+        ResponseDTO response = new ResponseDTO();
+        return response.fromUserEntityToDTO(user);
     }
 
     /**
@@ -83,6 +107,20 @@ public class UserService {
     }
 
     /**
+     * 
+     * @param login
+     * @return
+     */
+    public UserDTO findUserByLogin(String login) {
+        Optional<User> user = repository.findByLogin(login);
+        if (!user.isPresent())
+            return null;
+        
+        ResponseDTO responseDTO = new ResponseDTO();
+        return responseDTO.fromUserEntityToDTO(user.get());
+    }
+
+    /**
      * Находит всех пользователей
      * 
      * @return {@code List<User>} всех пользователей; пустой список, если пользователи не найдены
@@ -101,14 +139,13 @@ public class UserService {
      * @param requestDTO - DTO с данными для замены
      * @return {@link UserDTO} обновленного пользователя; {@code null}, если пользователь не найден
      */
-    public UserDTO updateUser(Long id, SignRequestDTO requestDTO) {
+    public UserDTO updateUser(Long id, SignUpRequestDTO requestDTO) {
         User user = repository.findById(id)
             .orElse(null);
 
         user.setUsername(requestDTO.getUsername());
         user.setEmail(requestDTO.getEmail());
-        user.setPassword(requestDTO.getPassword());
-        user.setUpdated_at(LocalDateTime.now());
+        user.setPassword("{bcrypt}" + passwordEncoder.encode(requestDTO.getPassword()));
 
         repository.save(user);
 
@@ -121,16 +158,10 @@ public class UserService {
     }
 
     public boolean isUserExistsByEmail(String email) {
-        if (repository.existsByEmail(email)) 
-            return true;
-
-        return false;
+        return repository.existsByEmail(email);
     }
 
     public boolean isUserExistsByUsername(String username) {
-        if (repository.existsByUsername(username))
-            return true;
-
-        return false;
+        return repository.existsByUsername(username);
     }
 }

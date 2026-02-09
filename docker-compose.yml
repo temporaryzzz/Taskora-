@@ -4,27 +4,34 @@ services:
   taskora-frontend:
     build:
       context: ./taskora-frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.front-local
+    env_file:
+      - .env
     ports:
-      - "3000:3000" # Маппинг порта frontend
+      - "3000:80"
     networks:
       - taskora-network
     depends_on:
       - taskora-backend
+    environment: 
+      FRONTEND_PROFILE: local
 
   taskora-backend:
       build: 
             context: ./taskora-backend
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.back-local
+      env_file:
+        - .env
+
       ports:
         - "8080:8080"
       networks:
         - taskora-network
       environment:
-        SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/taskora-backend
-        SPRING_DATASOURCE_USERNAME: postgres
-        SPRING_DATASOURCE_PASSWORD: immabriish
-        SPRING_JPA_HIBERNATE_DDL_AUTO: update
+        SPRING_PROFILES_ACTIVE: local
+        SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+        SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+        SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       depends_on:
         db:
           condition: service_healthy
@@ -32,10 +39,12 @@ services:
   db:
     image: postgres:17
     restart: always
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: taskora-backend
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: immabriish
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     networks:
@@ -43,10 +52,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d taskora-backend"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
+
 
 volumes:
   postgres_data:
