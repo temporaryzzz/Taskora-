@@ -161,7 +161,7 @@ function App() {
   }, [lists])
 
   useEffect(() => {
-    if(currentList) document.title = `Taskora | ${currentList.title}`
+    if(currentList) document.title = `Taskora - ${currentList.title}`
   }, [currentList])
 
   //⁡⁢⁣⁣CONTEXT⁡
