@@ -66,27 +66,25 @@ resources:
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
     cpu: 50m
-    memory: 64Mi
-  requests:
-    cpu: 25m
     memory: 32Mi
+  requests:
+    cpu: 15m
+    memory: 16Mi
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
-livenessProbe: {}
-#Для прод
-#httpGet:
-#  path: /
-#  port: 3000
-#  initialDelaySeconds: 15
-# periodSeconds: 10
+livenessProbe:
+  httpGet:
+    path: /
+    port: 3000
+  initialDelaySeconds: 15
+  periodSeconds: 10
 
-readinessProbe: {}
-#Для прод
-#httpGet:
-#   path: /
-#  port: 3000
-#   initialDelaySeconds: 10
-#  periodSeconds: 5
+readinessProbe:
+  httpGet:
+    path: /
+    port: 3000
+  initialDelaySeconds: 10
+  periodSeconds: 5
 
 # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
 autoscaling:

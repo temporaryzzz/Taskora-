@@ -7,9 +7,9 @@ image:
 
 persistence:
   #Для Dev
-  enabled: false
+  #enabled: false
   #Для Prod
-  #enabled: true
+  enabled: true
   size: 3Gi
   volumeMode: Filesystem
   accessMode: ReadWriteOnce
@@ -33,12 +33,12 @@ podLabels: {}
 
 podSecurityContext:
   #Раскомитить для Prod
-  fsGroup: 0 #999
+  fsGroup: 999
 
 securityContext:
   #Раскомитить Prod
-  runAsUser: 0 #999
-  runAsGroup: 0 #999
+  runAsUser: 999
+  runAsGroup: 999
 
 service:
   type: ClusterIP
@@ -58,11 +58,11 @@ ingress:
 
 resources:
   limits:
-    cpu: 300m
-    memory: 384Mi
-  requests:
     cpu: 150m
-    memory: 256Mi
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 100Mi
 
 livenessProbe:
   exec:
