@@ -3,7 +3,7 @@ replicaCount: 1
 
 # Контейнер прокси (nginx)
 image:
-  repository: ghcr.io/nothingness159/taskora-frontend
+  repository: ghcr.io/nothingness159/taskora-proxy
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -57,7 +57,7 @@ resources:
     memory: 32Mi
 
 # Liveness и Readiness для прокси
-livenessProbe:
+livenessProbe: 
   httpGet:
     path: /
     port: 80
@@ -85,7 +85,7 @@ ingress:
   enabled: true
   className: nginx
   hosts:
-    - host: taskora.local
+    - host: taskora.website
       paths:
         - path: /
           pathType: Prefix

@@ -29,11 +29,11 @@ service:
 
 resources:
   limits:
-    cpu: 300m
-    memory: 128Mi
+    cpu: 350m
+    memory: 300Mi
   requests:
-    cpu: 100m
-    memory: 90Mi
+    cpu: 150m
+    memory: 256Mi
 
 envSecrets:
   - name: SPRING_DATASOURCE_USERNAME
@@ -59,18 +59,18 @@ envSecrets:
         name: backend-secret
         key: JWT
 
-livenessProbe:
-  httpGet:
-    path: /actuator/health
-    port: 8080
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  failureThreshold: 6
+livenessProbe: {}
+  # httpGet:
+  #  path: /actuator/health
+  #  port: 8080
+  # initialDelaySeconds: 30
+  # periodSeconds: 10
+  # failureThreshold: 6
 
-readinessProbe:
-  httpGet:
-    path: /actuator/health
-    port: 8080
-  initialDelaySeconds: 15
-  periodSeconds: 5
-  failureThreshold: 6
+readinessProbe: {}
+  # httpGet:
+  #  path: /actuator/health
+  #  port: 8080
+  #initialDelaySeconds: 15
+  #periodSeconds: 5
+  #failureThreshold: 6

@@ -23,11 +23,9 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- with .Values.image.pullSecrets }}
+    {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        {{- range . }}
-        - name: {{ .name }}
-        {{- end }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
 
       serviceAccountName: {{ include "frontend.serviceAccountName" . }}
