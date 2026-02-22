@@ -3,10 +3,12 @@ replicaCount: 1
 
 # Контейнер прокси (nginx)
 image:
-  repository: nginx
-  tag: stable
+  repository: ghcr.io/nothingness159/taskora-frontend
+  tag: latest
   pullPolicy: IfNotPresent
 
+imagePullSecrets:
+  - name: ghcr-secret
 # Сервис прокси
 service:
   type: ClusterIP

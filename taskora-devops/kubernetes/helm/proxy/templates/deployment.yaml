@@ -17,6 +17,12 @@ spec:
         app.kubernetes.io/name: proxy
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- range . }}
+        - name: {{ .name }}
+        {{- end }}
+      {{- end }}
       containers:
         - name: proxy
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

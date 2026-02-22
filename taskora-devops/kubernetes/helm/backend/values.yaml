@@ -16,9 +16,12 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 image:
-  repository: taskora-backend
-  pullPolicy: IfNotPresent
+  repository: ghcr.io/nothingness159/taskora-backend
   tag: latest
+  pullPolicy: IfNotPresent
+
+imagePullSecrets:
+  - name: ghcr-secret
 
 service:
   type: ClusterIP
@@ -60,12 +63,14 @@ livenessProbe:
   httpGet:
     path: /actuator/health
     port: 8080
-  initialDelaySeconds: 10
+  initialDelaySeconds: 30
   periodSeconds: 10
+  failureThreshold: 6
 
 readinessProbe:
   httpGet:
     path: /actuator/health
     port: 8080
-  initialDelaySeconds: 5
+  initialDelaySeconds: 15
   periodSeconds: 5
+  failureThreshold: 6

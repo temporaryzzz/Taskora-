@@ -23,10 +23,13 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+    {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+        {{- range . }}
+        - name: {{ .name }}
+        {{- end }}
       {{- end }}
+
       serviceAccountName: {{ include "frontend.serviceAccountName" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:
