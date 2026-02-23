@@ -34,4 +34,10 @@ build/
 
 ### Other ###
 db.json5
-.github
+.env
+.env.*.local
+
+### K8s ###
+*-secret.yaml
+
+!*-secret-example.yaml

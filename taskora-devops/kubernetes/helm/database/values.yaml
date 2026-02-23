@@ -1,0 +1,100 @@
+replicaCount: 1
+
+image:
+  repository: postgres
+  pullPolicy: IfNotPresent
+  tag: "16-alpine"
+
+persistence:
+  #Для Dev
+  #enabled: false
+  #Для Prod
+  enabled: true
+  size: 3Gi
+  volumeMode: Filesystem
+  accessMode: ReadWriteOnce
+  storageClass: local-path
+
+postgres:
+  database: taskora_db
+  secretName: database-secret
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+  #Раскомитить для Prod
+
+securityContext:
+  #Раскомитить Prod
+  runAsUser: 0
+  runAsGroup: 0
+
+service:
+  type: ClusterIP
+  port: 5432
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+resources:
+  limits:
+    cpu: 150m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 100Mi
+
+livenessProbe:
+  exec:
+    command:
+      - sh
+      - -c
+      - pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+
+readinessProbe:
+  exec:
+    command:
+      - sh
+      - -c
+      - pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 5
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+volumes: []
+
+volumeMounts: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

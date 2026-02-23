@@ -12,6 +12,7 @@ import com.taskora.backend.dto.TaskListResponseDTO;
 import com.taskora.backend.dto.TaskResponseDTO;
 import com.taskora.backend.dto.TaskUpdateRequestDTO;
 import com.taskora.backend.entity.Task;
+import com.taskora.backend.entity.Task;
 import com.taskora.backend.entity.TaskList;
 import com.taskora.backend.service.TaskListService;
 import com.taskora.backend.service.TaskService;
@@ -39,92 +40,49 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
 @RequestMapping("/api/tasks")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+// @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class TaskController {
-    
+
     @Autowired
     private TaskListService taskListService;
-    
+
     @Autowired
     private TaskService taskService;
-
 
     @GetMapping("/{taskListId}")
     @Operation(description = "Получение всех задач по id списка")
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Задачи найдены",
-            content = @Content(
-                schema = @Schema(implementation = TaskResponseDTO.class) 
-            )
-        ),
-        @ApiResponse(
-            responseCode = "204",
-            description = "Задачи не найдены",
-            content = {}
-        ),
-        @ApiResponse(
-            responseCode = "403",
-            description = "Доступ запрещен",
-            content = @Content(
-                schema = @Schema(implementation = ErrorMessageDTO.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Список не найден",
-            content = {}
-        )
+            @ApiResponse(responseCode = "200", description = "Задачи найдены", content = @Content(schema = @Schema(implementation = TaskResponseDTO.class))),
+            @ApiResponse(responseCode = "204", description = "Задачи не найдены", content = {}),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Список не найден", content = {})
     })
     public ResponseEntity<?> getTasks(@PathVariable Long taskListId) {
         List<TaskDTO> taskDTOs = new ArrayList<>();
 
         TaskList list = taskListService.findTaskListById(taskListId, SecurityUtils.getCurrentUserId());
         taskDTOs = taskService.findNotDeletedTasksByTaskListId(list.getId());
-        
+
         if (taskDTOs.isEmpty())
             return ResponseEntity
-                .noContent()
-                .build();
+                    .noContent()
+                    .build();
 
         return ResponseEntity
-            .ok()
-            .body(new TaskResponseDTO(taskDTOs));
+                .ok()
+                .body(new TaskResponseDTO(taskDTOs));
     }
 
     @GetMapping("")
     @Operation(description = "Получение задач в системных списках")
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Задачи найдены",
-            content = @Content(
-                schema = @Schema(implementation = TaskResponseDTO.class) 
-            )
-        ),
-        @ApiResponse(
-            responseCode = "204",
-            description = "Задачи не найдены",
-            content = {}
-        ),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Неизвестный системный список",
-            content = @Content(
-                schema = @Schema(implementation = ErrorMessageDTO.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "403",
-            description = "Доступ запрещен",
-            content = @Content(
-                schema = @Schema(implementation = ErrorMessageDTO.class)
-            )
-        )
+            @ApiResponse(responseCode = "200", description = "Задачи найдены", content = @Content(schema = @Schema(implementation = TaskResponseDTO.class))),
+            @ApiResponse(responseCode = "204", description = "Задачи не найдены", content = {}),
+            @ApiResponse(responseCode = "400", description = "Неизвестный системный список", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class)))
     })
     public ResponseEntity<?> getTasksFromSystemList(
-            @RequestParam String system, 
+            @RequestParam String system,
             @RequestHeader(value = "X-User-Timezone", required = false) String timezone) {
         List<TaskDTO> taskDTOs = new ArrayList<>();
         Long currentUserId = SecurityUtils.getCurrentUserId();
@@ -136,8 +94,8 @@ public class TaskController {
             case "today":
                 if (timezone == null)
                     return ResponseEntity
-                        .badRequest()
-                        .body(new ErrorMessageDTO("Неизвестный часовой пояс для сегодняшних задач"));
+                            .badRequest()
+                            .body(new ErrorMessageDTO("Неизвестный часовой пояс для сегодняшних задач"));
 
                 taskDTOs = taskService.findTodayTasksByOwnerId(currentUserId, timezone);
                 break;
@@ -149,149 +107,82 @@ public class TaskController {
                 break;
             default:
                 return ResponseEntity
-                    .badRequest()
-                    .body(new ErrorMessageDTO("Неизвестный системный список"));
+                        .badRequest()
+                        .body(new ErrorMessageDTO("Неизвестный системный список"));
         }
-        
+
         if (taskDTOs.isEmpty())
             return ResponseEntity
-                .noContent()
-                .build();
+                    .noContent()
+                    .build();
 
         return ResponseEntity
-            .ok()
-            .body(new TaskResponseDTO(taskDTOs));
+                .ok()
+                .body(new TaskResponseDTO(taskDTOs));
     }
 
     @PostMapping("")
     @Operation(description = "Создание задачи")
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "201",
-            description = "Задача создана",
-            content = @Content(
-                schema = @Schema(implementation = TaskDTO.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Задача не может быть создана в удаленном списке",
-            content = @Content(
-                schema = @Schema(implementation = ErrorMessageDTO.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "403",
-            description = "Доступ запрещен",
-            content = @Content(
-                schema = @Schema(implementation = ErrorMessageDTO.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Список не найден",
-            content = {}
-        )
+            @ApiResponse(responseCode = "201", description = "Задача создана", content = @Content(schema = @Schema(implementation = TaskDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Задача не может быть создана в удаленном списке", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Список не найден", content = {})
     })
     public ResponseEntity<?> createTask(@RequestBody TaskCreateRequestDTO requestDTO) {
         TaskList list = taskListService.findTaskListById(requestDTO.getTaskListId(), SecurityUtils.getCurrentUserId());
 
         if (list.isDeleted())
             return ResponseEntity
-                .badRequest()
-                .body(new ErrorMessageDTO("Задача не может быть создана в удаленном списке"));
+                    .badRequest()
+                    .body(new ErrorMessageDTO("Задача не может быть создана в удаленном списке"));
 
         TaskDTO taskDTO = taskService.createTask(list, requestDTO);
-        
+
         return ResponseEntity
-            .status(201)
-            .body(taskDTO);
+                .status(201)
+                .body(taskDTO);
     }
 
     @PutMapping("/{taskId}")
     @Operation(description = "Обновление задачи")
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Задача обновлена",
-            content = @Content(
-                schema = @Schema(implementation = TaskDTO.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "403",
-            description = "Доступ запрещен",
-            content = @Content(
-                schema = @Schema(implementation = ErrorMessageDTO.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Задача или список не найдены",
-            content = {}
-        )
+            @ApiResponse(responseCode = "200", description = "Задача обновлена", content = @Content(schema = @Schema(implementation = TaskDTO.class))),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Задача или список не найдены", content = {})
     })
     public ResponseEntity<?> updateTask(@PathVariable Long taskId, @RequestBody TaskUpdateRequestDTO requestDTO) {
-        TaskList taskList = taskListService.findTaskListById(requestDTO.getTaskListId(), SecurityUtils.getCurrentUserId());
+        TaskList taskList = taskListService.findTaskListById(requestDTO.getTaskListId(),
+                SecurityUtils.getCurrentUserId());
 
         TaskDTO updatedTask = taskService.updateTask(taskId, taskList, requestDTO);
 
         return ResponseEntity
-            .ok()
-            .body(updatedTask);
+                .ok()
+                .body(updatedTask);
     }
-    
+
     @DeleteMapping("/{taskId}")
     @Operation(description = "Удаление задачи")
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "204",
-            description = "Задача успешно удалена",
-            content = {}
-        ),
-        @ApiResponse(
-            responseCode = "403",
-            description = "Доступ запрещен",
-            content = @Content(
-                schema = @Schema(implementation = ErrorMessageDTO.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Задача не найдена",
-            content = {}
-        )
+            @ApiResponse(responseCode = "204", description = "Задача успешно удалена", content = {}),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Задача не найдена", content = {})
     })
     public ResponseEntity<?> softDeleteTask(@PathVariable Long taskId) {
         taskService.softDeleteTaskById(taskId, SecurityUtils.getCurrentUserId());
 
         return ResponseEntity
-            .status(204)
-            .body(null);
+                .status(204)
+                .body(null);
     }
 
     @PatchMapping("/{taskId}")
     @Operation(description = "Восстановление задачи из корзины")
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Задача успешно восстановлена",
-            content = @Content(
-                schema = @Schema(implementation = TaskListResponseDTO.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "403",
-            description = "Доступ запрещен",
-            content = @Content(
-                schema = @Schema(implementation = ErrorMessageDTO.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Задача не найдена",
-            content = {}
-        )
+            @ApiResponse(responseCode = "200", description = "Задача успешно восстановлена", content = @Content(schema = @Schema(implementation = TaskListResponseDTO.class))),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Задача не найдена", content = {})
     })
     public ResponseEntity<?> restoreTask(@PathVariable Long taskId) {
         Long currentUserId = SecurityUtils.getCurrentUserId();
@@ -302,16 +193,16 @@ public class TaskController {
         taskService.restoreTaskById(taskId, currentUserId);
 
         return ResponseEntity
-            .ok(taskListService.findTaskListsByOwnerId(currentUserId));
+                .ok(taskListService.findTaskListsByOwnerId(currentUserId));
     }
 
     // @DeleteMapping("/{taskId}/hard")
     // @Operation(description = "Удаление задачи (old)")
     // public ResponseEntity<?> hardDeleteTask(@PathVariable Long taskId) {
-    //     taskService.deleteTaskById(taskId);
+    // taskService.deleteTaskById(taskId);
 
-    //     return ResponseEntity
-    //         .status(204)
-    //         .body(null);
+    // return ResponseEntity
+    // .status(204)
+    // .body(null);
     // }
 }

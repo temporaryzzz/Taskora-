@@ -34,9 +34,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api/tasklists")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+// CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class TaskListController {
-    
+
     @Autowired
     private TaskListService taskListService;
 
@@ -46,108 +46,62 @@ public class TaskListController {
     @Autowired
     private TaskService taskService;
 
-
     @GetMapping("")
     @Operation(description = "Получение списков задач")
-    @ApiResponses( value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Списки задач найдены",
-            content = @Content(
-                schema = @Schema(implementation = TaskListResponseDTO.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "204",
-            description = "Списки задач отсутствуют",
-            content = {}
-        )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Списки задач найдены", content = @Content(schema = @Schema(implementation = TaskListResponseDTO.class))),
+            @ApiResponse(responseCode = "204", description = "Списки задач отсутствуют", content = {})
     })
     public ResponseEntity<?> getTaskListsForUser() {
         List<TaskListDTO> taskLists = taskListService.findTaskListsByOwnerId(SecurityUtils.getCurrentUserId());
 
         if (taskLists.isEmpty())
             return ResponseEntity
-                .noContent()
-                .build();
+                    .noContent()
+                    .build();
 
         return ResponseEntity
-            .ok()
-            .body(new TaskListResponseDTO(taskLists));
+                .ok()
+                .body(new TaskListResponseDTO(taskLists));
     }
-    
+
     @PostMapping("")
     @Operation(description = "Создание списка задач")
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "201",
-            description = "Список задач создан",
-            content = @Content(
-                schema = @Schema(implementation = TaskListDTO.class)
-            )
-        )
+            @ApiResponse(responseCode = "201", description = "Список задач создан", content = @Content(schema = @Schema(implementation = TaskListDTO.class)))
     })
     public ResponseEntity<?> createTaskLists(@RequestBody TaskListCreateRequestDTO requestDTO) {
         User owner = userService.findUserById(SecurityUtils.getCurrentUserId());
         TaskListDTO taskListDTO = taskListService.createTaskList(owner, requestDTO);
-        
+
         return ResponseEntity
-            .status(201)
-            .body(taskListDTO);
+                .status(201)
+                .body(taskListDTO);
     }
-    
+
     @PutMapping("/{taskListId}")
     @Operation(description = "Обновление списка задач")
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Список задач обновлен",
-            content = @Content(
-                schema = @Schema(implementation = TaskListDTO.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "403",
-            description = "Доступ запрещен",
-            content = @Content(
-                schema = @Schema(implementation = ErrorMessageDTO.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Список не найден",
-            content = {}
-        )
+            @ApiResponse(responseCode = "200", description = "Список задач обновлен", content = @Content(schema = @Schema(implementation = TaskListDTO.class))),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Список не найден", content = {})
     })
-    public ResponseEntity<?> updateTaskList(@PathVariable Long taskListId, @RequestBody TaskListUpdateRequest requestDTO) {
-        TaskListDTO updatedTaskList = taskListService.updateTaskList(taskListId, requestDTO, SecurityUtils.getCurrentUserId());
+    public ResponseEntity<?> updateTaskList(@PathVariable Long taskListId,
+            @RequestBody TaskListUpdateRequest requestDTO) {
+        TaskListDTO updatedTaskList = taskListService.updateTaskList(taskListId, requestDTO,
+                SecurityUtils.getCurrentUserId());
 
         return ResponseEntity
-            .ok()
-            .body(updatedTaskList);
+                .ok()
+                .body(updatedTaskList);
     }
-
 
     @DeleteMapping("/{taskListId}")
     @Operation(description = "Удаление списка задач")
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "204",
-            description = "Список задач удален",
-            content = {}
-        ),
-        @ApiResponse(
-            responseCode = "403",
-            description = "Доступ запрещен",
-            content = @Content(
-                schema = @Schema(implementation = ErrorMessageDTO.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Список не найден",
-            content = {}
-        )
+            @ApiResponse(responseCode = "204", description = "Список задач удален", content = {}),
+            @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Список не найден", content = {})
     })
     public ResponseEntity<?> softDeleteTaskList(@PathVariable Long taskListId) {
         taskListService.softDeleteTaskListById(taskListId, SecurityUtils.getCurrentUserId());
@@ -155,16 +109,16 @@ public class TaskListController {
         taskService.softDeleteTasksByTaskListId(taskListId);
 
         return ResponseEntity
-            .status(204)
-            .body(null);
+                .status(204)
+                .body(null);
     }
 
     // @DeleteMapping("/{taskListId}/hard")
     // public ResponseEntity<?> hardDeleteTaskList(@PathVariable Long taskListId) {
-    //     taskListService.deleteTaskListById(taskListId);
+    // taskListService.deleteTaskListById(taskListId);
 
-    //     return ResponseEntity
-    //         .status(204)
-    //         .body(null);
+    // return ResponseEntity
+    // .status(204)
+    // .body(null);
     // }
 }

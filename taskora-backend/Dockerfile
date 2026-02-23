@@ -7,8 +7,7 @@ RUN mvn dependency:go-offline
 COPY . /app
 RUN mvn clean package -DskipTests -B
 
-
-FROM openjdk:26-ea-21-jdk-slim
+FROM eclipse-temurin:21-jdk-jammy
 
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
