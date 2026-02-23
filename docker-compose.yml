@@ -19,7 +19,7 @@ services:
   taskora-backend:
       build: 
             context: ./taskora-backend
-            dockerfile: Dockerfile.back-local
+            dockerfile: Dockerfile
       env_file:
         - .env
 
