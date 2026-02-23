@@ -1,0 +1,197 @@
+import type { UpdateTaskDTO, UpdateListDTO, Task, List, CreateListDTO, CreateTaskDTO, User } from "./interfaces";
+import { SYSTEM_LIST_IDS } from "./constants";
+
+export const SERVER_ADDRES = '/api';
+const SERVER_ADDRES__TASKS = '/api/tasks/';
+const SERVER_ADDRES__TASKS_NO_SLASH = '/api/tasks';
+const SERVER_ADDRES__LISTS = '/api/tasklists/';
+const SERVER_ADDRES__LISTS_NO_SLASH = '/api/tasklists';
+export const FRONTEND_ADDRES = 'http://localhost:3000';
+
+const defaultFetchOptions = {
+  credentials: 'include' as const,
+  headers: {
+    'Content-Type': 'application/json',
+  }
+};
+
+export class CustomError extends Error {
+  statusCode: number;
+
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.name = "CustomError"; 
+    this.statusCode = statusCode;
+  }
+}
+
+
+const fetchTasks = async (listId: number): Promise<Array<Task>> => {
+  let fetchString = `${SERVER_ADDRES__TASKS}${listId}`
+  if(listId == SYSTEM_LIST_IDS.COMPLETED) {
+     fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=completed`
+  } else if(listId == SYSTEM_LIST_IDS.TODAY) {
+    fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=today`
+  } else if(listId == SYSTEM_LIST_IDS.BASKET) {
+    fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=deleted`
+  } else if(listId == SYSTEM_LIST_IDS.ALL) {
+    fetchString = `${SERVER_ADDRES__TASKS_NO_SLASH}?system=all`
+  }
+  
+  const response = await fetch(fetchString, {
+    method: 'GET',
+    ...defaultFetchOptions,
+    headers: {
+      ...defaultFetchOptions.headers,
+      'X-User-Timezone': `${Intl.DateTimeFormat().resolvedOptions().timeZone}`
+    },
+  });
+
+  if (!response.ok) {
+    throw new CustomError(`Failed to fetch tasks for list ${listId}: ${response.status}`, response.status);
+  }
+
+  const data = await response.json();
+  const tasks: Array<Task> = data.taskDTOs;
+
+  return tasks;
+}
+
+const fetchLists = async (): Promise<Array<List>> => {
+  const response = await fetch(`${SERVER_ADDRES__LISTS_NO_SLASH}`, {
+    method: 'GET',
+    ...defaultFetchOptions,
+  });
+
+  if (!response.ok) {
+    throw new CustomError(`Failed to fetch lists for user: ${response.status}`, response.status);
+  }
+  const data = await response.json();
+  const lists: Array<List> = data.taskLists;
+  
+  return lists;
+}
+
+const createListOnServer = async (create: CreateListDTO): Promise<List> => {
+    const response = await fetch(`${SERVER_ADDRES__LISTS_NO_SLASH}`, {
+    method: 'POST',
+    ...defaultFetchOptions,
+    body: JSON.stringify({...create})
+  });
+
+  if (!response.ok) {
+    throw new CustomError(`Failed to create list: ${response.status}`, response.status);
+  }
+
+  const list: List = await response.json();
+
+  return list;
+}
+
+const createTaskOnServer = async (create: CreateTaskDTO): Promise<Task> => {
+    const response = await fetch(`${SERVER_ADDRES__TASKS_NO_SLASH}`, {
+    method: 'POST',
+    headers: {  
+      'Access-Control-Allow-Origin': `${FRONTEND_ADDRES}`,
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify(create)
+  });
+
+  if (!response.ok) {
+    throw new CustomError(`Failed to create task: ${response.status}`, response.status);
+  }
+
+  const task: Task = await response.json();
+
+  return task;
+}
+
+const updateTaskOnServer = async (taskId: number, updates: UpdateTaskDTO): Promise<Task> => {
+  const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {
+    method: 'PUT',
+    ...defaultFetchOptions,
+    body: JSON.stringify(updates)
+  });
+
+  if (!response.ok) {
+    throw new CustomError(`Failed to update task: ${response.status} ${response.statusText}`, response.status);
+  }
+
+  const task: Task = await response.json();
+
+  return task;
+}
+
+const updateListOnServer = async (listId: number, updates: UpdateListDTO): Promise<List> => {
+  const response = await fetch(`${SERVER_ADDRES__LISTS}${listId}`, {
+    method: 'PUT',
+    ...defaultFetchOptions,
+    body: JSON.stringify(updates)
+  });
+
+  if (!response.ok) {
+    throw new CustomError(`Failed to update task: ${response.status} ${response.statusText}`, response.status);
+  }
+
+  const list: List = await response.json();
+
+  return list;
+}
+
+const deleteTaskOnServer = async (taskId: number): Promise<void> => {
+  const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {
+    method: 'DELETE', 
+    ...defaultFetchOptions,
+  });
+
+  if (!response.ok) {
+    throw new CustomError(`Failed to update task: ${response.statusText}`, response.status);
+  }
+}
+
+const deleteListOnServer = async (listId: number): Promise<void> => {
+  const response = await fetch(`${SERVER_ADDRES__LISTS}${listId}`, {
+    method: 'DELETE', 
+    ...defaultFetchOptions,
+  });
+
+  if (!response.ok) {
+    throw new CustomError(`Failed to update task: ${response.statusText}`, response.status);
+  }
+}
+
+const taskRecoveryOnServer = async (taskId: number): Promise<List[]> => {
+    const response = await fetch(`${SERVER_ADDRES__TASKS}${taskId}`, {
+    method: 'PATCH', 
+    ...defaultFetchOptions,
+  });
+
+  if (!response.ok) {
+    throw new CustomError(`Failed to update task: ${response.statusText}`, response.status);
+  }
+
+  const lists: List[] = await response.json();
+
+  return lists;
+}
+
+const getUser = async (): Promise<User> => {
+  const response = await fetch(`/api/users`, {
+    method: 'GET',
+    ...defaultFetchOptions,
+  });
+
+  if (!response.ok) {
+    throw new CustomError(`Failed to fetch user: ${response.status}`, response.status);
+  }
+  const data = await response.json();
+  const user: User = data;
+  console.log(user)
+  
+  return user;
+}
+
+export {  updateTaskOnServer, updateListOnServer, fetchTasks, fetchLists, 
+  createListOnServer, createTaskOnServer, deleteListOnServer, deleteTaskOnServer, taskRecoveryOnServer, getUser};

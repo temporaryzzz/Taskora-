@@ -1,0 +1,104 @@
+# Количество реплик прокси
+replicaCount: 1
+
+# Контейнер прокси (nginx)
+image:
+  repository: ghcr.io/nothingness159/taskora-proxy
+  tag: latest
+  pullPolicy: IfNotPresent
+
+imagePullSecrets:
+  - name: ghcr-secret
+# Сервис прокси
+service:
+  type: ClusterIP
+  port: 80
+
+# Сервисы фронта и бэка, на которые будем проксировать
+frontend:
+  serviceName: frontend
+  port: 3000
+
+backend:
+  serviceName: backend
+  port: 8080
+
+# Конфиг nginx
+nginx:
+  config: |
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://frontend:3000;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location /api/ {
+            proxy_pass http://backend:8080;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            # JWT
+            proxy_set_header Authorization $http_authorization;
+        }
+    }
+
+# Ресурсы прокси
+resources:
+  requests:
+    cpu: 10m
+    memory: 16Mi
+  limits:
+    cpu: 25m
+    memory: 32Mi
+
+# Liveness и Readiness для прокси
+livenessProbe: 
+  httpGet:
+    path: /
+    port: 80
+  initialDelaySeconds: 10
+  periodSeconds: 5
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: 80
+  initialDelaySeconds: 5
+  periodSeconds: 5
+
+# Монтирование ConfigMap с конфигом nginx
+volumeMounts:
+  - name: nginx-config
+    mountPath: /etc/nginx/conf.d
+volumes:
+  - name: nginx-config
+    configMap:
+      name: proxy-nginx
+
+# Ingress
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: taskora.website
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# ServiceAccount
+serviceAccount:
+  create: true
+  name: ""
+
+# Автоскейлинг (выключен)
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80

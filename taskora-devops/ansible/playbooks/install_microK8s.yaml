@@ -1,0 +1,55 @@
+- name: Установка MicroK8s
+  hosts: arch_server
+  become: yes
+
+  vars:
+    microk8s_channel: "1.30/stable"
+    microk8s_user: "nothingness"
+
+  tasks:
+    - name: Установить snapd
+      pacman:
+        name: snapd
+        state: present
+
+    - name: Включить и запустить snapd
+      systemd:
+        name: snapd.socket  
+        enabled: yes
+        state: started
+
+    - name: Проверить работу snapd
+      command: snap version
+      register: snap_version
+      changed_when: false
+
+    - name: Установить MicroK8s
+      command: snap install microk8s --classic --channel={{ microk8s_channel }}
+      args:
+        creates: /snap/bin/microk8s
+
+    - name: Добавить пользователя в группу microk8s
+      user:
+        name: "{{ microk8s_user }}"
+        groups: microk8s
+        append: yes
+
+    - name: Настроить права для kubectl
+      file:
+        path: "/home/{{ microk8s_user }}/.kube"
+        state: directory
+        owner: "{{ microk8s_user }}"
+        group: "{{ microk8s_user }}"
+        mode: '0700'
+
+    - name: Включить базовые аддоны microk8s
+      command: microk8s enable dns storage ingress helm3
+      environment:
+        PATH: "/snap/bin:{{ ansible_env.PATH }}"
+      become_user: "{{ microk8s_user }}"
+
+    - name: Проверить готовность microk8s
+      command: microk8s status --wait-ready
+      environment:
+        PATH: "/snap/bin:{{ ansible_env.PATH }}"
+      become_user: "{{ microk8s_user }}"
