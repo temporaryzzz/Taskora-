@@ -9,10 +9,11 @@ import SignUp from './components/sign-up';
 import { fetchTasks, fetchLists, updateTaskOnServer, updateListOnServer, createListOnServer, createTaskOnServer, 
   deleteListOnServer, deleteTaskOnServer,
   taskRecoveryOnServer,
-  getUser} from './api';
+  getUser,
+  deleteToken} from './api';
 import './styles/main.scss'
 import MainPage from './components/main-page';
-import { getCookie, setCookie } from './cookies';
+import { deleteCookie, getCookie, setCookie } from './cookies';
 import { withAuthHandling } from './hooks';
 
 export const StateContext = createContext<AppState | undefined>(undefined);
@@ -42,6 +43,13 @@ function App() {
 
   const loadUser = () => {
     withAuthHandling(getUser, (updatedUser) => setUser(updatedUser), {navigate, setLogIn, setError})
+  }
+
+  const logOut = () => {
+    setLogIn(false)
+    deleteCookie('logIn')
+    deleteToken()
+    navigate('', {replace: true})
   }
 
   const setSelectedTask = useCallback((taskId: number) => {
@@ -182,6 +190,7 @@ function App() {
   const actionsValue = useMemo(() => {
     const actions: AppActions = {
       setUser,
+      logOut,
       setSelectedTask,
       setTempTaskTitle,
       updateTask,

@@ -3,9 +3,11 @@ import { memo } from "react";
 
 type HeaderProps = {
     currentListTitle?: string;
+    logOut: () => void;
 }
 
-function Header({ currentListTitle }: HeaderProps) {
+function Header({ currentListTitle, logOut }: HeaderProps) {
+
 
     return(
         <header className="header" data-js-header>
@@ -16,7 +18,10 @@ function Header({ currentListTitle }: HeaderProps) {
                     </div>
                     <h1 className="header__title h3">{currentListTitle ? currentListTitle : ''}</h1>
                 </div>
-                <button className="header__settings"></button>
+                <div className="header_extra">
+                    <button className="header__settings"></button>
+                    <button className="header__logout" onClick={() => logOut()}></button>
+                </div>
             </div>
         </header>
     )

@@ -45,6 +45,7 @@ export type UpdateListDTO = Pick<List, 'title' | 'icon' | 'color' | 'sections' |
 
 export interface AppActions {
     setUser: Dispatch<SetStateAction<User | undefined>>;
+    logOut: () => void;
     setSelectedTask: (taskId: number) => void;
     setTempTaskTitle: Dispatch<SetStateAction<string>>;
     updateTask: (taskId: number, updates: UpdateTaskDTO) => void;

@@ -193,5 +193,16 @@ const getUser = async (): Promise<User> => {
   return user;
 }
 
+const deleteToken = async () => {
+  const response = await fetch(`/api/auth/logout`, {
+    method: 'GET',
+    ...defaultFetchOptions,
+  });
+
+  if (!response.ok) {
+    throw new CustomError(`Failed to logOut: ${response.status}`, response.status);
+  }
+}
+
 export {  updateTaskOnServer, updateListOnServer, fetchTasks, fetchLists, 
-  createListOnServer, createTaskOnServer, deleteListOnServer, deleteTaskOnServer, taskRecoveryOnServer, getUser};
+  createListOnServer, createTaskOnServer, deleteListOnServer, deleteTaskOnServer, taskRecoveryOnServer, getUser, deleteToken};
