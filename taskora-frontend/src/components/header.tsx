@@ -19,8 +19,8 @@ function Header({ currentListTitle, logOut }: HeaderProps) {
                     <h1 className="header__title h3">{currentListTitle ? currentListTitle : ''}</h1>
                 </div>
                 <div className="header_extra">
-                    <button className="header__settings"></button>
-                    <button className="header__logout" onClick={() => logOut()}></button>
+                    <button className="header__extra-item icon icon--settings"></button>
+                    <button className="header__extra-item icon icon--logout" onClick={() => logOut()}></button>
                 </div>
             </div>
         </header>

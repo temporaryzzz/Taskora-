@@ -46,6 +46,40 @@
         }
     }
 
+    &--settings {
+
+        &::before {
+            --size: #{fluid(30, 24)};
+
+            background-image: url('../../assets/icons/settings-icon.svg');
+        }
+
+        @include hover {
+            &::before {
+                --size: #{fluid(30, 24)};
+
+                background-image: url('../../assets/icons/settings-white-icon.svg');
+            }
+        }
+    }
+
+    &--logout {
+
+        &::before {
+            --size: #{fluid(30, 24)};
+
+            background-image: url('../../assets/icons/logOut-icon.svg');
+        }
+
+        @include hover {
+            &::before {
+                --size: #{fluid(30, 24)};
+
+                background-image: url('../../assets/icons/logOut-white-icon.svg');
+            }
+        }
+    }
+
     &--basket {
 
         &::before {
@@ -146,6 +180,7 @@
 
         }
     }
+
     &--gear {
         &::before {
             --size: #{fluid(22, 18)};

@@ -44,41 +44,15 @@
         color: var(--main-accent);
     }
 
-    &__settings {
-        @include square(#{fluid(36, 28)});
-
-        content: '';
+    &__extra-item {
         flex-shrink: 0;
+        padding: rem(5);
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
         background-color: transparent;
-        background-image: url('../../assets/icons/settings-icon.svg');
         white-space: nowrap;
         border: none;
         outline: none;
-
-        @include hover {
-            background-image: url('../../assets/icons/settings-white-icon.svg');
-        }
-    }
-
-    &__logout {
-        @include square(#{fluid(36, 28)});
-
-        content: '';
-        flex-shrink: 0;
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: transparent;
-        background-image: url('../../assets/icons/logOut-icon.svg');
-        white-space: nowrap;
-        border: none;
-        outline: none;
-
-        @include hover {
-            background-image: url('../../assets/icons/logOut-white-icon.svg');
-        }
     }
 }
