@@ -40,6 +40,7 @@ public class WebSecurityConfig {
     @Autowired
     private Environment env;
 
+
     @Bean
     public AuthTokenFilter authTokenFilter() {
         return new AuthTokenFilter();
@@ -61,7 +62,7 @@ public class WebSecurityConfig {
     }
 
     /**
-     * Проверяем, что мы находимся в локальной dev-среде
+     * Проверка, что сервер запущен в локальной dev-среде
      */
     private boolean isLocal() {
         String profile = env.getProperty("spring.profiles.active", "");
@@ -69,13 +70,13 @@ public class WebSecurityConfig {
     }
 
     /**
-     * CORS конфигурация — включается только для local
+     * CORS конфигурация включается только для dev-среды
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-
+        // Проверка на dev-среду
         if (!isLocal()) {
-            return null; // В prod CORS не нужен, handled by nginx
+            return null;
         }
 
         CorsConfiguration configuration = new CorsConfiguration();
@@ -87,7 +88,7 @@ public class WebSecurityConfig {
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         configuration.setExposedHeaders(Arrays.asList("Set-Cookie"));
-        configuration.setMaxAge(3600L);
+        configuration.setMaxAge(3600L); // ???
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -99,7 +100,6 @@ public class WebSecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http.csrf(csrf -> csrf.disable());
 
         // Включаем CORS только для local

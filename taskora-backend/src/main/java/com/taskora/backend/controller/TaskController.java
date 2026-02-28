@@ -3,7 +3,6 @@ package com.taskora.backend.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.taskora.backend.dto.ErrorMessageDTO;
 import com.taskora.backend.dto.TaskCreateRequestDTO;
@@ -11,7 +10,6 @@ import com.taskora.backend.dto.TaskDTO;
 import com.taskora.backend.dto.TaskListResponseDTO;
 import com.taskora.backend.dto.TaskResponseDTO;
 import com.taskora.backend.dto.TaskUpdateRequestDTO;
-import com.taskora.backend.entity.Task;
 import com.taskora.backend.entity.Task;
 import com.taskora.backend.entity.TaskList;
 import com.taskora.backend.service.TaskListService;
@@ -40,7 +38,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
 @RequestMapping("/api/tasks")
-// @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class TaskController {
 
     @Autowired
@@ -48,6 +45,7 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
+
 
     @GetMapping("/{taskListId}")
     @Operation(description = "Получение всех задач по id списка")
@@ -78,7 +76,7 @@ public class TaskController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Задачи найдены", content = @Content(schema = @Schema(implementation = TaskResponseDTO.class))),
             @ApiResponse(responseCode = "204", description = "Задачи не найдены", content = {}),
-            @ApiResponse(responseCode = "400", description = "Неизвестный системный список", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Неизвестный системный список или часовой пояс", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))),
             @ApiResponse(responseCode = "403", description = "Доступ запрещен", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class)))
     })
     public ResponseEntity<?> getTasksFromSystemList(
@@ -195,14 +193,4 @@ public class TaskController {
         return ResponseEntity
                 .ok(taskListService.findTaskListsByOwnerId(currentUserId));
     }
-
-    // @DeleteMapping("/{taskId}/hard")
-    // @Operation(description = "Удаление задачи (old)")
-    // public ResponseEntity<?> hardDeleteTask(@PathVariable Long taskId) {
-    // taskService.deleteTaskById(taskId);
-
-    // return ResponseEntity
-    // .status(204)
-    // .body(null);
-    // }
 }

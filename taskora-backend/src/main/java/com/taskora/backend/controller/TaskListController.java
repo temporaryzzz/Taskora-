@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +33,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api/tasklists")
-// CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class TaskListController {
 
     @Autowired
@@ -45,6 +43,7 @@ public class TaskListController {
 
     @Autowired
     private TaskService taskService;
+
 
     @GetMapping("")
     @Operation(description = "Получение списков задач")
@@ -112,13 +111,4 @@ public class TaskListController {
                 .status(204)
                 .body(null);
     }
-
-    // @DeleteMapping("/{taskListId}/hard")
-    // public ResponseEntity<?> hardDeleteTaskList(@PathVariable Long taskListId) {
-    // taskListService.deleteTaskListById(taskListId);
-
-    // return ResponseEntity
-    // .status(204)
-    // .body(null);
-    // }
 }
