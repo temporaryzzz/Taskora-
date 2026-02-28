@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/api/users")
-// @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserController {
 
     @Autowired
     UserService userService;
 
+    
     @GetMapping("")
     @Operation(description = "Получение username и email пользователя")
     @ApiResponses(value = {

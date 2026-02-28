@@ -5,8 +5,11 @@ import java.util.Date;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.taskora.backend.config.AuthProperties;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -23,8 +26,8 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String jwtSecret;
     
-    @Value("${jwt.expiration}")
-    private int jwtExpirationMs;
+    @Autowired
+    private AuthProperties authProperties;
 
     private SecretKey key;
 
@@ -38,7 +41,7 @@ public class JwtUtil {
         return Jwts.builder()
             .setSubject(String.valueOf(id))
             .setIssuedAt(new Date())
-            .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
+            .setExpiration(new Date(new Date().getTime() + authProperties.getMillis()))
             .signWith(key, SignatureAlgorithm.HS256)
             .compact();
     }

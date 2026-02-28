@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.taskora.backend.config.AuthProperties;
 import com.taskora.backend.dto.CustomUserDetails;
 import com.taskora.backend.dto.ErrorMessageDTO;
 import com.taskora.backend.dto.SignInRequestDTO;
@@ -39,6 +40,10 @@ public class AuthenticationController {
         @Autowired
         private UserService userService;
 
+        @Autowired
+        private AuthProperties authProperties;
+
+        
         @PostMapping("/signup")
         @Operation(description = "Регистрация пользователя в БД, с проверкой на занятость логина")
         @ApiResponses(value = {
@@ -47,7 +52,10 @@ public class AuthenticationController {
         })
         public ResponseEntity<?> signUp(@RequestBody SignUpRequestDTO requestDTO) {
                 userService.createUser(requestDTO);
-                return ResponseEntity.ok().build();
+                
+                return ResponseEntity
+                        .ok()
+                        .build();
         }
 
         @PostMapping("/signin")
@@ -57,7 +65,6 @@ public class AuthenticationController {
                         @ApiResponse(responseCode = "401", description = "Неверный логин или пароль", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class)))
         })
         public ResponseEntity<?> signIn(@RequestBody SignInRequestDTO requestDTO) {
-
                 try {
                         Authentication authentication = authManager.authenticate(
                                         new UsernamePasswordAuthenticationToken(
@@ -75,14 +82,11 @@ public class AuthenticationController {
                         ResponseCookie.ResponseCookieBuilder cookieBuilder = ResponseCookie.from("token", token)
                                         .httpOnly(true)
                                         .path("/")
-                                        .maxAge(30 * 24 * 3600);
-
+                                        .maxAge(authProperties.getSeconds());
                         if (isLocal) {
-                                // ===== LOCAL =====
                                 cookieBuilder.secure(false);
                                 cookieBuilder.sameSite("Lax");
                         } else {
-                                // ===== PROD =====
                                 cookieBuilder.secure(true);
                                 cookieBuilder.sameSite("None");
                         }

@@ -6,13 +6,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.8</version>
+		<version>3.5.11</version>
 		<relativePath/>
 	</parent>
 	
 	<groupId>com.taskora.backend</groupId>
 	<artifactId>taskora-backend</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<name>taskora-backend</name>
 	<description>Backend for Taskora- web application</description>
 	
