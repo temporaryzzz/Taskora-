@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,77 +32,101 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RequestMapping("/api/auth")
 public class AuthenticationController {
 
-        @Autowired
-        private AuthenticationManager authManager;
+    @Autowired
+    private AuthenticationManager authManager;
 
-        @Autowired
-        private JwtUtil jwtUtil;
+    @Autowired
+    private JwtUtil jwtUtil;
 
-        @Autowired
-        private UserService userService;
+    @Autowired
+    private UserService userService;
 
-        @Autowired
-        private AuthProperties authProperties;
+    @Autowired
+    private AuthProperties authProperties;
 
-        
-        @PostMapping("/signup")
-        @Operation(description = "Регистрация пользователя в БД, с проверкой на занятость логина")
-        @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", description = "Успешная регистрация"),
-                        @ApiResponse(responseCode = "409", description = "Пользователь уже существует", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class)))
-        })
-        public ResponseEntity<?> signUp(@RequestBody SignUpRequestDTO requestDTO) {
-                userService.createUser(requestDTO);
-                
-                return ResponseEntity
-                        .ok()
-                        .build();
+    // Определяем профиль
+    boolean isLocal = "local".equalsIgnoreCase(System.getenv("SPRING_PROFILES_ACTIVE"));
+
+
+    @PostMapping("/signup")
+    @Operation(description = "Регистрация пользователя в БД, с проверкой на занятость логина")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Успешная регистрация"),
+            @ApiResponse(responseCode = "409", description = "Пользователь уже существует", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class)))
+    })
+    public ResponseEntity<?> signUp(@RequestBody SignUpRequestDTO requestDTO) {
+        userService.createUser(requestDTO);
+
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    @PostMapping("/signin")
+    @Operation(description = "Авторизация пользователя в систему")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Успешный вход", content = @Content(schema = @Schema(implementation = SignInResponseDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Неверный логин или пароль", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class)))
+    })
+    public ResponseEntity<?> signIn(@RequestBody SignInRequestDTO requestDTO) {
+        try {
+            Authentication authentication = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    requestDTO.getLogin(),
+                    requestDTO.getPassword()));
+
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            String token = jwtUtil.generateToken(userDetails.getId());
+
+            // Настройка cookie
+            ResponseCookie.ResponseCookieBuilder cookieBuilder = ResponseCookie.from("token", token)
+                    .httpOnly(true)
+                    .path("/")
+                    .maxAge(authProperties.getSeconds());
+            if (isLocal) {
+                cookieBuilder.secure(false);
+                cookieBuilder.sameSite("Lax");
+            } else {
+                cookieBuilder.secure(true);
+                cookieBuilder.sameSite("None");
+            }
+
+            ResponseCookie cookie = cookieBuilder.build();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .body(new SignInResponseDTO("Вход успешен"));
+
+        } catch (Exception e) {
+            System.err.println("Ошибка при попытке авторизации: " + e);
         }
 
-        @PostMapping("/signin")
-        @Operation(description = "Авторизация пользователя в систему")
-        @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", description = "Успешный вход", content = @Content(schema = @Schema(implementation = SignInResponseDTO.class))),
-                        @ApiResponse(responseCode = "401", description = "Неверный логин или пароль", content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class)))
-        })
-        public ResponseEntity<?> signIn(@RequestBody SignInRequestDTO requestDTO) {
-                try {
-                        Authentication authentication = authManager.authenticate(
-                                        new UsernamePasswordAuthenticationToken(
-                                                        requestDTO.getLogin(),
-                                                        requestDTO.getPassword()));
+    return ResponseEntity.status(401)
+            .body(new ErrorMessageDTO("Неверный логин или пароль"));
+    }
 
-                        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-                        String token = jwtUtil.generateToken(userDetails.getId());
-
-                        // Определяем профиль
-                        String profile = System.getenv("SPRING_PROFILES_ACTIVE");
-                        boolean isLocal = "local".equalsIgnoreCase(profile);
-
-                        // Настройка cookie
-                        ResponseCookie.ResponseCookieBuilder cookieBuilder = ResponseCookie.from("token", token)
-                                        .httpOnly(true)
-                                        .path("/")
-                                        .maxAge(authProperties.getSeconds());
-                        if (isLocal) {
-                                cookieBuilder.secure(false);
-                                cookieBuilder.sameSite("Lax");
-                        } else {
-                                cookieBuilder.secure(true);
-                                cookieBuilder.sameSite("None");
-                        }
-
-                        ResponseCookie cookie = cookieBuilder.build();
-
-                        return ResponseEntity.ok()
-                                        .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                                        .body(new SignInResponseDTO("Вход успешен"));
-
-                } catch (Exception e) {
-                        System.err.println("Ошибка при попытке авторизации: " + e);
-                }
-
-                return ResponseEntity.status(401)
-                                .body(new ErrorMessageDTO("Неверный логин или пароль"));
+    @GetMapping("/logout")
+    @Operation(description = "Выход пользователя из системы")
+    @ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Успешный выход", content = {})
+    })
+    public ResponseEntity<?> logout() {
+        ResponseCookie.ResponseCookieBuilder cookieBuilder = ResponseCookie.from("token", "")
+                .httpOnly(true)
+                .path("/")
+                .maxAge(0);
+        if (isLocal) {
+            cookieBuilder.secure(false);
+            cookieBuilder.sameSite("Lax");
+        } else {
+            cookieBuilder.secure(true);
+            cookieBuilder.sameSite("None");
         }
+
+        ResponseCookie cookie = cookieBuilder.build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .build();
+    }
 }
